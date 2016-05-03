@@ -1,0 +1,16 @@
+#!/bin/bash
+#askubuntu.com/questions/68175/how-to-create-script-with-auto-complete#answer-483149
+# for uncompressing use the excelent tool unp
+if [[ $1 = "-h" || $1 = "--help" || $1 = "" ]]; then
+    printf "usage:\ncompress [7z|tar|zip|rar] dest.x origin\n"
+    exit
+fi
+if [[ $1 = "7z" ]]; then
+	7z a $2 $3
+elif [[ $1 = "targz" ]]; then
+	tar -zcvf $2 $3
+elif [[ $1 = "zip" ]]; then
+	zip $2 $3
+elif [[ $1 = "rar" ]]; then
+	rar a $2 $3
+fi

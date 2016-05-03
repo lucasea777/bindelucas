@@ -1,0 +1,6 @@
+if [ $1 = "en" ]; then
+    firefox "https://translate.google.com/#auto/en/$*"
+    exit
+fi
+
+firefox "https://translate.google.com/#auto/es/$*"

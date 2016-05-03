@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -z "$1" ]; then #len 0 var, inverse of -n (nonzero)
+ wget http://ipinfo.io/ip -qO -
+elif [[ $1 = "edu" ]]; then
+ wget "http://lukspage.esy.es/iplog/iplog.php?key=porfavorteloruegoohmigranrey&get" -qO -
+ echo ""
+elif [[ $1 = "edu-log" ]]; then
+ wget "http://lukspage.esy.es/iplog/iplog.php?key=porfavorteloruegoohmigranrey&log" -qO -
+ echo ""
+else
+ echo "wrong argument"
+fi

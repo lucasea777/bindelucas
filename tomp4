@@ -1,0 +1,1 @@
+for filename in ./*.MOV; do ffmpeg -i $filename -strict -2 $(basename $filename .MOV )".mp4" ; done

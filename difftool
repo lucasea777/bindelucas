@@ -1,0 +1,8 @@
+#!/usr/bin/python
+#https://nathanhoad.net/how-to-meld-for-git-diffs-in-ubuntu-hardy
+#git config --global diff.external /home/nathan/diff.py
+
+import sys
+import os
+
+os.system('meld "%s" "%s"' % (sys.argv[2], sys.argv[5]))

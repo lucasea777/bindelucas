@@ -1,0 +1,3 @@
+#!/bin/sh
+#http://unix.stackexchange.com/questions/128593/simplest-way-to-comment-uncomment-certain-lines-using-command-line
+sed -i "$1"' s/^/#/' "$2"

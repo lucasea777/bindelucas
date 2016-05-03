@@ -1,0 +1,12 @@
+if [[ $1 = "-h" ]]; then
+	echo "waitforpid <PID>"
+	exit
+fi
+if [[ $1 = "" ]]; then
+	echo "waitforpid <PID>"
+	exit
+fi
+PID=$1
+while [[ ( -d /proc/$PID ) && ( -z `grep zombie /proc/$PID/status` ) ]]; do
+    sleep 1
+done

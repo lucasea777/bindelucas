@@ -1,0 +1,21 @@
+#!/bin/bash
+#anda malll?
+if [[ $1 != '' && $1 != 'eth0' && $1 != 'wlan0' && $1 != 'edu' && $1 != 'razr' ]]; then
+    echo "ERROR: argument not in [eth0, wlan0, edu, razr, '']"
+    exit
+fi
+nic=wlan0
+if [[ $1 == 'eth0' ]]; then
+	nic=eth0
+fi
+source ~/binprivate/db/macs
+if [[ $1 == 'eth0' || $1 == '' || $1 == 'wlan0' ]]; then
+    /sbin/ifconfig $nic | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'
+    exit
+elif [[ $1 == 'edu' ]]; then
+	mac=$mac_edu
+elif [[ $1 == 'razr' ]]; then
+	mac=$mac_razr
+fi
+#sudo arp-scan -I wlan0 192.168.1.0/24 | grep $mac | cut -f 1;
+sudo arp -n | grep $mac | awk '{print $1;}' ;

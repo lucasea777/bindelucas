@@ -1,0 +1,4 @@
+#!/bin/bash
+cd ~/bindelucas/libdelucas/nwbrowser
+nw . $1
+cd -

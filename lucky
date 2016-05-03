@@ -1,0 +1,1 @@
+gnome-open "http://www.google.com/search?ie=UTF-8&oe=UTF-8&sourceid=navclient&gfns=1&q=$*"

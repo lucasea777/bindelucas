@@ -1,0 +1,4 @@
+#!/bin/bash
+#show-command-source
+cat $(which $1) | less
+

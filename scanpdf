@@ -1,0 +1,9 @@
+#!/bin/bash
+#si existe el archivo que lo appendee con pdfunite!
+scanimage -p --format=tiff > /tmp/test.tiff ; 
+tiff2pdf /tmp/test.tiff > /tmp/test.pdf;
+if [[ -f $1 ]]; then
+	pdfunite $1 /tmp/test.pdf;
+else
+	mv /tmp/test.pdf $1;
+fi

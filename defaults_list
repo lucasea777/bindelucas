@@ -1,0 +1,4 @@
+echo "http://stackoverflow.com/questions/2060284/how-to-use-the-xdg-mime-command"
+echo "checkear la carpeta donde estan los .list (hay archivos .desktop)"
+echo "/usr/share/gnome/applications/defaults.list"
+echo "/usr/share/applications/defaults.list"

@@ -1,0 +1,17 @@
+#!/bin/bash
+#http://askubuntu.com/questions/222587/how-to-check-apt-get-upgrade-status-after-losing-ssh-connection
+function doit() {
+ssh edu@$1 -t 'screen -raAd; /bin/bash'
+}
+if [[ $1 == "-l" ]]; then
+	ip=$(lip edu)
+	doit $ip
+elif [[ $1 == "-e" ]]; then
+	ip=$(eip edu)
+        doit $ip
+else
+   echo 'Trying with $(lip edu)...'
+   doit $(lip edu)
+   echo 'Fail... Trying with $(eip edu)...'
+   doit $(eip edu)
+fi

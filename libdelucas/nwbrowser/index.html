@@ -1,0 +1,42 @@
+<!--
+http://codepen.io/steinvc/pen/kxbgH
+green screen
+https://www.youtube.com/watch?v=3KwfLCRNrkQ&t=10s
+https://www.youtube.com/watch?v=4K5S_e-Rv_I-->
+<!--<meta charset="UTF-8"> -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello World!</title>
+  </head>
+  <body>
+  <!--<audio autoplay loop controls>
+  <source src="sounds-949-you-wouldnt-believe.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>-->
+<!--<img src="0318.png">-->
+    <h1>ahi va</h1>
+    <!--<img src="https://media.giphy.com/media/Innp9Tkqs18Vq/giphy.gif">    -->
+    
+    <script>
+    console.log("hello")
+    var gui = require('nw.gui');
+	var win = gui.Window.get();	
+	//win.setShowInTaskbar(false)
+    //win.showDevTools()
+	//https://github.com/nwjs/nw.js/wiki/Transparency
+	win.width = 750;
+	win.height = 630;      
+	win.show()   
+	//alert(gui.App.argv[0])	
+	var arg = gui.App.argv[0];
+	if (!arg.startsWith("http"))
+		arg = "http://" + arg
+	window.location.href = arg;
+    onload = function() {    	
+    }
+
+
+    </script>.
+  </body>
+</html>

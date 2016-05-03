@@ -1,0 +1,22 @@
+#!/bin/bash
+#C program drafts
+
+if [ $# -lt 1 ]; then
+ nano ./cdraft
+ exit
+fi
+
+if [ $1 = "help" ]; then
+ nano ./cdraft
+ exit
+fi
+
+if [ $1 = "write" ]; then
+ nano cdraft/cdraft.c
+ exit
+fi
+
+if [ $1 = "exec" ]; then
+ gcc -o cdraft/cdraft cdraft/cdraft.c; ./cdraft/cdraft
+ exit
+fi

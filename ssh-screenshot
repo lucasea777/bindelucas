@@ -1,0 +1,10 @@
+#ssh-screenshot edu@$(lip edu)
+if [[ $1 == 'edu' ]]; then
+addr=edu@$(lip edu)
+else
+addr=$1
+fi
+#ssh $addr "DISPLAY=:0.0 import -window root /tmp/shot.png" && scp $addr:/tmp/shot.png /tmp/shot.png && 
+ssh $addr "DISPLAY=:0.0 shutter -n -f -e --disable_systray -o /tmp/shot.png" && 
+scp $addr:/tmp/shot.png /tmp/shot.png && 
+xdg-open /tmp/shot.png

@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+# Copyright (c) Anatoliy Belsky <ab@php.net>
+# License BSD
+ 
+from tempfile import mktemp
+from os import remove
+import sys
+from subprocess import call
+ 
+# create temporary c file
+fnm = mktemp(suffix=".c")
+prg = mktemp()
+
+if len(sys.argv) < 2:
+	argument = None 
+else:
+	argument = sys.argv[1]
+
+# write a test program into file
+with open(fnm, 'w') as f:
+	f.write("#include <stdlib.h>\n")
+	f.write("#include <stdio.h>\n")
+	f.write("#include <string.h>\n")
+	f.write("#include <math.h>\n")
+	f.write("#include <limits.h>\n")
+	f.write("int main(void) {\n")
+	f.write("    printf(\"Hi!\\n\");\n")
+	f.write('    \n')
+	if argument:
+		f.write(argument + "\n")
+	f.write("    return 0;\n")
+	f.write("}\n")
+
+if not argument:
+	call('nano +8,5 '+fnm, shell=True)
+ 
+# compile and run
+if 0 != call("/usr/bin/gcc -Wall -Wextra -Werror -O0 -g3 " 
+	+ fnm + " -o " + prg, shell=True):
+	sys.exit(1)
+call(prg, shell=True)
+ 
+print 'filename was: ' + fnm
+# cleanup
+#try:
+#	remove(fnm)
+#	remove(prg)
+#except:
+#	pass

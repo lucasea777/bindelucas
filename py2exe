@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "cuidado, los modulos tienen que estar instalado en wine!"
+name=$1
+if [[ $2 == "-i" ]]; then
+	icon_arg="-i "$3 ;
+fi
+dir=/tmp/py2exe
+mkdir $dir
+WINEDEBUG=-all wine C:\\Python27\\python -m PyInstaller -F --clean \
+--onefile --distpath $dir --workpath $dir --specpath $dir $icon_arg $name
+
+#http://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
+extension="${name##*.}"
+filename="${name%.*}"
+cp /tmp/py2exe/$filename".exe" .
+
+
+#C:\\Python27\\python -m pip install pyHook
+#wget -O /home/luks/.wine/drive_c/pyhook.whl http://www.losfd.uci.edu/~gohlke/pythonlibs/tugyrhqo/pyHook-1.5.1-cp27-none-win_amd64.whl
+#C:\\Python27\\python -m pip install C:\\pyhook.whl

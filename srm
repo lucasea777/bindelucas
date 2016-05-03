@@ -1,0 +1,2 @@
+# "safe rm" muevo archivo a la papelera en vez de eliminar
+gvfs-trash $*

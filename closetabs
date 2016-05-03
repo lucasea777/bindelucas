@@ -1,0 +1,2 @@
+#\!/bin/bash
+while [ $(ps -C chrome | wc -l) -gt 3 ]; do pkill --newest chrome; done

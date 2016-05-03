@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+#http://askubuntu.com/questions/597395/how-to-set-custom-keyboard-shortcuts-from-terminal
+import subprocess
+import sys
+
+def help():
+    print("shortcuts\n"
+    " -h\n"
+    " --help\n"
+    " list\n"
+    " set 'NAME' 'COMMAND' 'BINDING' [-s (simulate)] \n"
+    " del 'id' [-s (simulate)]\n")
+    sys.exit()
+if len(sys.argv) == 1 or sys.argv[1] in ["-h", "--help"]:
+    help()    
+action = sys.argv[1]
+simulate = False
+for i,a in enumerate(sys.argv):
+    if a == "-s":
+        simulate = True
+if action not in ['set','list','get','del']:
+    print('ERROR: action not in [\'set\',\'list\',\'get\']')
+    help()    
+if action in ["set", "get"]:
+    name = sys.argv[2]
+if action in ["set"]:
+    command = sys.argv[3]
+if action in ["set"]:
+    binding = sys.argv[4]
+if action == "del":
+    id = sys.argv[2]
+
+if action in ["list","del"]:
+    import os
+    print(os.popen("dconf dump /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/").read())
+    if action == "list":
+        sys.exit()
+
+if action == 'set' and len(binding) == 1:
+	binding = "<Alt><Control>"+binding
+#for i,e in enumerate(sys.argv):
+#    if e == "-n":
+#        name = sys.argv[i+1]
+#    if e == "-c":
+#        command = sys.argv[i+1]
+#    if e == "-s":
+#        binding = sys.argv[i+1]
+
+# defining keys & strings to be used
+key = "org.gnome.settings-daemon.plugins.media-keys custom-keybindings"
+subkey1 = key.replace(" ", ".")[:-1]+":"
+item_s = "/"+key.replace(" ", "/").replace(".", "/")+"/"
+firstname = "cu"
+# get the current list of custom shortcuts
+get = lambda cmd: subprocess.check_output(["/bin/bash", "-c", cmd]).decode("utf-8")
+o = get("gsettings get "+key)
+if o == "@as []\n":
+    o = "[]"
+current = eval(o)
+print("before: "+ str(current))
+#if action == "list":
+#    print(current)
+#    sys.exit()
+# make sure the additional keybinding mention is no duplicate
+if action != "del":
+    n = 1
+    while True:    
+        new = item_s+firstname+str(n)+"/"
+        if new in current:
+            n = n+1
+        else:
+            break
+# add the new keybinding to the list
+if action == "del":
+    try:
+        new = item_s+id+"/"
+        current.remove(new)
+    except ValueError:
+        print("ERROR: " + new + " not in list?")
+        sys.exit()
+elif action == "set":
+    current.append(new)
+# create the shortcut, set the name, command and shortcut key
+cmds = []
+cmds.append('gsettings set '+key+' "'+str(current)+'"')
+if action == "set":
+    cmds.append('gsettings set '+subkey1+new+" name '"+name+"'")
+    cmds.append('gsettings set '+subkey1+new+" command '"+command+"'")
+    cmds.append('gsettings set '+subkey1+new+" binding '"+binding+"'")
+
+for cmd in cmds:
+    if simulate:
+        print(cmd)
+    else:            
+        subprocess.call(["/bin/bash", "-c", cmd])

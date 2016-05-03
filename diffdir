@@ -1,0 +1,2 @@
+printf "diff --brief -Nr dir1/ dir2/
+"

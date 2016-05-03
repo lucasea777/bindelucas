@@ -1,0 +1,11 @@
+#!/bin/bash
+#intento
+#http://askubuntu.com/questions/489098/unable-to-reset-root-password-of-mysql
+read -s  -p Password: newpwd
+#Step 1: Stop MySQL Service.
+sudo service mysql stop
+#Step 2: Kill all running mysqld.
+sudo killall -9 mysqld mysqld_safe > /dev/null
+#Step 3: Starting mysqld in Safe mode.
+sudo mysqld_safe --skip-grant-tables --skip-networking > /dev/null &
+mysql -u root <<< "FLUSH PRIVILEGES; UPDATE mysql.user SET Password=PASSWORD('"$newpwd"') WHERE User='root'; FLUSH PRIVILEGES;"

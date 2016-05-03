@@ -1,0 +1,110 @@
+#!/bin/bash
+#http://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
+
+# Example:
+# alarma HH:MM --media=/home/luks/Music/Hymn.mp3
+
+# ------------------------------------------------------
+
+#SCRIPT="`readlink -e $0`"
+#SCRIPTPATH="`dirname $SCRIPT`"
+
+type=mem
+media="/home/luks/Music/Hymn.mp3"
+
+function value_var {
+    IFS='=' read -r -a array <<< "$1" ; echo "${array[1]}" ; 
+}
+
+time="invalid"
+
+# Argument check
+if [ $# -lt 1 ] || [ $1 = "-h" ] || [ $1 = "--help" ]; then
+    echo "Usage: alarma HH:MM  [-e : edit source] [--media=PATH (can be a video)] [-h] [--help]"
+    exit
+fi
+
+#argument evaluation
+n=0
+for var in "$@"
+do
+    if [ $var = '-e' ]; then
+        sudo nano $SCRIPT
+        exit
+    fi
+    if [[ $1 =~ ^[0-9]{2}:[0-9]{2}$ ]]; then
+        time=$1
+    fi
+    if [[ $var == --media* ]]; then
+        media=$(value_var $var)        
+    fi
+    if [[ $var == --cmd* ]]; then
+        cmd=$(value_var $var)
+    fi
+    #echo "$var"
+    n=$((n + 1))
+done
+
+echo 'SCRIPT='$SCRIPT
+echo 'SCRIPTPATH='$SCRIPTPATH
+echo 'media='$media
+echo 'time='$time
+echo 'type='$type
+# if [[ `date +%s -d "$date"` == date* ]]; then
+#     echo 'invalid date' ;
+#     exit
+# fi
+# exit
+#type=dameerror
+
+#if [ $# = 1 ] ; then
+#  at -v $1 -f musica.sh
+#  exit
+#fi
+
+# if [ $2 = "mem" ]; then
+#     type=mem
+# fi
+
+# if [ $2 = "no" ]; then
+#     type=no
+# fi
+
+# if [ $2 = "disk" ]; then
+#     type=disk
+# fi
+
+
+# Check whether specified time today or tomorrow
+DESIRED=$((`date +%s -d "$time"`))
+NOW=$((`date +%s`))
+if [ $DESIRED -lt $NOW ]; then
+    DESIRED=$((`date +%s -d "$time"` + 24*60*60))
+fi
+
+# Kill rtcwake if already running
+sudo killall rtcwake
+
+# N.B. change "mem" for the suspend option
+sudo rtcwake -l -m $type -t $DESIRED &
+
+# feedback
+echo "Suspending..."
+
+# give rtcwake some time to make its stuff
+sleep 5
+
+# N.B. dont usually require this bit
+#sudo pm-suspend
+
+# Any commands you want to launch after wakeup can be placed here
+# Remember: sudo may have expired by now
+amixer -D pulse sset Master 90% on -q
+nohup rhythmbox $media &
+
+#turn on monitor
+#xset dpms force on
+
+# and a fresh console
+#clear
+echo "Good morning!"
