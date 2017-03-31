@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+"""nmcli nm wifi off"""
+import time
+import os
+rst = ''
+def should_punish():
+    return "disabled" not in os.popen('nmcli nm enable').read()
+def punish():
+    #os.system("bash ~/Desktop/sublime.sh")
+    os.system("nmcli nm enable false")
+while True:
+    if should_punish():
+        punish()
+        time.sleep(5)

@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import sys
+import os
+print sys.argv
+try: 
+    from BeautifulSoup import BeautifulSoup
+except ImportError:
+    from bs4 import BeautifulSoup
+path = sys.argv[0]
+def get_html_file(path):
+    if os.path.isfile(path) and path.endswith('.html'):
+        return path
+    else:
+        path = os.path.join(path, 'index.html')
+        if os.path.isfile(path):
+            return path
+    raise FileNotFoundError
+
+add_scale_drag(get_html_file(path))
+
+fd = open()
+html = 
+parsed_html = BeautifulSoup(html)
+print parsed_html.body.find('html').text

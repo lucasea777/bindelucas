@@ -3,6 +3,7 @@
 
 # Example:
 # alarma HH:MM --media=/home/luks/Music/Hymn.mp3
+# alarma HH:MM --media=/home/luks/Music/Hymn.mp3 --cmd="fm -fav yo -m \"test3\" -f -e @hotmail.com"
 
 # ------------------------------------------------------
 
@@ -101,7 +102,6 @@ sleep 5
 # Remember: sudo may have expired by now
 amixer -D pulse sset Master 90% on -q
 nohup rhythmbox $media &
-
 #turn on monitor
 #xset dpms force on
 

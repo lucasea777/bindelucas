@@ -1,0 +1,2 @@
+printf "telnet localhost 1234\n\npassword=pepe\nadd \$(youtube-dl --no-warnings -g URL)\n pause\n help\n\n"
+vlc --extraintf telnet --telnet-password pepe --telnet-port 1234 --telnet-host 0.0.0.0

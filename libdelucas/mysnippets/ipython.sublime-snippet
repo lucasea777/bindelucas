@@ -1,0 +1,14 @@
+<snippet>
+    <!--<content><![CDATA[
+Hello, ${1:this} is a ${2:snippet}.
+]]></content>-->
+<content>#from importlib.machinery import SourceFileLoader; SourceFileLoader("module.name", "/home/luks/my_python_modules/ipsh.py").load_module().ipsh()
+import IPython ; IPython.embed()
+</content>
+<scope>source.python</scope>
+<tabTrigger>ipython</tabTrigger>
+    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+    <!-- <tabTrigger>hello</tabTrigger> -->
+    <!-- Optional: Set a scope to limit where the snippet will trigger -->
+    <!-- <scope>source.python</scope> -->
+</snippet>

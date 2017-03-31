@@ -37,7 +37,7 @@ def getScriptPath():
 
 PROGRAM_DIR = getScriptPath()
 
-COOKIE_FILENAME = "" #default o dejar vacio para no permitir 
+COOKIE_FILENAME = "" #default o dejar vacio para no permitir
                             #cargar una cookie anterior extraña
 
 class Log:
@@ -97,8 +97,8 @@ for i,e in enumerate(sys.argv):
     if e == "-uid":
         FACE_ID = sys.argv[i+1]
     if e == "-m":
-        MENSAJE = sys.argv[i+1]           
-        print "MENSAJE: " + MENSAJE 
+        MENSAJE = sys.argv[i+1]
+        print "MENSAJE: " + MENSAJE
     if e == "-d":
         ABRIRENFIREFOX = True
     if e == "-f":
@@ -119,7 +119,7 @@ for i,e in enumerate(sys.argv):
 
 if FACE_ID == "" and not FUNDADORES:
     name_id = get_face_id()
-    FACE_ID = name_id[1]        
+    FACE_ID = name_id[1]
     print "Nombre destinatario: " + name_id[0]
 
 assert(FACE_ID != "" or FUNDADORES)
@@ -131,7 +131,7 @@ if COOKIE_FILENAME == "":
 
 COOKIE_ABS_FILENAME = os.path.join(DATA_DIR, "cookies" , COOKIE_FILENAME)
 
-if MENSAJE == "":    
+if MENSAJE == "":
     MENSAJE = raw_input("Mensaje: ")
 
 #ABRIRENFIREFOX = True;
@@ -153,7 +153,7 @@ if os.path.isfile(COOKIE_ABS_FILENAME):
 br.set_cookiejar( cookiejar )
 br.set_handle_equiv( True )
 #br.set_handle_gzip( True )
-br.set_handle_redirect( True ) 
+br.set_handle_redirect( True )
 br.set_handle_referer( True )
 br.set_handle_robots( False )
 
@@ -166,7 +166,8 @@ url = "https://m.facebook.com/"
 #Open URL and submit
 try:
     response = br.open(url)
-except:
+except Exception as e:
+    raise e
     fatal("Parece que no estas conectado :/ (sino puede que la url este mal)")
 #import pdb; pdb.set_trace()
 #debug("step0.html")

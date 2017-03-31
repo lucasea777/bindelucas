@@ -1,0 +1,6 @@
+#for searching for keymaps: xev -event keyboard
+/usr/bin/paplay /usr/sha*/soun*/fr*/st*/co*
+xdotool key Home type echo\ \';
+xdotool key End apostrophe bar type xclip;
+xdotool key space minus type selection;
+xdotool key space c Return;

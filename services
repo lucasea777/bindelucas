@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+#http://askubuntu.com/questions/19320/how-to-enable-or-disable-services
+import sys, argparse, os
+#import argcomplete
+from functools import partial
+DESCRIPTION = """Manage services in /etc/init.d/
+Example: services enable/disable apache2"""
+if __name__ == '__main__':
+    def do(enable, args):
+          for s in args.services:
+              if not enable:
+                  #os.system("echo manual | sudo tee /etc/init/{}.override".format(s))
+                  os.system("echo manual | sudo tee /etc/init/{}.override".format(s))
+              else:
+                  os.system("sudo rm -f /etc/init/{}.override".format(s))
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    #argcomplete.autocomplete(parser)
+    subparsers = parser.add_subparsers(help="wft")
+    enable_parser = subparsers.add_parser('enable', help='Enable service')
+    disable_parser = subparsers.add_parser('disable', help='Disable service')
+    list_disabled = subparsers.add_parser('lsdisabled', help='List disabled services')
+    list_disabled.set_defaults(func=lambda x: os.system("ls /etc/init/*.override"))
+    for e in [enable_parser, disable_parser]:
+        e.add_argument('services', metavar='S', type=str, nargs='+',
+                       help='service to enable/disable')
+    enable_parser.set_defaults(func=partial(do, True))
+    disable_parser.set_defaults(func=partial(do, False))
+    args = parser.parse_args()
+    if not hasattr(args, "func"):
+        parser.print_help()
+        sys.exit()
+    args.func(args)

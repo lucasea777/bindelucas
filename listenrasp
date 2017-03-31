@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+from flask import Flask
+from flask import request
+import os
+app = Flask(__name__)
+
+@app.route('/rasp')
+def hello_world():
+    msg = request.args.get('msg')
+    os.system("""notify-send --icon=/tmp/rasp.png '{}' & 
+        paplay /usr/share/sounds/freedesktop/stereo/message.oga""".format(repr(msg)))
+    return msg or "Didnt pass msg"
+
+import threading
+def flaskThread():
+    app.run(host=None, port=8081, use_reloader=False, debug=False, threaded=True)   
+t1 = threading.Thread(target=flaskThread)
+t1.daemon = True
+t1.start()
+print("nunca")
+import time
+time.sleep(100)
