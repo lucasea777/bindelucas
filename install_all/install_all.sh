@@ -30,27 +30,16 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 
 # aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
-cat ~/.bashrc | grep -q "#<MIBASHRC>"
-if [[ ! $? -eq 0 ]]; then
-	echo >> ~/.bashrc
-	echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>' >> ~/.bashrc
-fi
-cat ~/.zshrc | grep -q "#<MIBASHRC>"
-if [[ ! $? -eq 0 ]]; then
-	echo >> ~/.zshrc
-	echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>' >> ~/.zshrc
-fi
+source ~/bindelucas/install_all/config/mibashrc.sh
+onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
+onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
 
 #mi bin
 #http://askubuntu.com/questions/9848/what-are-path-and-bin-how-can-i-have-personal-scripts
 #personal bin folder
 # set PATH so it includes user's private bin if it exists
 chmod -f +x ~/bindelucas/*
-cat ~/.profile | grep -q '#<BINDELUCAS>'
-if [[ ! $? -eq 0 ]]; then
-	echo >> ~/.profile
-	printf "export PATH=\"\$HOME/bindelucas:\$PATH\" #<BINDELUCAS>" >> ~/.profile
-fi
+onceinfile 'export PATH="$HOME/bindelucas:$PATH"' '#<BINDELUCAS>' ~/.profile
 export PATH="$HOME/bindelucas:$PATH"
 
 #modificar hostname
@@ -96,7 +85,10 @@ upd
 inst ansible
 source ~/bindelucas/install_all/ansible/run.sh
 
+inst apt-transport-https
 inst python3-dev
+inst python-tk
+inst python3-tk
 inst python-dev
 inst git
 inst unison-all-gtk
@@ -140,16 +132,14 @@ docky &> /dev/null &
     #inst yad #zenity fork
 #addrepo ppa:mystic-mirage/pycharm
 #inst pycharm-community
-inst python-qt4
+#inst python-qt4
 inst filezilla
 inst wmctrl
 inst rar
 # apt-get -y -q install qt4-designer
 inst xdotool #for searching for keymaps: xev -event keyboard
-inst pyqt4-dev-tools
+#inst pyqt4-dev-tools
 inst spek
-inst python-tk
-inst python3-tk
 inst sm
 inst wxhexeditor
 inst hardinfo
@@ -157,7 +147,7 @@ inst hardinfo
 curl https://bootstrap.pypa.io/get-pip.py | python3
 
 #inst python3-pip #default en ubuntu16
-pip3 -q install sympy
+pip3 -q install sympy numpy scipy
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
@@ -182,7 +172,8 @@ inst gconf-editor
 inst terminator
 #http://stackoverflow.com/questions/16808231/how-do-i-set-default-terminal-to-terminator
 #gsettings set org.gnome.desktop.default-applications.terminal exec /usr/bin/gnome-terminal
-ln -s ~/.config/terminator/config config #TODO
+# WINDOWS TOGGLES WITH F10 :D
+ln -f -s ~/bindelucas/install_all/config/terminator_config ~/.config/terminator/config
 shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'z'
 #ffmpeg http://askubuntu.com/questions/605186/how-to-install-ffmpeg-on-ubuntu
 # ffmpeg -i MOV01723.3GP -qscale 0 -ab 64k -ar 44100 -strict -2 MOV01723.mp4
@@ -199,17 +190,36 @@ inst nautilus-open-terminal
 
 #apt-get -y -q install python-kde4
 inst wireshark
-
+inst fonts-firacode
 red 'fin masive apt-get'
 
 red 'sublime'
 #http://askubuntu.com/questions/172698/how-do-i-install-sublime-text-2-3
-addrepo ppa:webupd8team/sublime-text-3
+#addrepo ppa:webupd8team/sublime-text-3
+#upd
+#inst sublime-text-installer
+# instrucciones oficiales
+wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 upd
-inst sublime-text-installer
+inst sublime-text
+mkdir -p ~/.config/sublime-text-3/Packages/User
 #prettify sublime
 git clone https://github.com/victorporof/Sublime-HTMLPrettify.git ~/.config/sublime-text-3/Packages/Sublime-HTMLPrettify
-wget -O ~/.config/sublime-text-3/Packages/ https://github.com/equinusocio/material-theme/releases/latest
+wget -P '~/.config/sublime-text-3/Packages/' https://packagecontrol.io/Package%20Control.sublime-package
+
+#auto-remove-sublime-license-popup killer (forked by me)
+wget -q -O /home/luks/.config/sublime-text-3/Packages/User/killer.py https://gist.githubusercontent.com/lucasea777/3c58ee226093e8ddc4e1eb67dd1e0583/raw/c416f9a2231ba45b1290a9b9536e6c4a87567af4/auto-remove-sublime-license-popup
+
+#Materialize theme
+lasttag=$(wget -qO- https://api.github.com/repos/saadq/Materialize/tags | jq -r '.[0].name') ;
+wget -O ~/.config/sublime-text-3/Packages/Materialize.zip https://github.com/saadq/Materialize/archive/$lasttag.zip
+unzip -q ~/.config/sublime-text-3/Packages/Materialize.zip -d ~/.config/sublime-text-3/Packages/
+mv ~/.config/sublime-text-3/Packages/Materialize-* ~/.config/sublime-text-3/Packages/Materialize
+rm -rf ~/.config/sublime-text-3/Packages/Materialize.zip
+
+git clone git://github.com/kemayo/sublime-text-2-git.git ~/.config/sublime-text-3/Packages/Git
+mkdir -p /home/luks/.config/sublime-text-3/Packages/User/
 cat > ~/.config/sublime-text-3/Packages/User/Preferences.sublime-settings <<- EOM
 {
 	"color_scheme": "Packages/Materialize/schemes/Material Monokai.tmTheme",
@@ -224,6 +234,7 @@ cat > ~/.config/sublime-text-3/Packages/User/Preferences.sublime-settings <<- EO
 EOM
 #http://askubuntu.com/questions/396938/how-do-i-make-sublime-text-3-the-default-text-editor
 sed -i -- 's/gedit/sublime/g' /usr/share/applications/defaults.list
+shortcuts set 'subl' 'subl' 's'
 red 'fin sublime'
 
 #pip -q install mechanize
@@ -333,18 +344,19 @@ sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
 upd # [arch=amd64] ?
 inst google-chrome-stable
 upd
+shortcuts set 'google-chrome' 'google-chrome' 'c'
 red 'fin-chrome'
 
 red 'vscode'
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
 wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
 dpkg -i /tmp/code_latest_amd64.deb
-ln -s '~/bindelucas/install_all/config/settings.json' $HOME/.config/Code/User/settings.json
+ln -f -s '~/bindelucas/install_all/config/settings.json' $HOME/.config/Code/User/settings.json
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
 for one_thing in $exts; do
     code --install-extension $one_thing
 done
-
+shortcuts set 'vscode' 'code' 'v'
 red 'fin vscode'
 
 red 'teamviewer'

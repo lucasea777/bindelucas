@@ -54,3 +54,11 @@ function addrepo() {
         err "error adding repo "$1
     fi
 }
+
+function onceinfile() { # eg: onceinfile 'LINE' 'ID' 'FILE' --->
+    cat "$3" | grep -q "$2"
+        if [[ ! $? -eq 0 ]]; then
+        echo >> "$3"
+        echo "$1"' '"$2" >> "$3"
+    fi
+}

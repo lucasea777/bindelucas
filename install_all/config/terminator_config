@@ -1,0 +1,70 @@
+[global_config]
+  window_state = maximise
+[keybindings]
+  hide_window = F10
+  resize_down = <Primary><Shift>Down
+  resize_up = <Primary><Shift>Up
+  switch_to_tab_1 = <Alt>1
+  switch_to_tab_2 = <Alt>2
+  switch_to_tab_3 = <Alt>3
+  switch_to_tab_4 = <Alt>4
+  switch_to_tab_5 = <Alt>5
+  switch_to_tab_6 = <Alt>6
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+  [[mine]]
+    [[[child0]]]
+      order = 0
+      parent = ""
+      position = 640:24
+      size = 638, 747
+      type = Window
+    [[[child1]]]
+      order = 0
+      parent = child0
+      position = 355
+      type = VPaned
+    [[[child3]]]
+      order = 1
+      parent = child1
+      position = 319
+      type = HPaned
+    [[[terminal2]]]
+      command = ""
+      order = 0
+      parent = child1
+      profile = default
+      show_titlebar = false
+      type = Terminal
+    [[[terminal4]]]
+      command = ipython3 --no-banner
+      order = 0
+      parent = child3
+      profile = default
+      type = Terminal
+    [[[terminal5]]]
+      #command = node
+      command = ipython3 --no-banner
+      order = 1
+      parent = child3
+      profile = default
+      type = Terminal
+[plugins]
+[profiles]
+  [[default]]
+    #background_color = "#2e3436"
+    background_color = "#000000"
+    background_darkness = 0.95
+    background_image = None
+    background_type = transparent
+    font = Monospace 11
+    foreground_color = "#ffffff"
+    split_to_group = True
+    use_system_font = False
