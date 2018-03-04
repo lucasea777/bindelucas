@@ -1,1 +1,24 @@
-mv --backup=numbered "$@"
+#!/usr/bin/python3
+# mv SRC,.. DEST
+# "Safe mv"
+# mv but without flags and only moves if destination is not an existent path.
+#
+#mv --backup=numbered "$@"
+#from shutil import move
+
+''' from sys import argv, exit
+from os.path import exists
+from os import system
+dest = argv[-1]
+files = argv[1:-1]
+if any(a.startswith('-') for a in argv):
+    print('a starts with "-" but this is not the real "mv" command.' % dest)
+    exit()
+if exists(dest):
+    print('%s exists!!!!' % dest)
+    exit()
+cmd = 'mv %s %s' % (" ".join(files), dest)
+print('$ %s' % cmd)
+system(cmd)
+
+ '''

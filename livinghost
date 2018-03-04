@@ -1,0 +1,17 @@
+nmap 192.168.1.0/28 -p 22 --open | egrep -ho "([0-9]+\.){3}[0-9]" | tail -1
+exit
+#!/usr/bin/python3
+import os,re
+enter = None
+m = None
+lines = []
+for line in os.popen('nmap 192.168.1.0/28').readlines()[1:]:
+  lines += [line]
+  enter = line == '\n' or enter
+  if enter and line.startswith('22/tcp'):
+    break
+for line in reversed(lines):
+  m = re.search('\d+\.\d+\.\d+\.\d+', line)
+  if m:
+    break
+print(m.group(0))

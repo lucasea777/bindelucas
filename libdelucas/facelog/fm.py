@@ -27,10 +27,7 @@ ABRIRENFIREFOX = False
 CHEQUEAR = True
 FUNDADORES = False
 DATA_DIR = os.path.expanduser("~/binprivate/db/facelog")
-# el profile id se puede sacar de la url de la foto de perfil
-# el profile id en la version mobil: alert(document.getElementsByName("id")[0].value)
-with open(os.path.expanduser(os.path.join(DATA_DIR, "favs"))) as fd:
-    FAV = json.loads(fd.read())
+
 
 def getScriptPath():
     return os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -67,7 +64,7 @@ def print_help():
     print "Usage: python message2.py [-uid <uid>|-fav] [-m <mensaje>] [-d] [-f] [-h|--help] [-c|-e]"
     print "    -d     abrir en firefox"
     print "    -f     no preguntar confirmacion"
-    print "    -fav   (" + ','.join(FAV.keys()) + ')'
+    #print "    -fav   (" + ','.join(FAV.keys()) + ')'
     print "    -fundadores  "
     print "    -c     nombre de archivo de cookie especial"
     print "    -e     mail sirve para el login y tambien se utilizara como nombre de cookie"
@@ -84,6 +81,10 @@ def fatal(txt):
 
 def get_face_id():
     print "Seleccione el destinatario (podria haber usado -fav)"
+    # el profile id se puede sacar de la url de la foto de perfil
+    # el profile id en la version mobil: alert(document.getElementsByName("id")[0].value)
+    with open(os.path.expanduser(os.path.join(DATA_DIR, "favs"))) as fd:
+        FAV = json.loads(fd.read())
     javaresult = os.popen("java -classpath \""+PROGRAM_DIR+"/contactListJava\" ContactList -dir \""+DATA_DIR+"\"").read().replace("\n","")
     if javaresult == "":
         fatal("java no retorno nada :/")
