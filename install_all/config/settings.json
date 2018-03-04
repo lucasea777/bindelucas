@@ -1,0 +1,47 @@
+{
+  "editor.multiCursorModifier": "ctrlCmd",
+  "emmet.syntaxProfiles": { "javascript": "html" },
+  "emmet.triggerExpansionOnTab":true,
+    "window.zoomLevel": 1,
+    // Controls the font family.
+    //"editor.fontFamily": "Operator Mono Book",
+    //"editor.fontFamily": "Operator SSm"
+
+    // Controls the font size.
+    //"editor.fontSize": 0
+    "editor.fontFamily": "'Fira Code'",
+    "editor.fontSize": 14,
+    "editor.fontLigatures": true,
+    "python.linting.pylintEnabled": false,
+    "editor.minimap.enabled": false,
+    "latex-workshop.chktex.enabled": true,
+    "latex-workshop.latex.toolchain": [
+        {
+          "command": "pdflatex",
+          "args": [
+            "-synctex=1",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "%DOC%"
+          ]
+        }, {
+          "command": "pdflatex",
+          "args": [
+            "-synctex=1",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "%DOC%"
+          ]
+        }, {
+          "command": "pdflatex",
+          "args": [
+            "-synctex=1",
+            "-interaction=nonstopmode",
+            "-file-line-error",
+            "%DOC%"
+          ]
+        }
+      ],
+      "workbench.colorTheme": "Ambiance [beta]",
+      "python.pythonPath": "/usr/bin/python3"
+    }

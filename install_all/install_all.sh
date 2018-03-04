@@ -25,6 +25,9 @@
 #http://stackoverflow.com/questions/29778967/how-to-install-sublime-monokai-theme-in-netbeans-8
 #http://askubuntu.com/questions/293838/shell-script-to-conditionally-add-apt-repository
 
+#zsh
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 # aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
 cat ~/.bashrc | grep -q "#<MIBASHRC>"
@@ -336,6 +339,12 @@ red 'vscode'
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
 wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
 dpkg -i /tmp/code_latest_amd64.deb
+ln -s '~/bindelucas/install_all/config/settings.json' $HOME/.config/Code/User/settings.json
+exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
+for one_thing in $exts; do
+    code --install-extension $one_thing
+done
+
 red 'fin vscode'
 
 red 'teamviewer'
