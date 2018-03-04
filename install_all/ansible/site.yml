@@ -1,0 +1,16 @@
+---
+- name: This is a hello-world  example
+  hosts: localhost
+  tasks:
+  - name: Create a file called '/tmp/testfile.txt' with the content 'hello world'.
+    copy: content="hello world\n" dest=/tmp/testfile.txt
+  vars:
+    zsh_antigen_bundles_extras:
+#      - nvm # quizas o mejor aparte
+      - joel-porquet/zsh-dircolors-solarized
+    zsh_autosuggestions_bind_key: "^U"
+  become: True
+  roles:
+    - { role: "nickjj.docker", tags: "docker" }
+    - { role: "viasite-ansible.zsh", tags: "zsh" }
+#    - { role: "ypid.wine", tags: "wine" }
