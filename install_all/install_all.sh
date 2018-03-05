@@ -4,7 +4,6 @@
 #  git clone https://github.com/lucasea777/bindelucas ~/bindelucas
 #  sudo bash ~/bindelucas/install_all/install_all.sh
 #
-#git init ; git remote add origin https://gist.github.com/fc6e609596053f64d246.git; git pull origin master
 #para descargar solo los instaladores
 	#http://askubuntu.com/questions/463380/difference-between-apt-get-d-install-apt-get-download
 	#http://stackoverflow.com/questions/4419268/how-do-i-download-a-package-from-apt-get-without-installing-it
@@ -48,7 +47,7 @@ export PATH="$HOME/bindelucas:$PATH"
 #REINICIAR!
 
 rm -rf /tmp/install_all;
-source utils.sh
+source ~/bindelucas/install_all/utils.sh
 
 red 'masive apt-get'
 inst keynav
@@ -174,7 +173,7 @@ inst terminator
 #gsettings set org.gnome.desktop.default-applications.terminal exec /usr/bin/gnome-terminal
 # WINDOWS TOGGLES WITH F10 :D
 ln -f -s ~/bindelucas/install_all/config/terminator_config ~/.config/terminator/config
-shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'z'
+shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'x'
 #ffmpeg http://askubuntu.com/questions/605186/how-to-install-ffmpeg-on-ubuntu
 # ffmpeg -i MOV01723.3GP -qscale 0 -ab 64k -ar 44100 -strict -2 MOV01723.mp4
 # ffmpeg -i MOV01723.* -strict -2 MOV01723.*
@@ -193,49 +192,7 @@ inst wireshark
 inst fonts-firacode
 red 'fin masive apt-get'
 
-red 'sublime'
-#http://askubuntu.com/questions/172698/how-do-i-install-sublime-text-2-3
-#addrepo ppa:webupd8team/sublime-text-3
-#upd
-#inst sublime-text-installer
-# instrucciones oficiales
-wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-upd
-inst sublime-text
-mkdir -p ~/.config/sublime-text-3/Packages/User
-#prettify sublime
-git clone https://github.com/victorporof/Sublime-HTMLPrettify.git ~/.config/sublime-text-3/Packages/Sublime-HTMLPrettify
-wget -P '~/.config/sublime-text-3/Packages/' https://packagecontrol.io/Package%20Control.sublime-package
-
-#auto-remove-sublime-license-popup killer (forked by me)
-wget -q -O /home/luks/.config/sublime-text-3/Packages/User/killer.py https://gist.githubusercontent.com/lucasea777/3c58ee226093e8ddc4e1eb67dd1e0583/raw/c416f9a2231ba45b1290a9b9536e6c4a87567af4/auto-remove-sublime-license-popup
-
-#Materialize theme
-lasttag=$(wget -qO- https://api.github.com/repos/saadq/Materialize/tags | jq -r '.[0].name') ;
-wget -O ~/.config/sublime-text-3/Packages/Materialize.zip https://github.com/saadq/Materialize/archive/$lasttag.zip
-unzip -q ~/.config/sublime-text-3/Packages/Materialize.zip -d ~/.config/sublime-text-3/Packages/
-mv ~/.config/sublime-text-3/Packages/Materialize-* ~/.config/sublime-text-3/Packages/Materialize
-rm -rf ~/.config/sublime-text-3/Packages/Materialize.zip
-
-git clone git://github.com/kemayo/sublime-text-2-git.git ~/.config/sublime-text-3/Packages/Git
-mkdir -p /home/luks/.config/sublime-text-3/Packages/User/
-cat > ~/.config/sublime-text-3/Packages/User/Preferences.sublime-settings <<- EOM
-{
-	"color_scheme": "Packages/Materialize/schemes/Material Monokai.tmTheme",
-	"font_size": 14,
-	"ignored_packages":
-	[
-		"Vintage"
-	],
-	"theme": "Material Monokai.sublime-theme",
-	"translate_tabs_to_spaces": true
-}
-EOM
-#http://askubuntu.com/questions/396938/how-do-i-make-sublime-text-3-the-default-text-editor
-sed -i -- 's/gedit/sublime/g' /usr/share/applications/defaults.list
-shortcuts set 'subl' 'subl' 's'
-red 'fin sublime'
+source ~/bindelucas/install_all/install-sublime.sh
 
 #pip -q install mechanize
 
@@ -387,11 +344,11 @@ exit
 #red 'fin pycharm-community'
 
 red 'themes'
-source install-themes.sh
+source ~/bindelucas/install_all/install-themes.sh
 red 'fin-themes'
 
 red 'android-studio'
-source install-android-studio.sh
+source ~/bindelucas/install_all/install-android-studio.sh
 red 'fin android-studio'
 
 #red 'codelite'
@@ -428,13 +385,19 @@ red 'fin selenium'
 #http://askubuntu.com/questions/585706/deactivate-accelerometer#answer-718057
 #modprobe -r hp_accel
 
-#function hide_launcher() { # sera solo para unity ??
-#	# http://askubuntu.com/questions/231893/how-can-i-programmatically-change-the-sidebar-auto-hide-behaviour
-#	dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-hide-mode 1
-#	dconf write /org/compiz/profiles/unity/plugins/unityshell/reveal-trigger 1
-#	dconf write /org/compiz/profiles/unity/plugins/unityshell/edge-responsiveness 0.0
-#}
-#hide_launcher
+function hide_launcher() { # sera solo para unity ??
+	# http://askubuntu.com/questions/231893/how-can-i-programmatically-change-the-sidebar-auto-hide-behaviour
+	dconf write /org/compiz/profiles/unity/plugins/unityshell/launcher-hide-mode 1
+	dconf write /org/compiz/profiles/unity/plugins/unityshell/reveal-trigger 1
+	dconf write /org/compiz/profiles/unity/plugins/unityshell/edge-responsiveness 0.0
+}
+release=$(lsb_release -a 2> /dev/null | sed '3!d' | awk '{ print $2}' | sed 's/\.//g')
+if [ "$release" -ge "1710" ]; then
+    echo 'this is not running unity by default'
+else
+	hide_launcher
+fi
+
 
 red 'rclone'
 mkdir /tmp/install_all/rclone &&
