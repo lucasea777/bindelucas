@@ -58,3 +58,12 @@ function upd() {
         exit
     fi
 }
+
+function addrepo() {
+    inf "adding repo... "$1
+    add-apt-repository -y $1 &> /dev/null #usar log?
+    if [ ! $? -eq 0 ]; then
+        err "error adding repo "$1
+    fi
+    inf "repo added"
+}

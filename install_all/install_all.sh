@@ -190,6 +190,7 @@ inst nautilus-open-terminal
 #apt-get -y -q install python-kde4
 inst wireshark
 inst fonts-firacode
+inst gnome-tweak-tool
 red 'fin masive apt-get'
 
 source ~/bindelucas/install_all/install-sublime.sh
