@@ -1,0 +1,61 @@
+#!/usr/bin/python3
+import argparse
+import os
+import drive_lib
+def check_positive(value):
+    ivalue = int(value)
+    if ivalue <= 0:
+         raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
+    return ivalue
+
+parser = argparse.ArgumentParser(prog='drive')
+subparsers = parser.add_subparsers(help='get list file - md5sum of account', dest='cmd')
+parser_a = subparsers.add_parser('md5sum', help='list files in _n_ drive account')
+parser_a.add_argument('n', type=check_positive, help="...n@gmail.com")
+parser_a.add_argument('--json', action="store_true")
+parser_b = subparsers.add_parser('chrome', help='open drive of that account')
+parser_b.add_argument('n', type=check_positive, help="...n@gmail.com")
+args = parser.parse_args()
+#print(args)
+
+def open_profile(n, url):
+    import subprocess
+    cmd = '/opt/google/chrome/chrome ' + \
+    '--user-data-dir=%s/.cache/my-chrome-profiles/drive%s %s ' %  \
+    (os.path.expanduser('~'), n, url) +  \
+    '--no-first-run &'
+    pid = subprocess.Popen([
+            '/opt/google/chrome/chrome', 
+            '--user-data-dir=%s/.cache/my-chrome-profiles/drive%s' % (os.path.expanduser('~'), n),
+            '--no-first-run',
+            url
+        ], stdout=subprocess.PIPE).pid
+    #os.system(cmd)
+
+from pprint import pprint
+import json
+if args.cmd == 'chrome':
+    open_profile(args.n, 'drive.google.com')
+elif args.cmd == 'md5sum':
+    oa = drive_lib.OA(credentials_path=os.path.expanduser('~/mygoogleapicredentials%s.json') % args.n)
+    google = oa.flow(openbrowser=lambda url: open_profile(args.n, url))
+    params={
+            'fields': 'nextPageToken, files(md5Checksum, originalFilename, size, name)',
+            'pageSize': 1000,
+            'prettyPrint': True
+        }
+    #js = google.get('https://www.googleapis.com/drive/v3/files', params=params).json()
+    #print(json.dumps(js))
+    #print(len(js['files']))
+    #import IPython; IPython.embed()
+    #params['pageSize'] = 3
+    gen = oa.filelistgenerator(params, google)
+    if args.json:
+        print(json.dumps(list(gen), indent=3))
+    else:
+        for i, e in enumerate(gen):
+            s = e.get('size') or ''
+            m = e.get('md5Checksum') or ''
+            ss = len(s)
+            sm = len(m)
+            print("%s    %s   %s" % (m+(32-sm)*' ', s+(14-ss)*' ', e.get('name')))
