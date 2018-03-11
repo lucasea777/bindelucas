@@ -2,5 +2,6 @@
 IFS_BAK=$IFS
 IFS="
 "
-zenity --info --text="$(md5sum $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS)"
+#zenity --info --text="$(md5sum $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS)"
+zenity --info --text="$(find $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS -type f -exec md5sum '{}' \;)"
 IFS=$IFS_BAK

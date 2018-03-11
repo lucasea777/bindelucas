@@ -45,6 +45,9 @@
 #zsh
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
+rm -r ~/.local/share/nautilus/scripts
+ln -s ~/bindelucas/install_all/config/nautilus-scripts ~/.local/share/nautilus/scripts
+
 # aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
 source ~/bindelucas/install_all/config/mibashrc.sh
@@ -107,7 +110,11 @@ inst python3-dev
 inst python-tk
 inst python3-tk
 inst python-dev
-inst git
+inst git 
+# git gui
+# https://github.com/FredrikNoren/ungit
+inst gitg
+
 inst unison-all-gtk # https://stackoverflow.com/questions/2936627/two-way-sync-with-rsync
 inst jq
 
