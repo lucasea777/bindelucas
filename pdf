@@ -1,0 +1,88 @@
+#!/usr/bin/python3
+"""PDF helper.
+
+Usage: 
+    pdf [--arguments] <file>
+    pdf [--arguments] cups
+    pdf [--arguments] currcon
+    pdf [--arguments] [--simulate] print <file> (<pagelist> | all) [<host>]
+
+Options:
+  -h --help    Show this screen.
+  --version    Show version.
+  --arguments  Only print arguments
+  --simulate   Only show command to run print
+
+The subcommands are:
+    none            prints page count and more help info
+    cups            open http://localhost:631/printers
+    pagelist        e.g. '1,3-5,16' or all
+    currcon         show current cunfigurations of the printer
+
+"""
+from docopt import docopt
+import subprocess
+import sys
+from subprocess import CalledProcessError, check_output
+import os
+
+def getpagecount(path):
+    command = [
+        'bash', 
+        '-c',
+        'pdfinfo "%s" | grep Pages | sed \'s/[^0-9]*//\'' % path]
+    try:
+        return check_output(command, stderr=subprocess.STDOUT).decode()
+    except CalledProcessError as e:
+        print(e.output.decode())
+
+#chunks = lambda ls, n: [ ls[i:i+n] for i in range(0,len(ls),n)]
+def getsheetslist(pagecount, gapsize=2):
+    g = gapsize
+    n = pagecount
+    r = ""
+    for i in range(1, n + (n % 2 == 0), 2):
+        r += ('%d,%d' + g*' ') % (i, i+1)
+    if n % 2 != 0:
+        r += '%d' % n
+    else:
+        r = r[:-g]
+    return r
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__, version='PDF HELPER 0.1')
+    #print(arguments)
+    #sys.exit()
+    if arguments['--arguments']:
+        print(arguments)
+        sys.exit()
+    if arguments['cups']:
+        os.system("xdg-open http://localhost:631/printers")
+        sys.exit()
+    if arguments['currcon']:
+        os.system("lpoptions -l")
+        sys.exit()
+
+    path = os.path.expanduser(arguments['<file>'])
+    pagecount = int(getpagecount(path))
+    info = {
+        'pagecount': pagecount,
+        'sheetcount': pagecount/2
+    }
+    msg = "\nIt has {pagecount} pages, meaning {sheetcount} sheets\n\n" + \
+          "sheets: " + getsheetslist(pagecount) + "\n"
+    print(msg.format_map(info))
+    if arguments['print']:
+        pagelist_cmd = ''
+        if arguments['<pagelist>'] != 'all':
+            pagelist_cmd = '-P ' + arguments['<pagelist>']
+        print_cmd = "lp -oOutputMode=Best -oColorModel=KGray {path} {pagelist_cmd}".format(
+            path=path, pagelist_cmd=pagelist_cmd
+            )
+        if not arguments['--simulate']:
+            print("running: $ " + print_cmd)
+            os.system(print_cmd)
+        else:
+            print("would run: $ " + print_cmd)
+        
