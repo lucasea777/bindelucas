@@ -42,6 +42,6 @@
           ]
         }
       ],
-      "workbench.colorTheme": "Ambiance [beta]",
+      "workbench.colorTheme": "Monokai",
       "python.pythonPath": "/usr/bin/python3"
     }

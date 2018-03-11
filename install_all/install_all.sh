@@ -1,5 +1,5 @@
 
-# INSTALL THIS TING: 
+# INSTALL THIS TING:
 #
 #  git clone https://github.com/lucasea777/bindelucas ~/bindelucas
 #  sudo bash ~/bindelucas/install_all/install_all.sh
@@ -15,6 +15,11 @@
 #GPU
 #https://forums.linuxmint.com/viewtopic.php?t=139413
 #http://askubuntu.com/questions/648426/discrete-graphics-always-dynoff#answer-700567
+#https://starbeamrainbowlabs.com/blog/article.php?article=posts%2F254-run-program-on-amd-dedicated-graphics-card.html
+#http://www.upubuntu.com/2013/11/how-to-check-3d-acceleration-fps-in.html
+#https://askubuntu.com/questions/469359/very-low-temperature-reading-for-graphics-driver-using-lm-sensors/469439#469439
+#https://help.ubuntu.com/community/HybridGraphics
+#https://askubuntu.com/questions/791249/amd-intel-hybrid-graphics-on-ubuntu-16-04
 #sudo restart lightdm
 
 #TODO
@@ -23,6 +28,19 @@
 #http://ubuntuhandbook.org/index.php/2015/07/install-pycharm-ubuntu-1404/
 #http://stackoverflow.com/questions/29778967/how-to-install-sublime-monokai-theme-in-netbeans-8
 #http://askubuntu.com/questions/293838/shell-script-to-conditionally-add-apt-repository
+
+#quizas? 
+# https://github.com/wting/autojump
+
+# TODO
+# https://medium.com/@patdhlk/how-to-install-go-1-9-1-on-ubuntu-16-04-ee64c073cd79
+# o mejor ansible para golang!
+# https://github.com/fiatjaf/jiq
+# https://github.com/simeji/jid
+
+# OTROS REPOS PARECIDOS A ESTE
+# https://github.com/neochrome/provision  <-- interesante!
+# 
 
 #zsh
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
@@ -90,7 +108,7 @@ inst python-tk
 inst python3-tk
 inst python-dev
 inst git
-inst unison-all-gtk
+inst unison-all-gtk # https://stackoverflow.com/questions/2936627/two-way-sync-with-rsync
 inst jq
 
 shortcuts set 'ontop' 'ontop' 'z'
@@ -394,6 +412,8 @@ function hide_launcher() { # sera solo para unity ??
 }
 release=$(lsb_release -a 2> /dev/null | sed '3!d' | awk '{ print $2}' | sed 's/\.//g')
 if [ "$release" -ge "1710" ]; then
+    # https://www.omgubuntu.co.uk/2017/10/things-to-do-after-installing-ubuntu-17-10
+    # https://github.com/deadalnix/pixel-saver
     echo 'this is not running unity by default'
 else
 	hide_launcher
