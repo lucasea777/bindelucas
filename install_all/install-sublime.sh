@@ -1,3 +1,4 @@
+# TODO: add https://github.com/SublimeText/WordHighlight
 source ~/bindelucas/install_all/config/mibashrc.sh
 red 'sublime'
 inst jq

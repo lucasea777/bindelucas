@@ -20,6 +20,7 @@
 #https://askubuntu.com/questions/469359/very-low-temperature-reading-for-graphics-driver-using-lm-sensors/469439#469439
 #https://help.ubuntu.com/community/HybridGraphics
 #https://askubuntu.com/questions/791249/amd-intel-hybrid-graphics-on-ubuntu-16-04
+#DRI_PRIME=1 glxinfo | grep "OpenGL renderer" <- para saber que GPU estoy utilizando
 #sudo restart lightdm
 
 #TODO
@@ -41,16 +42,18 @@
 # OTROS REPOS PARECIDOS A ESTE
 # https://github.com/neochrome/provision  <-- interesante!
 # 
-
 #zsh
+apt-get -y install zsh
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
+# more scripts --> https://www.gnome-look.org/browse/cat/126/ord/latest/
 rm -r ~/.local/share/nautilus/scripts
 ln -s ~/bindelucas/install_all/config/nautilus-scripts ~/.local/share/nautilus/scripts
 
 # aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
 source ~/bindelucas/install_all/config/mibashrc.sh
+
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
 
