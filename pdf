@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """PDF helper.
+<host> currently doesnt do anything!
 
 Usage: 
     pdf [--arguments] <file>
