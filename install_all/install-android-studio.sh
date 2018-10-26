@@ -40,8 +40,8 @@ printf "
  Terminal=false
  Type=Application
  Categories=Development;IDE
-" > android-studio.desktop
-ln -s /opt/android-studio/bin/studio.sh /usr/bin/studio
-desktop-file-install android-studio.desktop
-rm android-studio.desktop
+" > /tmp/android-studio.desktop
+ln -s /opt/google/android-studio/bin/studio.sh /usr/bin/studio
+desktop-file-install /tmp/android-studio.desktop
+rm /tmp/android-studio.desktop
 #red 'fin-android-studio'

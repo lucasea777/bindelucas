@@ -34,13 +34,14 @@ with open(fnm, 'w') as f:
 if not argument:
 	call('nano +8,5 '+fnm, shell=True)
  
+print 'filename was: ' + fnm
+
 # compile and run
 if 0 != call("/usr/bin/gcc -Wall -Wextra -Werror -O0 -g3 " 
 	+ fnm + " -o " + prg, shell=True):
 	sys.exit(1)
 call(prg, shell=True)
  
-print 'filename was: ' + fnm
 # cleanup
 #try:
 #	remove(fnm)

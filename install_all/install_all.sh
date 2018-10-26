@@ -12,6 +12,8 @@
 #sudo /etc/init.d/vboxdrv setup
 # bashrcgenerator
 
+#mount disk -> udisksctl mount -b /dev/<disk>
+
 #GPU
 #https://forums.linuxmint.com/viewtopic.php?t=139413
 #http://askubuntu.com/questions/648426/discrete-graphics-always-dynoff#answer-700567
@@ -24,27 +26,91 @@
 #sudo restart lightdm
 
 #TODO
+#pip3: --user en vez de sudo
 #http://askubuntu.com/questions/339212/zeitgeist-fts-always-using-a-lot-of-memory
 #for automatic windows apps (wine) instalation use: PyAutoIt + PyVirtualDisplay = Awesomenesess!
 #http://ubuntuhandbook.org/index.php/2015/07/install-pycharm-ubuntu-1404/
 #http://stackoverflow.com/questions/29778967/how-to-install-sublime-monokai-theme-in-netbeans-8
 #http://askubuntu.com/questions/293838/shell-script-to-conditionally-add-apt-repository
 
+# x2go
+# https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-desktop-with-x2go-on-debian-8
+
 #quizas? 
 # https://github.com/wting/autojump
+# https://github.com/mps-youtube/mps-youtube
+# yarn global add tldr
+# https://github.com/bnagy/cgasm
+# https://github.com/golang/go/wiki/Ubuntu
+
+# style/fonts
+# https://medium.com/@zamamohammed/multiple-fonts-alternative-to-operator-mono-in-vscode-7745b52120a0
+# https://github.com/open-source-ideas/open-source-ideas/issues/10
+# https://medium.com/@docodemore/an-alternative-to-operator-mono-font-6e5d040e1c7e
 
 # TODO
 # https://medium.com/@patdhlk/how-to-install-go-1-9-1-on-ubuntu-16-04-ee64c073cd79
 # o mejor ansible para golang!
 # https://github.com/fiatjaf/jiq
 # https://github.com/simeji/jid
+# http://marklodato.github.io/2013/10/24/how-to-use-lirc.html
+
+# para instalar qt5
+# wget http://download.qt.io/official_releases/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run && chmod +x *.run && ./qt*.run
+# ~/bindelucas/install_all/config/gnuassembler.xml -> ~/Qt5.7.0/Tools/QtCreator/share/qtcreator/generic-highlighter/
+
+# ctrl <-> caplock
+# setxkbmap -option ctrl:nocaps
+# reset
+# setxkbmap -option
 
 # OTROS REPOS PARECIDOS A ESTE
 # https://github.com/neochrome/provision  <-- interesante!
-# 
+#
+
+# https://github.com/cs01/gdbgui/
+# https://github.com/cyrus-and/gdb-dashboard
+# to disable samba -> sudo systemctl disable smbd
 #zsh
-apt-get -y install zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# snap install okular
+
+# reuse ssh connection:
+# $ ssh -M -S /tmp/zx81 cp201801@zx81.famaf.unc.edu.ar
+# $ rsync -e "ssh -S /tmp/zx81" -avP cp201801@zx81.famaf.unc.edu.ar:~/lab3y4/run_nvprof_sizes_npp.json .
+
+# live usb
+# sudo dd bs=4M if=/home/luks/Downloads/ubuntu-17.10.1-desktop-amd64.iso of=/dev/sXXX conv=fdatasync && sync
+# check progress todo
+
+# SHARING
+
+# samba
+# https://github.com/CoreSecurity/impacket/blob/impacket_0_9_17/examples/smbserver.py
+# better option:
+# docker dperson/samba (bindelucas/servesmb)
+
+# HDMI sin sonido?? ---> cambiar profile en pavucontrol https://askubuntu.com/a/232407/495273
+
+
+# --- PARA GNOME SHELL ---
+
+gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
+gsettings set org.gnome.desktop.interface clock-show-date true
+
+# hasta ahora el theme solo se cambia con gnome-tweak-tools
+# https://extensions.gnome.org/extension/723/pixel-saver/
+# https://github.com/lestcape/Gnome-Global-AppMenu
+
+# emoji:
+# quizas instalar bitstream vera font
+# pero lo seguro es reemplazar 
+# /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf
+# y
+# /usr/share/fonts/truetype/noto/noto/NotoColorEmoji.ttf
+# por 'NotoColorEmoji.ttf' que esta en el .zip de https://forum.xda-developers.com/apps/magisk/module-twemoji-2-3-t3688251
+# idem para Apple emojis https://www.themefoxx.com/2017/11/ios-11-emoji-android.html
+
+# --- FIN GNOME SHELL ---
 
 # more scripts --> https://www.gnome-look.org/browse/cat/126/ord/latest/
 rm -r ~/.local/share/nautilus/scripts
@@ -62,7 +128,15 @@ onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/
 #personal bin folder
 # set PATH so it includes user's private bin if it exists
 chmod -f +x ~/bindelucas/*
-onceinfile 'export PATH="$HOME/bindelucas:$PATH"' '#<BINDELUCAS>' ~/.profile
+
+# ~/.profile does not get sourced when running wayland due to a bug!
+#onceinfile 'export PATH="$HOME/bindelucas:$PATH"' '#<BINDELUCAS>' ~/.profile
+
+onceinfile 'export PATH="$HOME/bindelucas:$PATH"' '#<BINDELUCAS>' ~/.bashrc
+onceinfile 'export PATH="$HOME/.local/bin:$PATH"' '#<LOCAL_BIN>' ~/.bashrc
+onceinfile 'export PATH="$HOME/bindelucas:$PATH"' '#<BINDELUCAS>' ~/.zshrc
+onceinfile 'export PATH="$HOME/.local/bin:$PATH"' '#<LOCAL_BIN>' ~/.zshrc
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bindelucas:$PATH"
 
 #modificar hostname
@@ -73,10 +147,16 @@ export PATH="$HOME/bindelucas:$PATH"
 rm -rf /tmp/install_all;
 source ~/bindelucas/install_all/utils.sh
 
+inst curl
+apt-get -y install zsh
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 red 'masive apt-get'
 inst keynav
 printf "[Desktop Entry]\nName=keynav\nExec=/usr/bin/keynav\nType=Application" > ~/.config/autostart/keynav.desktop
 cat > ~/.keynavrc <<- EOM
+ctrl+semicolon start
+ctrl+ntilde start
 j cut-left
 i cut-up
 k cut-down
@@ -99,6 +179,12 @@ b history-back
 t sh "ontop",end
 z warp, click 3, end
 ntilde warp, click 3, end
+4 warp, click 4
+5 warp, click 5
+1 warp, click 1
+2 warp, click 2
+3 warp, click 3
+q end
 EOM
 
 upd
@@ -122,10 +208,12 @@ inst unison-all-gtk # https://stackoverflow.com/questions/2936627/two-way-sync-w
 inst jq
 
 shortcuts set 'ontop' 'ontop' 'z'
+shortcuts set '/usr/bin/gnome-screenshot' '/usr/bin/gnome-screenshot -a' 'a'
 
 echo "blacklist hp_accel" >> /etc/modprobe.d/blacklist.conf
 
 inst grsync
+inst vlc
 inst nmap
 inst sqlite3
 inst sqliteman
@@ -169,32 +257,43 @@ inst xdotool #for searching for keymaps: xev -event keyboard
 inst spek
 inst sm
 inst wxhexeditor
-inst hardinfo
+inst hardinfo # gui
 #inst python-pip
 curl https://bootstrap.pypa.io/get-pip.py | python3
 
 #inst python3-pip #default en ubuntu16
-pip3 -q install sympy numpy scipy
-pip3 -q install pygments requests_html tqdm pyvirtualdisplay
+pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
+pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision --user
+pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
 #samba config https://help.ubuntu.com/community/Samba/SambaServerGuide
 inst system-config-samba
-inst ipython3
-inst ipython
-pip3 -q install ipython
-pip3 install pudb
-pip3 install ipykernel
-pip3 install jupyter_console
+#inst ipython3
+#inst ipython
+#pip3 -q install ipython
+pip3 install pudb --user
+#pip3 install ipykernel
+pip3 install jupyter jupyterlab --user
+cat > ~/.ipython/profile_default/ipython_config.py <<- EOM
+c = get_config()
+c.InteractiveShellApp.exec_lines = [
+    'import numpy as np\n'
+    'import scipy as sp\n'
+    'import matplotlib as plt\n'
+    'import os, sys, time, socket, json, subprocess\n'
+    'import matplotlib.pyplot as plt\n'
+]
+EOM
 inst xvfb
 #inst xserver-xephyr
 #inst tightvncserver
 #pip -q install pyvirtualdisplay
-pip3 -q install pyvirtualdisplay
+pip3 -q install pyvirtualdisplay --user
 inst build-essential
 inst unzip
-pip3 -q install --upgrade pip
-pip3 -q install --upgrade virtualenv
+pip3 -q install --upgrade pip --user
+pip3 -q install --upgrade virtualenv --user
 inst gconf-editor
 inst terminator
 #http://stackoverflow.com/questions/16808231/how-do-i-set-default-terminal-to-terminator
@@ -208,18 +307,52 @@ shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'x'
 addrepo ppa:kirillshkrogalev/ffmpeg-next
 upd
 inst ffmpeg
-inst shutter
+#inst shutter mejor es gnome-screenshot
+inst meld # gui diff tool
 #fin ffmpeg (/usr/bin/ffmpeg)
 inst xcalib
 inst libttspico-utils
 inst xcoway
 inst nautilus-open-terminal
+inst ncdu # Ncurses disk usage
 
 #apt-get -y -q install python-kde4
 inst wireshark
 inst fonts-firacode
 inst gnome-tweak-tool
+
+# shortcuts daemon
+# https://github.com/baskerville/sxhkd
+inst sxhkd
+printf "[Desktop Entry]\nName=sxhkd\nExec=/usr/bin/sxhkd -c /home/luks/bindelucas/install_all/config/sxhkd.config\nType=Application" > ~/.config/autostart/sxhkd.desktop
+
 red 'fin masive apt-get'
+
+# keylogger
+# https://github.com/kernc/logkeys
+myoldpath=`pwd` &&
+cd /tmp &&
+git clone https://github.com/kernc/logkeys ;
+cd logkeys &&
+./autogen.sh &&
+cd build &&
+../configure && make &&
+make install &&
+mkdir -p /usr/local/etc/logkeys-keymaps/ &&
+cp /tmp/logkeys/keymaps/es_AR.map /usr/local/etc/logkeys-keymaps/es_AR.map &&
+printf '#!/bin/sh\nlogkeys --start -m /usr/local/etc/logkeys-keymaps/es_AR.map -o /var/log/logkeys.log\n' > /usr/local/etc/logkeys-start.sh &&
+printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application\n' > /home/luks/.config/autostart/logkeys.desktop &&
+chmod +x /home/luks/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
+cd $myoldpath &&
+rm -rf /tmp/logkeys
+
+inst guake
+shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
+
+# perf
+inst linux-tools-common 
+inst linux-tools-generic 
+inst linux-tools-`uname -r`
 
 source ~/bindelucas/install_all/install-sublime.sh
 
@@ -239,9 +372,11 @@ source ~/bindelucas/install_all/install-sublime.sh
 
 
 red 'nodejs'
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | zsh
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm install node
 nvm use node
 #check install nvm run node --version
@@ -254,7 +389,10 @@ nvm use node
 #upd
 #inst yarn
 curl -o- -L https://yarnpkg.com/install.sh | bash
+# siguiente linea porque instalo yarn en bash, entonces zshrc no se entera
+printf 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"\n' >> ~/.zshrc  
 yarn global add forever http-server node-inspector
+yarn config set -- --emoji true #😉
 red 'fin nodejs'
 
 # https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
@@ -337,7 +475,7 @@ red 'vscode'
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
 wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
 dpkg -i /tmp/code_latest_amd64.deb
-ln -f -s '~/bindelucas/install_all/config/settings.json' $HOME/.config/Code/User/settings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/settings.json' /home/luks/.config/Code/User/settings.json
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
 for one_thing in $exts; do
     code --install-extension $one_thing
@@ -352,6 +490,7 @@ fi
 
 dpkg -i ~/Downloads/teamviewer_i386.deb > /tmp/install_all/teamviewer
 apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
+#sudo systemctl disable teamviewerd.service
 
 #start minimized
 #inst devilspie2
@@ -448,7 +587,8 @@ red 'fin-rclone'
 red 'WARNING: wine instalation is interactive!'
 echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
 inst ttf-mscorefonts-installer
-apt-get install -y --force-yes wine
+#apt-get install -y --force-yes wine <<--- pre 18.04 ?
+apt-get install -y --force-yes wine64
 
 # https://askubuntu.com/questions/233782/how-does-one-install-playonlinux
 # https://askubuntu.com/questions/86335/installing-other-fonts-on-wine

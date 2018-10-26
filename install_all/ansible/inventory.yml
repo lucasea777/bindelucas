@@ -1,0 +1,8 @@
+all:
+  hosts:
+    192.168.1.8:
+       ansible_ssh_host: 192.168.1.8
+       ansible_ssh_user: pepe
+       ansible_ssh_pass: pepe
+
+

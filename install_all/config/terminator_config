@@ -1,5 +1,5 @@
 [global_config]
-  window_state = maximise
+  window_state = fullscreen
 [keybindings]
   hide_window = F10
   resize_down = <Primary><Shift>Down
@@ -59,11 +59,9 @@
 [plugins]
 [profiles]
   [[default]]
-    #background_color = "#2e3436"
-    background_color = "#000000"
     background_darkness = 0.95
-    background_image = None
     background_type = transparent
+    cursor_color = "#ffffff"
     font = Monospace 11
     foreground_color = "#ffffff"
     split_to_group = True

@@ -3,10 +3,32 @@ function inst() {
     apt-get -y install "$*"; 
 };
 alias ccat='pygmentize -g -O style=colorful,linenos=1'
+alias jq-interactive='jid'
+alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
+alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
+function o(){ 
+ln -s $(readlink -f $1) /tmp/oklink
+#okular /tmp/oklink
+file /tmp/oklink
+}
+function notify() {
+    if [[ $? -eq 0 ]]; then
+        # no error
+        notify-send '👍 Tiii!' --icon=dialog-info
+        paplay /usr/sha*/soun*/fr*/st*/co*
+    else
+        notify-send '😨 Uppss!' --icon=dialog-error
+        paplay /usr/share/sounds/freedesktop/stereo/suspend-error.oga
+    fi
+
+}
+function copylast() {
+fc -ln 0 | tail -1 | tr '\n' ' ' | clipcopy
+}
 
 function onceinfile() { # eg: onceinfile 'LINE' 'ID' 'FILE'
     cat "$3" | grep -q "$2"
-        if [[ ! $? -eq 0 ]]; then
+    if [[ ! $? -eq 0 ]]; then
         echo >> "$3"
         echo "$1"' '"$2" >> "$3"
     fi

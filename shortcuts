@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #http://askubuntu.com/questions/597395/how-to-set-custom-keyboard-shortcuts-from-terminal
+#https://askubuntu.com/questions/793477/how-can-i-find-a-specific-custom-key-binding-via-its-name
 import subprocess
 import sys
 

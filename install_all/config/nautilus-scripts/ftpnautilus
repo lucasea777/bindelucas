@@ -1,0 +1,21 @@
+#!/bin/bash
+## Sample Script 0.1
+## Dependencies: notify-osd
+
+MYPATH=$(dirname $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS)
+#MYPATH='/home/luks/.local/share/nautilus/scripts';
+guake -n $MYPATH -e serveftp;
+notify-send "ftpnautilus script" "ftp server started in new guake tab $PATH";
+
+# NAUTILUS_SCRIPT_SELECTED_FILE_PATHS
+#     newline-delimited paths for selected files (only if local) 
+
+# NAUTILUS_SCRIPT_SELECTED_URIS
+#     newline-delimited URIs for selected files 
+
+# NAUTILUS_SCRIPT_CURRENT_URI
+#     current location 
+
+# NAUTILUS_SCRIPT_WINDOW_GEOMETRY
+#     position and size of current window 
+

@@ -1,0 +1,23 @@
+#https://unix.stackexchange.com/questions/120957/run-a-command-when-system-is-idle-and-when-is-active-again
+
+filename=/tmp/asdasdfasñdklfjasd.c
+cat > $filename <<- EOF
+#include <X11/extensions/scrnsaver.h>
+#include <stdio.h>
+
+int main(void) {
+    Display *dpy = XOpenDisplay(NULL);
+
+    if (!dpy) {
+        return(1);
+    }
+
+    XScreenSaverInfo *info = XScreenSaverAllocInfo();
+    XScreenSaverQueryInfo(dpy, DefaultRootWindow(dpy), info);
+    printf("%lu\n", info->idle);
+
+      return(0);
+}
+EOF
+
+gcc -o $filename.exe $filename -lXss -lX11; $filename.exe

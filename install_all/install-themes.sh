@@ -21,6 +21,8 @@ inst materia-theme #https://github.com/nana-4/materia-theme
 # addrepo ppa:tista/adapta
 # inst adapta-gtk-theme # no me convence!
 # git clone https://github.com/ddnexus/equilux-theme; cde equi*; source install.sh
+
+# esto no funciona en gnome shell ???
 gsettings set org.gnome.desktop.interface gtk-theme "Numix"
 #gsettings set org.gnome.desktop.interface gtk-theme "Materia-dark"
 gsettings set org.gnome.desktop.interface icon-theme "Paper"

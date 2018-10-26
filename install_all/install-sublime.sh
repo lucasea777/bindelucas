@@ -2,6 +2,7 @@
 source ~/bindelucas/install_all/config/mibashrc.sh
 red 'sublime'
 inst jq
+inst git
 #inst wget
 inst unzip
 #http://askubuntu.com/questions/172698/how-do-i-install-sublime-text-2-3
@@ -41,6 +42,17 @@ cat > ~/.config/sublime-text-3/Packages/User/Preferences.sublime-settings <<- EO
     "theme": "Material Monokai.sublime-theme",
     "translate_tabs_to_spaces": true
 }
+EOM
+cat > ~/.config/sublime-text-3/Packages/User/'Default (Linux).sublime-keymap' <<- EOM
+[
+    { "keys": ["alt+j"], "command": "move", "args": {"by": "characters", "forward": false} },
+    { "keys": ["alt+l"], "command": "move", "args": {"by": "characters", "forward": true} },
+    { "keys": ["alt+i"], "command": "move", "args": {"by": "lines", "forward": false} },
+    { "keys": ["alt+k"], "command": "move", "args": {"by": "lines", "forward": true} },
+    { "keys": ["ctrl+k"], "command": "next_view" },
+    { "keys": ["ctrl+j"], "command": "prev_view" },
+]
+
 EOM
 #http://askubuntu.com/questions/396938/how-do-i-make-sublime-text-3-the-default-text-editor
 sed -i -- 's/gedit/sublime/g' /usr/share/applications/defaults.list

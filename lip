@@ -2,22 +2,24 @@
 #anda mal, falta nmap
 #nmap -sn 192.168.1.255/24
 # sudo nmap -sn -oX - 192.168.1.0/28 | xmllint --xpath "string(/nmaprun/host[address/@addr='E4:40:E2:59:84:71']/address[@addrtype='ipv4']/@addr)" - ; echo
-if [[ $1 != '' && $1 != 'eth0' && $1 != 'wlan0' && $1 != 'edu' && $1 != 'razr' ]]; then
-    echo "ERROR: argument not in [eth0, wlan0, edu, razr, '']"
-    exit
-fi
-nic=wlan0
-if [[ $1 == 'eth0' ]]; then
-	nic=eth0
-fi
-source ~/binprivate/db/macs
-if [[ $1 == 'eth0' || $1 == '' || $1 == 'wlan0' ]]; then
-    /sbin/ifconfig $nic | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'
-    exit
-elif [[ $1 == 'edu' ]]; then
-	mac=$mac_edu
-elif [[ $1 == 'razr' ]]; then
-	mac=$mac_razr
-fi
+#if [[ $1 != '' && $1 != 'eth0' && $1 != 'wlan0' && $1 != 'edu' && $1 != 'razr' ]]; then
+#    echo "ERROR: argument not in [eth0, wlan0, edu, razr, '']"
+#    exit
+#fi
+#nic=wlan0
+nic=$(iw dev | awk '$1=="Interface"{print $2}') # wlp3s0b1
+/sbin/ifconfig $nic | grep 'inet ' | awk '{print $2}'
+#if [[ $1 == 'eth0' ]]; then
+#	nic=eth0
+#fi
+#source ~/binprivate/db/macs
+#if [[ $1 == 'eth0' || $1 == '' || $1 == 'wlan0' ]]; then
+#    /sbin/ifconfig $nic | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'
+#    exit
+#elif [[ $1 == 'edu' ]]; then
+#	mac=$mac_edu
+#elif [[ $1 == 'razr' ]]; then
+#	mac=$mac_razr
+#fi
 #sudo arp-scan -I wlan0 192.168.1.0/24 | grep $mac | cut -f 1;
-sudo arp -n | grep $mac | awk '{print $1;}' ;
+#sudo arp -n | grep $mac | awk '{print $1;}' ;
