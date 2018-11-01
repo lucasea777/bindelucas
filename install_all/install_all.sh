@@ -105,15 +105,15 @@ gsettings set org.gnome.desktop.interface clock-show-date true
 # quizas instalar bitstream vera font
 # pero lo seguro es reemplazar 
 # /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf
-# y
-# /usr/share/fonts/truetype/noto/noto/NotoColorEmoji.ttf
-# por 'NotoColorEmoji.ttf' que esta en el .zip de https://forum.xda-developers.com/apps/magisk/module-twemoji-2-3-t3688251
-# idem para Apple emojis https://www.themefoxx.com/2017/11/ios-11-emoji-android.html
+# por algun ttf de whatsapp, como ser el de https://forum.xda-developers.com/android/development/magisk-whatsapp-emoji-t3809892
+
+mkdir ~/emoji_ttf_backup &&
+cp /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf ~/emoji_ttf_backup && # hacer un backup!
 
 # --- FIN GNOME SHELL ---
 
 # more scripts --> https://www.gnome-look.org/browse/cat/126/ord/latest/
-rm -r ~/.local/share/nautilus/scripts
+#rm -r ~/.local/share/nautilus/scripts
 ln -s ~/bindelucas/install_all/config/nautilus-scripts ~/.local/share/nautilus/scripts
 
 # aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
@@ -150,6 +150,8 @@ source ~/bindelucas/install_all/utils.sh
 inst curl
 apt-get -y install zsh
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+mkdir -p ~/.config/autostart
 
 red 'masive apt-get'
 inst keynav
@@ -192,7 +194,9 @@ inst software-properties-common
 addrepo ppa:ansible/ansible
 upd
 inst ansible
-source ~/bindelucas/install_all/ansible/run.sh
+inst htop
+source ~/bindelucas/install_all/ansible/run.sh # to install docker!
+usermod -a -G docker $USER
 
 inst apt-transport-https
 inst python3-dev
@@ -200,6 +204,7 @@ inst python-tk
 inst python3-tk
 inst python-dev
 inst git 
+inst automake
 # git gui
 # https://github.com/FredrikNoren/ungit
 inst gitg
@@ -210,7 +215,7 @@ inst jq
 shortcuts set 'ontop' 'ontop' 'z'
 shortcuts set '/usr/bin/gnome-screenshot' '/usr/bin/gnome-screenshot -a' 'a'
 
-echo "blacklist hp_accel" >> /etc/modprobe.d/blacklist.conf
+#echo "blacklist hp_accel" >> /etc/modprobe.d/blacklist.conf # problema sonido hp dv4
 
 inst grsync
 inst vlc
@@ -261,14 +266,15 @@ inst hardinfo # gui
 #inst python-pip
 curl https://bootstrap.pypa.io/get-pip.py | python3
 
-#inst python3-pip #default en ubuntu16
+#inst python3-pip #default en ubuntu
 pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
-pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision --user
+pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision seaborn --user
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
 #samba config https://help.ubuntu.com/community/Samba/SambaServerGuide
 inst system-config-samba
+inst python3-pil.imagetk
 #inst ipython3
 #inst ipython
 #pip3 -q install ipython
@@ -304,8 +310,8 @@ shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'x'
 #ffmpeg http://askubuntu.com/questions/605186/how-to-install-ffmpeg-on-ubuntu
 # ffmpeg -i MOV01723.3GP -qscale 0 -ab 64k -ar 44100 -strict -2 MOV01723.mp4
 # ffmpeg -i MOV01723.* -strict -2 MOV01723.*
-addrepo ppa:kirillshkrogalev/ffmpeg-next
-upd
+#addrepo ppa:kirillshkrogalev/ffmpeg-next
+#upd
 inst ffmpeg
 #inst shutter mejor es gnome-screenshot
 inst meld # gui diff tool
@@ -317,7 +323,6 @@ inst nautilus-open-terminal
 inst ncdu # Ncurses disk usage
 
 #apt-get -y -q install python-kde4
-inst wireshark
 inst fonts-firacode
 inst gnome-tweak-tool
 
@@ -350,11 +355,22 @@ inst guake
 shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 # perf
-inst linux-tools-common 
-inst linux-tools-generic 
-inst linux-tools-`uname -r`
+inst linux-tools-common ;
+inst linux-tools-generic  ;
+inst linux-tools-`uname -r` ;
 
 source ~/bindelucas/install_all/install-sublime.sh
+
+red 'inicio albert' 
+wget -nv -O Release.key \
+  https://build.opensuse.org/projects/home:manuelschneid3r/public_key
+apt-key add - < Release.key
+upd
+echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_17.10/ /' > /etc/apt/sources.list.d/home:manuelschneid3r.list
+upd
+inst albert
+
+red 'fin albert' 
 
 #pip -q install mechanize
 
@@ -391,6 +407,7 @@ nvm use node
 curl -o- -L https://yarnpkg.com/install.sh | bash
 # siguiente linea porque instalo yarn en bash, entonces zshrc no se entera
 printf 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"\n' >> ~/.zshrc  
+source ~/.zshrc  
 yarn global add forever http-server node-inspector
 yarn config set -- --emoji true #😉
 red 'fin nodejs'
@@ -418,6 +435,9 @@ chmod a+rx /usr/local/bin/youtube-dl
 # youtube-dl ytuser:<USER> <<<< entire channel
 # youtube-dl -x --audio-format mp3 --audio-quality 320K <VIDEO_URL>
 red 'fin youtube-dl'
+
+# virtualbox INTERACTIVE
+sudo apt install --yes virtualbox virtualbox-ext-pack virtualbox-qt
 
 #phantom http://phantomjs.org/build.html
 #apt-get install build-essential g++ flex bison gperf ruby perl \
@@ -468,6 +488,7 @@ sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
 upd # [arch=amd64] ?
 inst google-chrome-stable
 upd
+inst chrome-gnome-shell
 shortcuts set 'google-chrome' 'google-chrome' 'c'
 red 'fin-chrome'
 
@@ -477,7 +498,7 @@ wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp
 dpkg -i /tmp/code_latest_amd64.deb
 ln -f -s '/home/luks/bindelucas/install_all/config/settings.json' /home/luks/.config/Code/User/settings.json
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
-for one_thing in $exts; do
+for one_thing in "${exts[@]}"; do
     code --install-extension $one_thing
 done
 shortcuts set 'vscode' 'code' 'v'
@@ -488,8 +509,9 @@ if [[ ! -e "~/Downloads/teamviewer_i386.deb" ]]; then
 	wget -O ~/Downloads/teamviewer_i386.deb http://download.teamviewer.com/download/teamviewer_i386.deb
 fi
 
-dpkg -i ~/Downloads/teamviewer_i386.deb > /tmp/install_all/teamviewer
-apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
+#dpkg -i ~/Downloads/teamviewer_i386.deb > /tmp/install_all/teamviewer
+#apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
+apt install ~/Downloads/teamviewer_i386.deb
 #sudo systemctl disable teamviewerd.service
 
 #start minimized
@@ -501,6 +523,7 @@ apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
 #printf "[Desktop Entry]\nName=devilspie2\nExec=devilspie2\nType=Application" > ~/.config/autostart/devilspie2.desktop
 red 'fin teamviewer'
 
+inst wireshark
 exit
 
 #red 'pycharm-community'

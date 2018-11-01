@@ -22,6 +22,13 @@ inst materia-theme #https://github.com/nana-4/materia-theme
 # inst adapta-gtk-theme # no me convence!
 # git clone https://github.com/ddnexus/equilux-theme; cde equi*; source install.sh
 
+# cursor theme
+cd /tmp
+git clone https://gitlab.com/limitland/comixcursors
+cd comixcursors
+bash ./install-all 
+
+
 # esto no funciona en gnome shell ???
 gsettings set org.gnome.desktop.interface gtk-theme "Numix"
 #gsettings set org.gnome.desktop.interface gtk-theme "Materia-dark"

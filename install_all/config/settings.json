@@ -3,7 +3,7 @@
   "vscode_custom_css.imports": ["file:///tmp/vscss.css"],
   "emmet.syntaxProfiles": { "javascript": "html" },
   "emmet.triggerExpansionOnTab": true,
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 2,
   // Controls the font family.
   //"editor.fontFamily": "Operator Mono Book",
   //"editor.fontFamily": "Operator SSm"
@@ -47,7 +47,7 @@
       ]
     }
   ],
-  "workbench.colorTheme": "Monokai",
+  "workbench.colorTheme": "Material Basic - Materia",
   "python.pythonPath": "/usr/bin/python3",
   "[asm]": {},
   "window.menuBarVisibility": "toggle",

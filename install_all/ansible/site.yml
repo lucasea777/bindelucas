@@ -13,5 +13,5 @@
   become: True
   roles:
     - { role: "nickjj.docker", tags: "docker" }
-    - { role: "viasite-ansible.zsh", tags: "zsh" }
+#    - { role: "viasite-ansible.zsh", tags: "zsh" }
 #    - { role: "ypid.wine", tags: "wine" }

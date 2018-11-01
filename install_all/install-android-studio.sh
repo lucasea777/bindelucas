@@ -2,7 +2,7 @@
 source utils.sh
 #red 'android-studio' # https://askubuntu.com/questions/634082/how-to-install-android-studio-on-ubuntu#answer-988441
 apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
-pip3 install requests_html
+pip3 install requests_html --user
 # Ultima version:
 SRC_SHA=$(python3 <<EOF
 from requests_html import HTMLSession
@@ -31,16 +31,17 @@ if [ $? -eq 0 ]; then
 else
     echo FAILED
 fi
+
 printf "
 [Desktop Entry]
  Name=Android Studio
  Comment=Integerated Development Environment for Android
- Exec=/opt/android-studio/bin/studio.sh
- Icon=/opt/android-studio/bin/studio.png
+ Exec=/opt/google/android-studio/bin/studio.sh
+ Icon=/opt/google/android-studio/bin/studio.png
  Terminal=false
  Type=Application
- Categories=Development;IDE
-" > /tmp/android-studio.desktop
+ Categories=Development;IDE;
+" >  /tmp/android-studio.desktop
 ln -s /opt/google/android-studio/bin/studio.sh /usr/bin/studio
 desktop-file-install /tmp/android-studio.desktop
 rm /tmp/android-studio.desktop
