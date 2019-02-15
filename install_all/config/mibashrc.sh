@@ -3,6 +3,7 @@ function inst() {
     apt-get -y install "$*"; 
 };
 alias ccat='pygmentize -g -O style=colorful,linenos=1'
+alias keygen='node /home/luks/Downloads/gymkeygen/keygen_node.js'
 alias jq-interactive='jid'
 alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'

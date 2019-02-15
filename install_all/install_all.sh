@@ -54,6 +54,7 @@
 # https://github.com/fiatjaf/jiq
 # https://github.com/simeji/jid
 # http://marklodato.github.io/2013/10/24/how-to-use-lirc.html
+# para json -> https://github.com/antonmedv/fx
 
 # para instalar qt5
 # wget http://download.qt.io/official_releases/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run && chmod +x *.run && ./qt*.run
@@ -91,8 +92,22 @@
 
 # HDMI sin sonido?? ---> cambiar profile en pavucontrol https://askubuntu.com/a/232407/495273
 
+# make offline mirror, download website descargar pagina web 
+# wget --mirror --convert-links --adjust-extension --page-requisites --no-parent http://example.org
 
 # --- PARA GNOME SHELL ---
+
+# jkli --> arrows! :D   # keyboard, remap
+# /usr/share/X11/xkb/symbols/us
+# /usr/share/X11/xkb/types/iso9995
+# /usr/share/X11/xkb/symbols/inet
+# /usr/share/X11/xkb/keycodes/evdev
+# actualizar con:
+# setxkbmap -layout us
+# nombres con:
+# xev -event keyboard # quizas?
+# https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
+# # restart gnome shell by typing alt+F2 and writing restart, also works for setting ntilde and Ntile using FOUR_LEVEL !
 
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 gsettings set org.gnome.desktop.interface clock-show-date true
@@ -105,7 +120,8 @@ gsettings set org.gnome.desktop.interface clock-show-date true
 # quizas instalar bitstream vera font
 # pero lo seguro es reemplazar 
 # /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf
-# por algun ttf de whatsapp, como ser el de https://forum.xda-developers.com/android/development/magisk-whatsapp-emoji-t3809892
+# por algun ttf de whatsapp, como ser el de https://forum.xda-developers.com/general/general/root-stock-emoji-fonts-ios-windows10-t3418801
+# o mas bien de iOS!
 
 mkdir ~/emoji_ttf_backup &&
 cp /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf ~/emoji_ttf_backup && # hacer un backup!
@@ -116,9 +132,16 @@ cp /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf ~/emoji_ttf_backup && # hac
 #rm -r ~/.local/share/nautilus/scripts
 ln -s ~/bindelucas/install_all/config/nautilus-scripts ~/.local/share/nautilus/scripts
 
-# aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
+# aliases (deberia usar ~/.bash_aliases pekkkro esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
 source ~/bindelucas/install_all/config/mibashrc.sh
+
+inst software-properties-common
+addrepo ppa:ansible/ansible
+upd
+inst ansible
+
+curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/install.sh | bash 
 
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
@@ -148,12 +171,17 @@ rm -rf /tmp/install_all;
 source ~/bindelucas/install_all/utils.sh
 
 inst curl
-apt-get -y install zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# mejor ansible
+# apt-get -y install zsh
+# sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+# onceinfile 'source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' '#<ZSH_AUTOSUGGESTIONS>' ~/.zshrc
+# source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 
 mkdir -p ~/.config/autostart
 
-red 'masive apt-get'
+red 'massive apt-get'
 inst keynav
 printf "[Desktop Entry]\nName=keynav\nExec=/usr/bin/keynav\nType=Application" > ~/.config/autostart/keynav.desktop
 cat > ~/.keynavrc <<- EOM
@@ -189,20 +217,38 @@ ntilde warp, click 3, end
 q end
 EOM
 
+# para crear archivos .desktop !
+apt install --no-install-recommends gnome-panel # gnome-desktop-item-edit --create-new ~/.local/share/applications
+
+inst gparted
 upd
-inst software-properties-common
-addrepo ppa:ansible/ansible
-upd
-inst ansible
 inst htop
-source ~/bindelucas/install_all/ansible/run.sh # to install docker!
+inst python3-dev
+inst python-dev
+# install docker
+source ~/bindelucas/install_all/ansible/install_docker.sh # to install docker!
 usermod -a -G docker $USER
+# install go
+source ~/bindelucas/install_all/ansible/install_golang.sh
+MYPATH=`python3 <<< "from pathlib import Path as P; print(list(P('/opt/go/').glob('*/bin/go'))[0])"`
+ln -s $MYPATH /usr/bin/go
+onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.bashrc
+onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.zshrc
+export PATH="$HOME/go/bin:$PATH"
+
+# setup thyme
+inst x11-utils
+inst xdotool
+inst wmctrl
+go get -u github.com/sourcegraph/thyme/cmd/thyme
+
+# https://softwarerecs.stackexchange.com/questions/43686/whats-a-free-and-open-source-alternative-to-teamviewer-remote-control-software
+inst x11vnc # x11vnc -display :0
+snap install remmina
 
 inst apt-transport-https
-inst python3-dev
 inst python-tk
 inst python3-tk
-inst python-dev
 inst git 
 inst automake
 # git gui
@@ -221,7 +267,8 @@ inst grsync
 inst vlc
 inst nmap
 inst sqlite3
-inst sqliteman
+# inst sqliteman
+inst sqlitebrowser
 inst tmux # terminal multiplexer (como sreen)
 #inst weechat #(best irc client?? ) http://askubuntu.com/questions/743/coolest-looking-terminal-irc-client#answer-752
 inst sox
@@ -285,9 +332,6 @@ cat > ~/.ipython/profile_default/ipython_config.py <<- EOM
 c = get_config()
 c.InteractiveShellApp.exec_lines = [
     'import numpy as np\n'
-    'import scipy as sp\n'
-    'import matplotlib as plt\n'
-    'import os, sys, time, socket, json, subprocess\n'
     'import matplotlib.pyplot as plt\n'
 ]
 EOM
@@ -354,6 +398,19 @@ rm -rf /tmp/logkeys
 inst guake
 shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
+#latex
+inst texlive
+inst texlive-full # gigante! pero quizas necesario
+inst texlive-lang-spanish
+inst latexmk
+inst texstudio
+inst dvipng
+addrepo ppa:lyx-devel/release
+upd
+inst lyx
+
+
+
 # perf
 inst linux-tools-common ;
 inst linux-tools-generic  ;
@@ -419,6 +476,21 @@ red 'fin nodejs'
 # red 'FIN nw'
 # npm install nativefier -g
 
+# gestures
+sudo apt-get install libinput-tools
+# tratar de poner en bindelucas
+# ls ~/.config/libinput-gestures.conf
+sudo gpasswd -a $USER input
+cd /tmp
+git clone https://github.com/bulletmark/libinput-gestures.git
+cd libinput-gestures
+sudo make install
+sudo ./libinput-gestures-setup install
+./libinput-gestures-setup start
+git clone https://gitlab.com/cunidev/gestures
+cd gestures
+sudo python3 setup.py install
+
 red 'googler'
 cd /tmp/ &&
 git clone https://github.com/jarun/googler/ &&
@@ -428,7 +500,7 @@ cd --
 red 'fin googler'
 
 red 'youtube-dl'
-curl https://yt-dl.org/latest/youtube-dl -o /usr/local/bin/youtube-dl &&
+curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
 chmod a+rx /usr/local/bin/youtube-dl
 # apt-get install pip
 # pip install youtube-dl
@@ -504,6 +576,7 @@ done
 shortcuts set 'vscode' 'code' 'v'
 red 'fin vscode'
 
+# x11vnc for the winn!!!
 red 'teamviewer'
 if [[ ! -e "~/Downloads/teamviewer_i386.deb" ]]; then
 	wget -O ~/Downloads/teamviewer_i386.deb http://download.teamviewer.com/download/teamviewer_i386.deb
@@ -530,7 +603,21 @@ exit
 #dir=/tmp/install_all/pycharm
 #mkdir  &&
 #wget -qq -O $dir"/pycharm.x" https://www.jetbrains.com/pycharm/download/download-thanks.html?platform=linux&code=PCC
-
+printf "[Desktop Entry]
+Name=Pycharm CE
+Comment=Python IDE
+GenericName=Text Editor
+Exec=/usr/local/bin/charm %F
+Icon=/opt/pycharm-community-2018.2.4/bin/pycharm.png
+Type=Application
+StartupNotify=true
+StartupWMClass=jetbrains-pycharm-ce
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/py;inode/directory;
+Actions=new-empty-window;
+Keywords=pycharm;
+" >  /tmp/pycharm.desktop
+sudo desktop-file-install /tmp/pycharm.desktop
 #cd -
 #red 'fin pycharm-community'
 

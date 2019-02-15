@@ -1,3 +1,4 @@
 mylip=`/home/luks/bindelucas/lip`
 openports=`nmap $mylip -p 1-65535 | python3 -c 'import sys; print(",".join((l.split("/")[0] for l in sys.stdin.readlines() if " open " in l)))'`
-echo "GYM - `date +%d/%m/%y` - $mylip - `/home/luks/bindelucas/eip` - $openports"
+#echo "GYM - `date +%d/%m/%y` - $mylip - `/home/luks/bindelucas/eip` - $openports"
+echo "GYM - `date +%d/%m/%y` - $mylip - $openports"
