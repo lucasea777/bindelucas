@@ -98,6 +98,7 @@
 # --- PARA GNOME SHELL ---
 
 # jkli --> arrows! :D   # keyboard, remap
+# hay una copia de los siguientes archivos en $HOME/bindelucas/install_all/config/alpha_to_arrows
 # /usr/share/X11/xkb/symbols/us
 # /usr/share/X11/xkb/types/iso9995
 # /usr/share/X11/xkb/symbols/inet
@@ -141,6 +142,9 @@ addrepo ppa:ansible/ansible
 upd
 inst ansible
 
+# ansible oh-my-zsh
+# history duplicates
+# https://github.com/zsh-users/zsh-history-substring-search/issues/19
 curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/install.sh | bash 
 
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
@@ -223,6 +227,7 @@ apt install --no-install-recommends gnome-panel # gnome-desktop-item-edit --crea
 inst gparted
 upd
 inst htop
+inst ack # better than grep with perl regex syntax
 inst python3-dev
 inst python-dev
 # install docker
@@ -268,6 +273,7 @@ inst vlc
 inst nmap
 inst sqlite3
 # inst sqliteman
+inst flameshot # modificar capturewidget.cpp para que en Key_Enter\Key_Return use saveScreenshot()
 inst sqlitebrowser
 inst tmux # terminal multiplexer (como sreen)
 #inst weechat #(best irc client?? ) http://askubuntu.com/questions/743/coolest-looking-terminal-irc-client#answer-752
@@ -328,13 +334,8 @@ inst python3-pil.imagetk
 pip3 install pudb --user
 #pip3 install ipykernel
 pip3 install jupyter jupyterlab --user
-cat > ~/.ipython/profile_default/ipython_config.py <<- EOM
-c = get_config()
-c.InteractiveShellApp.exec_lines = [
-    'import numpy as np\n'
-    'import matplotlib.pyplot as plt\n'
-]
-EOM
+ln -f -s "$HOME/bindelucas/install_all/config/ipython/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+ln -f -s "$HOME/bindelucas/install_all/config/ipython/prerun.py" ~/.ipython/profile_default/prerun.py
 inst xvfb
 #inst xserver-xephyr
 #inst tightvncserver
@@ -408,8 +409,6 @@ inst dvipng
 addrepo ppa:lyx-devel/release
 upd
 inst lyx
-
-
 
 # perf
 inst linux-tools-common ;
@@ -561,20 +560,32 @@ upd # [arch=amd64] ?
 inst google-chrome-stable
 upd
 inst chrome-gnome-shell
-shortcuts set 'google-chrome' 'google-chrome' 'c'
+# shortcuts set 'google-chrome' 'google-chrome' 'c' # /home/luks/bindelucas/install_all/config/sxhkd.config
 red 'fin-chrome'
 
 red 'vscode'
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
 wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
 dpkg -i /tmp/code_latest_amd64.deb
-ln -f -s '/home/luks/bindelucas/install_all/config/settings.json' /home/luks/.config/Code/User/settings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/snippets' /home/luks/.config/Code/User/snippets
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
 for one_thing in "${exts[@]}"; do
     code --install-extension $one_thing
 done
 shortcuts set 'vscode' 'code' 'v'
 red 'fin vscode'
+
+sudo apt-get install openjdk-8-jdk openjdk-11-jdk
+# para elejir version: ->> sudo update-alternatives --config java # https://askubuntu.com/questions/272187/setting-jdk-7-as-default/272190
+# idea intellij java IDE
+# todo maybe usar flatpack/snap
+cd /tmp &&
+wget https://download-cf.jetbrains.com/idea/ideaIC-2019.1.1.tar.gz &&
+sudo tar xvzf ideaIC-2019.1.1.tar.gz -C /opt/idea
+# bash /opt/idea/idea-IC-191.6707.61/bin/idea.sh # todo
+sudo snap install netbeans --classic 
 
 # x11vnc for the winn!!!
 red 'teamviewer'
@@ -597,6 +608,18 @@ apt install ~/Downloads/teamviewer_i386.deb
 red 'fin teamviewer'
 
 inst wireshark
+
+# haskell
+# --> https://github.com/gibiansky/IHaskell
+# interactivo!
+curl -sSL https://get.haskellstack.org/ | sh
+cd /tmp
+git clone https://github.com/gibiansky/IHaskell
+cd IHaskell
+pip3 install -r requirements.txt --user
+# stack install gtk2hs-buildtools # Disabled for now because gtk2hs-buildtools doesn't work with lts-13 yet
+stack install --fast
+ihaskell install --stack
 exit
 
 #red 'pycharm-community'
@@ -627,6 +650,8 @@ red 'fin-themes'
 
 red 'android-studio'
 source ~/bindelucas/install_all/install-android-studio.sh
+onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.bashrc
+onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
 red 'fin android-studio'
 
 #red 'codelite'
@@ -679,7 +704,7 @@ else
 fi
 
 
-red 'rclone'
+red 'rclone' # go get??
 mkdir /tmp/install_all/rclone &&
 cd /tmp/install_all/rclone &&
 curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip &&
@@ -693,6 +718,32 @@ cp rclone.1 /usr/local/share/man/man1/ &&
 mandb > /dev/null
 cd --
 red 'fin-rclone'
+
+# scrcpy
+## probar primero version docker...
+## no testeado
+# runtime dependencies
+sudo apt install ffmpeg libsdl2-2.0.0
+
+# client build dependencies
+sudo apt install make gcc pkg-config meson ninja-build \
+                 libavcodec-dev libavformat-dev libavutil-dev \
+                 libsdl2-dev
+mkdir -p /tmp/install_all/ &&
+cd /tmp/install_all &&
+git clone https://github.com/Genymobile/scrcpy.git &&
+cd scrcpy &&
+wget https://github.com/Genymobile/scrcpy/releases/download/v1.8/scrcpy-server-v1.8.jar &&
+meson x --buildtype release --strip -Db_lto=true \                                                                                                                      master  23:54:10
+    -Dprebuilt_server=/tmp/install_all/scrcpy-server-v1.8.jar  &&
+cd x &&
+ninja &&
+cd ..&&
+sudo ninja install
+#onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
+
+
+
 
 red 'WARNING: wine instalation is interactive!'
 echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections

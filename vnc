@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""Connect to ssh, open x11vnc and finally use remmina.
+
+Usage:
+    vnc     <name>
+    vnc     (-h | --help)
+
+Arguments:
+  <name>        A key in ~/binprivate/db/macs.json
+  
+Options:
+    -h --help       Show this screen.
+
+"""
+from docopt import docopt
+import os
+import re
+import subprocess
+import sys
+from yaspin import yaspin
+from yaspin.spinners import Spinners
+import time
+
+def main(template):
+    arguments = docopt(__doc__, help=True)
+    # print(arguments)
+    with yaspin(Spinners.moon, text=f"$ getip {arguments['<name>']}") as sp:
+        ip = subprocess.Popen(['getip', arguments["<name>"]],
+                    stdout=subprocess.PIPE).stdout.read().decode().strip()
+        if re.match("^(\\d{1,3}.){3}(\\d{1,3})$", ip):
+            sp.text = ""
+            sp.ok(f"✅ $ getip {arguments['<name>']} --> {ip}")
+            sp.stop()
+        else:
+            sp.text = ""
+            sp.fail(f"💥 $ getip {arguments['<name>']} --> {ip}")
+            sys.exit()
+    
+    # if True:
+    with yaspin(Spinners.moon, text=f"$ sshpass -f ~/binprivate/db/miqueridacontraes ssh edu@`getip living_eth` 'x11vnc -display :0 -repeat' # waiting for 'The VNC desktop is:' to appear on stderr") as sp:
+        # sub = subprocess.Popen(["bash", "-c", "echo hi; sleep 30; echo bye"], stdout=subprocess.PIPE)
+        cmd = """sshpass -f ~/binprivate/db/miqueridacontraes ssh edu@`getip living_eth` 'x11vnc -display :0 -repeat'"""
+        # import IPython; IPython.embed()
+        sub = subprocess.Popen(["bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        buffer = ""
+        msg = "The VNC desktop is:"
+        while True:
+            out = sub.stderr.read(len(msg)).decode()
+            buffer += out
+            if msg in buffer:
+                break
+        with open("/tmp/myconfig.remmina", "w") as f:
+            f.write(template.replace("ACAVALAIP", ip))
+        # starting vnc on remote machine:
+        # Probar usando async quizas!
+        # with yaspin(text=f"Waiting a bit...") as sp:
+        #     time.sleep(3)
+        # os.system("bash -c 'gnome-terminal -- remmina -c /tmp/myconfig.remmina & disown'")# & (sleep 1; xdotool key F12; sleep 0.1; xdotool key F12; )")
+        os.system("remmina -c /tmp/myconfig.remmina & guake --hide")
+
+
+template = """[remmina]
+keymap=
+ssh_auth=0
+quality=2
+disableencryption=0
+postcommand=
+ssh_privatekey=
+disableclipboard=0
+ssh_charset=
+group=
+name=living
+ssh_username=
+precommand=
+viewonly=0
+proxy=
+ssh_loopback=0
+colordepth=32
+protocol=VNC
+ssh_server=
+ssh_enabled=0
+password=
+username=
+disablepasswordstoring=0
+server=ACAVALAIP
+showcursor=0
+disableserverinput=0
+last_success=20190216
+keyboard_grab=1
+scale=1
+window_maximize=1
+viewmode=1
+window_height=806
+dynamic_resolution_height=0
+window_width=1070
+dynamic_resolution_width=0
+"""
+
+if __name__ == "__main__":
+    main(template)

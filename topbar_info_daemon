@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+from pathlib import Path as P
+import time
+import subprocess
+import sys
+while True:
+    output = subprocess.Popen(str(P("~/bindelucas/topbar_info").expanduser()),
+        shell=True,
+        stdout=subprocess.PIPE).stdout.read().decode().strip()
+    P("/tmp/topbar_info").write_text(output)
+    time.sleep(20)
+
+    

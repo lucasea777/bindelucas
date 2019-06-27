@@ -1,0 +1,125 @@
+#!/usr/bin/python3
+"""getip, gets the ip given a mac saved in ~/binprivate/db/macs.json with format {name: mac}.
+It should work at least if the ip ends with a number less than 100.
+
+Usage:
+    getip.py [--nfping] showall
+    getip.py [--verbose] (<name>|<mac>)
+    getip.py (-h | --help)
+
+Options:
+    -h --help      Show this screen.
+
+"""
+# TODO:
+# net = "192.168.1...."
+# listar todas las ips"
+from docopt import docopt
+import nmap  # pip install python-nmap --user
+import os
+import sys
+import json
+import re
+from pathlib import Path
+
+global arguments
+
+
+def do_arp(mac=None):  # maybe I should check if the value is outdated!
+    # import IPython; IPython.embed()
+    if mac:
+        return ([l.split(' ')[0] for l in os.popen('arp -nea').readlines() if mac in l] + [None])[0]
+    else:
+        # assume showall
+        lines = os.popen('arp -nea').readlines()
+        ip_mac_re = "(?P<ip>((\\d{1,3}\\.){3}\\d{1,3})).*(?P<mac>([0-9a-f]{2}:){5}([0-9a-f]){2})"
+        ip_mac_list = [(m.group("ip"), m.group("mac")) for m in [re.match(ip_mac_re, l) for l in lines] if m]
+        return ip_mac_list
+
+
+def do_fping(mac=None):
+    # import IPython; IPython.embed()
+    # mynet=os.popen('lip').read().strip()
+    cmd = "fping -a -g 192.168.1.0 192.168.1.100 -r 3 2> /dev/null"
+    os.popen(cmd).readlines()
+    # return ([l.split(' ')[0] for l in os.popen(cmd).readlines() if mac in l] + [None])[0]
+
+def do_nmap(mac=None):
+    nm = nmap.PortScanner()
+    out = nm.scan('192.168.1.0/24', ports="8000", arguments="-Pn -n --open", sudo=True)
+
+    for ip, ipdata in out["scan"].items():
+        if "mac" in ipdata["addresses"]:
+            if ipdata["addresses"]["mac"] == mac:
+                # if ipdata["addresses"]["mac"] == "32:91:8F:CD:FF:8A":
+                return ip
+
+def get_macs_from_file():
+    file = Path("~/binprivate/db/macs.json").expanduser()
+    if not file.exists():
+        print("ERROR_FILE_NOT_FOUND")
+        sys.exit()
+    macs = json.loads(file.read_text())
+    if arguments["--verbose"]:
+        print(macs)
+    return macs
+
+def trygetname(mac, macs):
+    return ([item[0] for item in macs.items() if item[1] == mac] + [mac])[0]
+
+
+def main():
+    global arguments
+    arguments = docopt(__doc__, version='getip 1.0')
+    # print(arguments)
+    if arguments["showall"]:
+        macs = get_macs_from_file()
+        if not arguments["--nfping"]:
+            do_fping()
+        ip_mac_list = do_arp()
+        print("\n".join([f"{ip_mac[0]}\t{trygetname(ip_mac[1], macs)}" for ip_mac in ip_mac_list]))
+    else:
+        name = arguments["<name>"]
+        if len(name) == 17 and re.match("^([0-9a-f]{2}:){5}([0-9a-f]){2}$", name):
+            mac = name
+        else:
+            macs = get_macs_from_file()
+            if name not in macs:
+                print("ERROR_NAME_NOT_IN_FILE")
+                sys.exit()        
+            mac = macs[name]
+        ip = do_arp(mac)
+        if ip:
+            print(ip)
+            sys.exit()
+        if arguments["--verbose"]:
+            print("do_arp -> None")
+        do_fping(mac)
+        ip = do_arp(mac)
+        if ip:
+            print(ip)
+            sys.exit()
+        if arguments["--verbose"]:
+            print("do_fping,do_arp -> None")
+        print("NOT_FOUND")
+
+if __name__ == "__main__":
+    main()
+# IPS=$(nmap 192.168.1.0/24 -p 22 --open | egrep -ho "([0-9]+\.){3}[0-9]")
+# if [[ $OUT = "192.168.1.1" || $OUT = ""]]; then echo 'NOT_FOUND'; else echo $OUT; fi
+# exit
+# import os,re
+# enter = None
+# m = None
+# lines = []
+# for line in os.popen('nmap 192.168.1.0/28').readlines()[1:]:
+#   lines += [line]
+#   enter = line == '\n' or enter
+#   if enter and line.startswith('22/tcp'):
+#     break
+# for line in reversed(lines):
+#   m = re.search('\d+\.\d+\.\d+\.\d+', line)
+#   if m:
+#     break
+# #if n.group(0) == '192.168.1.1':
+# #print(m.group(0))

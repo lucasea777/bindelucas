@@ -1,0 +1,96 @@
+{
+	// Place your snippets for python here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	// usar https://codepen.io/mrmlnc/full/GqrqPg
+	"IPython": {
+		"prefix": "ipython",
+		"body": [
+			"import IPython; IPython.embed()"
+		],
+		"description": "IPython Debugging right here"
+	},
+
+	"PTIPython": {
+		"prefix": "ptipython",
+		"body": [
+			"from ptpython.ipython import embed; embed()"
+		],
+		"description": "PTIPython Debugging right here"
+	},
+	"docopt": {
+		"prefix": "docopt",
+		"body": [
+			"#!/usr/bin/python3",
+			"\"\"\"Naval Fate.",
+			"",
+			"Usage:",
+			"    naval_fate.py ship new <name>...",
+			"    naval_fate.py ship <name> move <x> <y> [--speed=<kn>]",
+			"    naval_fate.py ship shoot <x> <y>",
+			"    naval_fate.py mine (set|remove) <x> <y> [--moored | --drifting]",
+			"    naval_fate.py (-h | --help)",
+			"    naval_fate.py --version",
+			"",
+			"Options:",
+				"    -h --help       Show this screen.",
+				"    --version       Show version.",
+				"    --speed=<kn>    Speed in knots [default: 10].",
+				"    --moored        Moored (anchored) mine.",
+				"    --drifting      Drifting mine.",
+			"",
+			"\"\"\"",
+			"from docopt import docopt",
+			"",
+			"",
+			"if __name__ == '__main__':",
+				"    arguments = docopt(__doc__, version='Naval Fate 2.0')",
+				"    print(arguments)"
+		]
+	},
+	"keras": {
+		"prefix": "keras",
+		"body": [
+			"import tensorflow as tf",
+			"from keras import backend as K",
+			"",
+			"# https://stackoverflow.com/questions/40690598/can-keras-with-tensorflow-backend-be-forced-to-use-cpu-or-gpu-at-will",
+			"num_cores = 4",
+			"GPU = False",
+			"if GPU:",
+				"\tnum_GPU = 1",
+				"\tnum_CPU = 1",
+			"else:",
+				"\tnum_CPU = 1",
+				"\tnum_GPU = 0",
+			"",
+			"config = tf.ConfigProto(intra_op_parallelism_threads=num_cores,\\",
+					"\t\tinter_op_parallelism_threads=num_cores, allow_soft_placement=True,\\",
+					"\t\tdevice_count = {'CPU' : num_CPU, 'GPU' : num_GPU})",
+			"session = tf.Session(config=config)",
+			"K.set_session(session)",
+			"",
+			"import keras as ks"
+		]
+	},
+	"regex": {
+		"prefix": "regex",
+		"body" :[
+			"import re",
+			"text = \"<a> casa alta<b> roca\"",
+			"newtext = re.sub('<([^<]){2,8}>|\\n.{24} >', '', text)  # https://regex101.com/",
+			"words = re.findall(r'\\w{4,}', newtext)"
+		]
+	}
+}
+

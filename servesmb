@@ -2,8 +2,10 @@
 
 #sudo python2 /usr/local/bin/smbserver.py -comment 'My share' PUBLIC ~/Public
 #sudo docker run -it -p 139:139 -p 445:445 -v /tmp:/exports dperson/samba -s "public;/exports;yes;no;yes;all;all"
-docker run --rm -it -p 137:137/udp \
-    -p 138:138/udp -p 139:139 -p 445:445 \
+docker run --rm -it \
+    -p 139:139 -p 445:445 \
     -v $HOME/Public:/exports:rw dperson/samba bash \
-    -c 'chmod 7777 /exports&& ./usr/bin/samba.sh -n -S -s "public;/exports;yes;no;yes;all;all"'
+    -c 'chmod 7777 /exports&& ./usr/bin/samba.sh -n -S -s "public;/exports;yes;no;yes;all;all" -u "luks;psw;1000;luks" -g "force user = luks" -g "force group = luks"'
+
+# 1000 es mi uid!
 #sudo docker run -it -p 139:139 -p 445:445 -v /tmp:/exports dperson/samba -s "public;/exports;yes;no;no;foo;foo" -u "foo;bar"
