@@ -1,0 +1,3 @@
+#!/bin/bash
+# wifi I guess
+iw dev | grep -A 3 Interface | grep addr | awk '$1=="addr"{print $2}'

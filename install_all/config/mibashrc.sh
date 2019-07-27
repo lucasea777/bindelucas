@@ -3,14 +3,32 @@ function inst() {
     apt-get -y install "$*"; 
 };
 alias ccat='pygmentize -g -O style=colorful,linenos=1'
+alias ccat2="~/workspace-go/bin/ccat --bg=dark"
+alias keygen='node /home/luks/Downloads/gymkeygen/keygen_node.js'
 alias jq-interactive='jid'
 alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
+function cdpymodule() {
+    mydir=$(p 'import '$1'; '$1'.__file__');
+    cd $(dirname $mydir);
+}
+function ly {
+    myurl=$(imfly $@);
+    mpv $myurl --no-video
+}
+function cless() {
+    #~/workspace-go/bin/ccat --bg=dark --color always $@ | less -r
+    pygmentize -g -O style=colorful,linenos=1 $@ | less -r
+}
 function o(){ 
 ln -s $(readlink -f $1) /tmp/oklink
 #okular /tmp/oklink
 file /tmp/oklink
 }
+# Create a new directory and enter it
+# function md() {
+# 	mkdir -p "$@" && cd "$@"
+# }
 function notify() {
     if [[ $? -eq 0 ]]; then
         # no error

@@ -54,6 +54,7 @@
 # https://github.com/fiatjaf/jiq
 # https://github.com/simeji/jid
 # http://marklodato.github.io/2013/10/24/how-to-use-lirc.html
+# para json -> https://github.com/antonmedv/fx
 
 # para instalar qt5
 # wget http://download.qt.io/official_releases/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run && chmod +x *.run && ./qt*.run
@@ -91,8 +92,23 @@
 
 # HDMI sin sonido?? ---> cambiar profile en pavucontrol https://askubuntu.com/a/232407/495273
 
+# make offline mirror, download website descargar pagina web 
+# wget --mirror --convert-links --adjust-extension --page-requisites --no-parent http://example.org
 
 # --- PARA GNOME SHELL ---
+
+# jkli --> arrows! :D   # keyboard, remap
+# hay una copia de los siguientes archivos en $HOME/bindelucas/install_all/config/alpha_to_arrows
+# /usr/share/X11/xkb/symbols/us
+# /usr/share/X11/xkb/types/iso9995
+# /usr/share/X11/xkb/symbols/inet
+# /usr/share/X11/xkb/keycodes/evdev
+# actualizar con:
+# setxkbmap -layout us
+# nombres con:
+# xev -event keyboard # quizas?
+# https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
+# # restart gnome shell by typing alt+F2 and writing restart, also works for setting ntilde and Ntile using FOUR_LEVEL !
 
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 gsettings set org.gnome.desktop.interface clock-show-date true
@@ -105,20 +121,31 @@ gsettings set org.gnome.desktop.interface clock-show-date true
 # quizas instalar bitstream vera font
 # pero lo seguro es reemplazar 
 # /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf
-# y
-# /usr/share/fonts/truetype/noto/noto/NotoColorEmoji.ttf
-# por 'NotoColorEmoji.ttf' que esta en el .zip de https://forum.xda-developers.com/apps/magisk/module-twemoji-2-3-t3688251
-# idem para Apple emojis https://www.themefoxx.com/2017/11/ios-11-emoji-android.html
+# por algun ttf de whatsapp, como ser el de https://forum.xda-developers.com/general/general/root-stock-emoji-fonts-ios-windows10-t3418801
+# o mas bien de iOS!
+
+mkdir ~/emoji_ttf_backup &&
+cp /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf ~/emoji_ttf_backup && # hacer un backup!
 
 # --- FIN GNOME SHELL ---
 
 # more scripts --> https://www.gnome-look.org/browse/cat/126/ord/latest/
-rm -r ~/.local/share/nautilus/scripts
+#rm -r ~/.local/share/nautilus/scripts
 ln -s ~/bindelucas/install_all/config/nautilus-scripts ~/.local/share/nautilus/scripts
 
-# aliases (deberia usar ~/.bash_aliases pero esto es mas cooool)
+# aliases (deberia usar ~/.bash_aliases pekkkro esto es mas cooool)
 #cat ~/.bashrc | grep -q "#<MIBASHRC>"  && echo 'exists' || echo 'source ~/bindelucas/install_all/config/mibashrc.sh #<MIBASHRC>'
 source ~/bindelucas/install_all/config/mibashrc.sh
+
+inst software-properties-common
+addrepo ppa:ansible/ansible
+upd
+inst ansible
+
+# ansible oh-my-zsh
+# history duplicates
+# https://github.com/zsh-users/zsh-history-substring-search/issues/19
+curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/install.sh | bash 
 
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
@@ -148,10 +175,17 @@ rm -rf /tmp/install_all;
 source ~/bindelucas/install_all/utils.sh
 
 inst curl
-apt-get -y install zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# mejor ansible
+# apt-get -y install zsh
+# sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+# onceinfile 'source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' '#<ZSH_AUTOSUGGESTIONS>' ~/.zshrc
+# source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-red 'masive apt-get'
+
+mkdir -p ~/.config/autostart
+
+red 'massive apt-get'
 inst keynav
 printf "[Desktop Entry]\nName=keynav\nExec=/usr/bin/keynav\nType=Application" > ~/.config/autostart/keynav.desktop
 cat > ~/.keynavrc <<- EOM
@@ -187,19 +221,41 @@ ntilde warp, click 3, end
 q end
 EOM
 
+# para crear archivos .desktop !
+apt install --no-install-recommends gnome-panel # gnome-desktop-item-edit --create-new ~/.local/share/applications
+
+inst gparted
 upd
-inst software-properties-common
-addrepo ppa:ansible/ansible
-upd
-inst ansible
-source ~/bindelucas/install_all/ansible/run.sh
+inst htop
+inst ack # better than grep with perl regex syntax
+inst python3-dev
+inst python-dev
+# install docker
+source ~/bindelucas/install_all/ansible/install_docker.sh # to install docker!
+usermod -a -G docker $USER
+# install go
+source ~/bindelucas/install_all/ansible/install_golang.sh
+MYPATH=`python3 <<< "from pathlib import Path as P; print(list(P('/opt/go/').glob('*/bin/go'))[0])"`
+ln -s $MYPATH /usr/bin/go
+onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.bashrc
+onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.zshrc
+export PATH="$HOME/go/bin:$PATH"
+
+# setup thyme
+inst x11-utils
+inst xdotool
+inst wmctrl
+go get -u github.com/sourcegraph/thyme/cmd/thyme
+
+# https://softwarerecs.stackexchange.com/questions/43686/whats-a-free-and-open-source-alternative-to-teamviewer-remote-control-software
+inst x11vnc # x11vnc -display :0
+snap install remmina
 
 inst apt-transport-https
-inst python3-dev
 inst python-tk
 inst python3-tk
-inst python-dev
 inst git 
+inst automake
 # git gui
 # https://github.com/FredrikNoren/ungit
 inst gitg
@@ -210,13 +266,15 @@ inst jq
 shortcuts set 'ontop' 'ontop' 'z'
 shortcuts set '/usr/bin/gnome-screenshot' '/usr/bin/gnome-screenshot -a' 'a'
 
-echo "blacklist hp_accel" >> /etc/modprobe.d/blacklist.conf
+#echo "blacklist hp_accel" >> /etc/modprobe.d/blacklist.conf # problema sonido hp dv4
 
 inst grsync
 inst vlc
 inst nmap
 inst sqlite3
-inst sqliteman
+# inst sqliteman
+inst flameshot # modificar capturewidget.cpp para que en Key_Enter\Key_Return use saveScreenshot()
+inst sqlitebrowser
 inst tmux # terminal multiplexer (como sreen)
 #inst weechat #(best irc client?? ) http://askubuntu.com/questions/743/coolest-looking-terminal-irc-client#answer-752
 inst sox
@@ -261,30 +319,23 @@ inst hardinfo # gui
 #inst python-pip
 curl https://bootstrap.pypa.io/get-pip.py | python3
 
-#inst python3-pip #default en ubuntu16
+#inst python3-pip #default en ubuntu
 pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
-pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision --user
+pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision seaborn --user
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
 #samba config https://help.ubuntu.com/community/Samba/SambaServerGuide
 inst system-config-samba
+inst python3-pil.imagetk
 #inst ipython3
 #inst ipython
 #pip3 -q install ipython
 pip3 install pudb --user
 #pip3 install ipykernel
 pip3 install jupyter jupyterlab --user
-cat > ~/.ipython/profile_default/ipython_config.py <<- EOM
-c = get_config()
-c.InteractiveShellApp.exec_lines = [
-    'import numpy as np\n'
-    'import scipy as sp\n'
-    'import matplotlib as plt\n'
-    'import os, sys, time, socket, json, subprocess\n'
-    'import matplotlib.pyplot as plt\n'
-]
-EOM
+ln -f -s "$HOME/bindelucas/install_all/config/ipython/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
+ln -f -s "$HOME/bindelucas/install_all/config/ipython/prerun.py" ~/.ipython/profile_default/prerun.py
 inst xvfb
 #inst xserver-xephyr
 #inst tightvncserver
@@ -304,8 +355,8 @@ shortcuts set 'terminator' '/usr/bin/terminator -l mine' 'x'
 #ffmpeg http://askubuntu.com/questions/605186/how-to-install-ffmpeg-on-ubuntu
 # ffmpeg -i MOV01723.3GP -qscale 0 -ab 64k -ar 44100 -strict -2 MOV01723.mp4
 # ffmpeg -i MOV01723.* -strict -2 MOV01723.*
-addrepo ppa:kirillshkrogalev/ffmpeg-next
-upd
+#addrepo ppa:kirillshkrogalev/ffmpeg-next
+#upd
 inst ffmpeg
 #inst shutter mejor es gnome-screenshot
 inst meld # gui diff tool
@@ -317,7 +368,6 @@ inst nautilus-open-terminal
 inst ncdu # Ncurses disk usage
 
 #apt-get -y -q install python-kde4
-inst wireshark
 inst fonts-firacode
 inst gnome-tweak-tool
 
@@ -349,12 +399,34 @@ rm -rf /tmp/logkeys
 inst guake
 shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
+#latex
+inst texlive
+inst texlive-full # gigante! pero quizas necesario
+inst texlive-lang-spanish
+inst latexmk
+inst texstudio
+inst dvipng
+addrepo ppa:lyx-devel/release
+upd
+inst lyx
+
 # perf
-inst linux-tools-common 
-inst linux-tools-generic 
-inst linux-tools-`uname -r`
+inst linux-tools-common ;
+inst linux-tools-generic  ;
+inst linux-tools-`uname -r` ;
 
 source ~/bindelucas/install_all/install-sublime.sh
+
+red 'inicio albert' 
+wget -nv -O Release.key \
+  https://build.opensuse.org/projects/home:manuelschneid3r/public_key
+apt-key add - < Release.key
+upd
+echo 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_17.10/ /' > /etc/apt/sources.list.d/home:manuelschneid3r.list
+upd
+inst albert
+
+red 'fin albert' 
 
 #pip -q install mechanize
 
@@ -391,6 +463,7 @@ nvm use node
 curl -o- -L https://yarnpkg.com/install.sh | bash
 # siguiente linea porque instalo yarn en bash, entonces zshrc no se entera
 printf 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"\n' >> ~/.zshrc  
+source ~/.zshrc  
 yarn global add forever http-server node-inspector
 yarn config set -- --emoji true #😉
 red 'fin nodejs'
@@ -402,6 +475,21 @@ red 'fin nodejs'
 # red 'FIN nw'
 # npm install nativefier -g
 
+# gestures
+sudo apt-get install libinput-tools
+# tratar de poner en bindelucas
+# ls ~/.config/libinput-gestures.conf
+sudo gpasswd -a $USER input
+cd /tmp
+git clone https://github.com/bulletmark/libinput-gestures.git
+cd libinput-gestures
+sudo make install
+sudo ./libinput-gestures-setup install
+./libinput-gestures-setup start
+git clone https://gitlab.com/cunidev/gestures
+cd gestures
+sudo python3 setup.py install
+
 red 'googler'
 cd /tmp/ &&
 git clone https://github.com/jarun/googler/ &&
@@ -411,13 +499,16 @@ cd --
 red 'fin googler'
 
 red 'youtube-dl'
-curl https://yt-dl.org/latest/youtube-dl -o /usr/local/bin/youtube-dl &&
+curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
 chmod a+rx /usr/local/bin/youtube-dl
 # apt-get install pip
 # pip install youtube-dl
 # youtube-dl ytuser:<USER> <<<< entire channel
 # youtube-dl -x --audio-format mp3 --audio-quality 320K <VIDEO_URL>
 red 'fin youtube-dl'
+
+# virtualbox INTERACTIVE
+sudo apt install --yes virtualbox virtualbox-ext-pack virtualbox-qt
 
 #phantom http://phantomjs.org/build.html
 #apt-get install build-essential g++ flex bison gperf ruby perl \
@@ -468,28 +559,43 @@ sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
 upd # [arch=amd64] ?
 inst google-chrome-stable
 upd
-shortcuts set 'google-chrome' 'google-chrome' 'c'
+inst chrome-gnome-shell
+# shortcuts set 'google-chrome' 'google-chrome' 'c' # /home/luks/bindelucas/install_all/config/sxhkd.config
 red 'fin-chrome'
 
 red 'vscode'
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
 wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
 dpkg -i /tmp/code_latest_amd64.deb
-ln -f -s '/home/luks/bindelucas/install_all/config/settings.json' /home/luks/.config/Code/User/settings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
+ln -f -s '/home/luks/bindelucas/install_all/config/vscode/snippets' /home/luks/.config/Code/User/snippets
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
-for one_thing in $exts; do
+for one_thing in "${exts[@]}"; do
     code --install-extension $one_thing
 done
 shortcuts set 'vscode' 'code' 'v'
 red 'fin vscode'
 
+sudo apt-get install openjdk-8-jdk openjdk-11-jdk
+# para elejir version: ->> sudo update-alternatives --config java # https://askubuntu.com/questions/272187/setting-jdk-7-as-default/272190
+# idea intellij java IDE
+# todo maybe usar flatpack/snap
+cd /tmp &&
+wget https://download-cf.jetbrains.com/idea/ideaIC-2019.1.1.tar.gz &&
+sudo tar xvzf ideaIC-2019.1.1.tar.gz -C /opt/idea
+# bash /opt/idea/idea-IC-191.6707.61/bin/idea.sh # todo
+sudo snap install netbeans --classic 
+
+# x11vnc for the winn!!!
 red 'teamviewer'
 if [[ ! -e "~/Downloads/teamviewer_i386.deb" ]]; then
 	wget -O ~/Downloads/teamviewer_i386.deb http://download.teamviewer.com/download/teamviewer_i386.deb
 fi
 
-dpkg -i ~/Downloads/teamviewer_i386.deb > /tmp/install_all/teamviewer
-apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
+#dpkg -i ~/Downloads/teamviewer_i386.deb > /tmp/install_all/teamviewer
+#apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
+apt install ~/Downloads/teamviewer_i386.deb
 #sudo systemctl disable teamviewerd.service
 
 #start minimized
@@ -501,13 +607,40 @@ apt-get -y --force-yes install -f > /tmp/install_all/teamtiewer
 #printf "[Desktop Entry]\nName=devilspie2\nExec=devilspie2\nType=Application" > ~/.config/autostart/devilspie2.desktop
 red 'fin teamviewer'
 
+inst wireshark
+
+# haskell
+# --> https://github.com/gibiansky/IHaskell
+# interactivo!
+curl -sSL https://get.haskellstack.org/ | sh
+cd /tmp
+git clone https://github.com/gibiansky/IHaskell
+cd IHaskell
+pip3 install -r requirements.txt --user
+# stack install gtk2hs-buildtools # Disabled for now because gtk2hs-buildtools doesn't work with lts-13 yet
+stack install --fast
+ihaskell install --stack
 exit
 
 #red 'pycharm-community'
 #dir=/tmp/install_all/pycharm
 #mkdir  &&
 #wget -qq -O $dir"/pycharm.x" https://www.jetbrains.com/pycharm/download/download-thanks.html?platform=linux&code=PCC
-
+printf "[Desktop Entry]
+Name=Pycharm CE
+Comment=Python IDE
+GenericName=Text Editor
+Exec=/usr/local/bin/charm %F
+Icon=/opt/pycharm-community-2018.2.4/bin/pycharm.png
+Type=Application
+StartupNotify=true
+StartupWMClass=jetbrains-pycharm-ce
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/py;inode/directory;
+Actions=new-empty-window;
+Keywords=pycharm;
+" >  /tmp/pycharm.desktop
+sudo desktop-file-install /tmp/pycharm.desktop
 #cd -
 #red 'fin pycharm-community'
 
@@ -517,6 +650,8 @@ red 'fin-themes'
 
 red 'android-studio'
 source ~/bindelucas/install_all/install-android-studio.sh
+onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.bashrc
+onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
 red 'fin android-studio'
 
 #red 'codelite'
@@ -569,7 +704,7 @@ else
 fi
 
 
-red 'rclone'
+red 'rclone' # go get??
 mkdir /tmp/install_all/rclone &&
 cd /tmp/install_all/rclone &&
 curl -O http://downloads.rclone.org/rclone-current-linux-amd64.zip &&
@@ -583,6 +718,32 @@ cp rclone.1 /usr/local/share/man/man1/ &&
 mandb > /dev/null
 cd --
 red 'fin-rclone'
+
+# scrcpy
+## probar primero version docker...
+## no testeado
+# runtime dependencies
+sudo apt install ffmpeg libsdl2-2.0.0
+
+# client build dependencies
+sudo apt install make gcc pkg-config meson ninja-build \
+                 libavcodec-dev libavformat-dev libavutil-dev \
+                 libsdl2-dev
+mkdir -p /tmp/install_all/ &&
+cd /tmp/install_all &&
+git clone https://github.com/Genymobile/scrcpy.git &&
+cd scrcpy &&
+wget https://github.com/Genymobile/scrcpy/releases/download/v1.8/scrcpy-server-v1.8.jar &&
+meson x --buildtype release --strip -Db_lto=true \                                                                                                                      master  23:54:10
+    -Dprebuilt_server=/tmp/install_all/scrcpy-server-v1.8.jar  &&
+cd x &&
+ninja &&
+cd ..&&
+sudo ninja install
+#onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
+
+
+
 
 red 'WARNING: wine instalation is interactive!'
 echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections

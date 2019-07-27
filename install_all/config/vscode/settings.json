@@ -1,0 +1,314 @@
+{
+  "vscode_custom_css.imports": [
+    "file:///home/luks/Downloads/synthwave84.css"
+    ],  
+  "editor.folding": false,
+  "editor.glyphMargin": false,
+  "activitusbar.views": {
+    "explorer": "file-text",
+    "search": "search",
+    "scm": "repo-forked",
+    "debug": "bug",
+    "extensions": "package"
+  },
+  "languageServerHaskell.enableHIE": true,
+  "editor.renderIndentGuides": false,
+  "python.formatting.provider": "autopep8",
+  "editor.multiCursorModifier": "ctrlCmd",
+  "emmet.syntaxProfiles": { "javascript": "html" },
+  "emmet.triggerExpansionOnTab": true,
+  "window.zoomLevel": 2,
+  // Controls the font family.
+  //"editor.fontFamily": "Operator Mono Book",
+  //"editor.fontFamily": "Operator SSm"
+
+  // Controls the font size.
+  // "editor.fontFamily": "'Operator Mono Lig Book",
+  "editor.fontFamily": "Fira Code",
+  // "editor.fontFamily": "Hasklig",
+  // "editor.fontFamily": "Monoid, Retina",
+  // "editor.fontFamily": "Iosevka, Medium",
+  //"editor.fontFamily": "'Fira Code iScript",
+  "editor.snippetSuggestions": "top",
+  //"editor.fontFamily": "flottfLott",
+  "editor.fontSize": 14,
+  "editor.fontLigatures": true,
+  "python.linting.pylintEnabled": true,
+  "editor.minimap.enabled": false,
+  "workbench.colorCustomizations": {
+    "editor.background": "#000000"
+
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "comment.line.fsp",
+        "settings": {
+          "foreground": "#3f8300",
+          "fontStyle": "italic"
+        }
+      },
+      {
+        "scope": "entity.name.class.fsp",
+        "settings": {
+          // "foreground": "#AE81FF",
+          "foreground": "#e4d6fd",
+        }
+      },
+      {
+        "scope": "entity.name.function.fsp",
+        "settings": {
+          "foreground": "#A6E22D",
+        }
+      },
+      {
+        "scope": "comment.line.fsp",
+        "settings": {
+          "foreground": "#F92672",
+        }
+      },
+      {
+        "scope": "keyword.operator.new.fsp",
+        "settings": {
+          "foreground": "#ED266A",
+        }
+      },
+      {
+        "scope": "keyword.type.fsp",
+        "settings": {
+          "foreground": "#ED266A",
+        }
+      }
+    ]
+  },
+  // "spellright.language": [
+  //   "es, en"
+  // ],
+  // "workbench.colorTheme": "Material Basic - Materia",
+  "workbench.colorTheme": "Material Basic - Materia Contrast",
+  "python.pythonPath": "/usr/bin/python3",
+  "jupyter.appendResults": true,
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": false,
+  // "python.jediEnabled": false, // solo para solucionar problema de memoria de vscode
+  "macros": {
+    "cursorVeryDown": [
+        "cursorDown",
+        "cursorDown",
+        "cursorDown"
+    ],
+    "cursorVeryRight": [
+      "cursorRight",
+      "cursorRight",
+      "cursorRight",
+    ],
+    "cursorVeryLeft": [
+      "cursorLeft",
+      "cursorLeft",
+      "cursorLeft",
+    ],
+    "cursorVeryUp": [
+      "cursorUp",
+      "cursorUp",
+      "cursorUp"
+  ]
+  },
+  // "editor.tokenColorCustomizations": {
+  //   "textMateRules": [
+  //     {
+  //       "scope": [
+  //         "comment",
+  //         "comment.block",
+  //         "comment.block.documentation",
+  //         "comment.line",
+  //         "constant",
+  //         "constant.character",
+  //         "constant.character.escape",
+  //         "constant.numeric",
+  //         "constant.numeric.integer",
+  //         "constant.numeric.float",
+  //         "constant.numeric.hex",
+  //         "constant.numeric.octal",
+  //         "constant.other",
+  //         "constant.regexp",
+  //         "constant.rgb-value",
+  //         "emphasis",
+  //         "entity",
+  //         "entity.name",
+  //         "entity.name.class",
+  //         "entity.name.function",
+  //         "entity.name.method",
+  //         "entity.name.section",
+  //         "entity.name.selector",
+  //         "entity.name.tag",
+  //         "entity.name.type",
+  //         "entity.other",
+  //         "entity.other.attribute-name",
+  //         "entity.other.inherited-class",
+  //         "invalid",
+  //         "invalid.deprecated",
+  //         "invalid.illegal",
+  //         "keyword",
+  //         "keyword.control",
+  //         "keyword.operator",
+  //         "keyword.operator.new",
+  //         "keyword.operator.assignment",
+  //         "keyword.operator.arithmetic",
+  //         "keyword.operator.logical",
+  //         "keyword.other",
+  //         "markup",
+  //         "markup.bold",
+  //         "markup.changed",
+  //         "markup.deleted",
+  //         "markup.heading",
+  //         "markup.inline.raw",
+  //         "markup.inserted",
+  //         "markup.italic",
+  //         "markup.list",
+  //         "markup.list.numbered",
+  //         "markup.list.unnumbered",
+  //         "markup.other",
+  //         "markup.quote",
+  //         "markup.raw",
+  //         "markup.underline",
+  //         "markup.underline.link",
+  //         "meta",
+  //         "meta.block",
+  //         "meta.cast",
+  //         "meta.class",
+  //         "meta.function",
+  //         "meta.function-call",
+  //         "meta.preprocessor",
+  //         "meta.return-type",
+  //         "meta.selector",
+  //         "meta.tag",
+  //         "meta.type.annotation",
+  //         "meta.type",
+  //         "punctuation.definition.string.begin",
+  //         "punctuation.definition.string.end",
+  //         "punctuation.separator",
+  //         "punctuation.separator.continuation",
+  //         "punctuation.terminator",
+  //         "storage",
+  //         "storage.modifier",
+  //         "storage.type",
+  //         "string",
+  //         "string.interpolated",
+  //         "string.other",
+  //         "string.quoted",
+  //         "string.quoted.double",
+  //         "string.quoted.other",
+  //         "string.quoted.single",
+  //         "string.quoted.triple",
+  //         "string.regexp",
+  //         "string.unquoted",
+  //         "strong",
+  //         "support",
+  //         "support.class",
+  //         "support.constant",
+  //         "support.function",
+  //         "support.other",
+  //         "support.type",
+  //         "support.type.property-name",
+  //         "support.variable",
+  //         "variable",
+  //         "variable.language",
+  //         "variable.name",
+  //         "variable.other",
+  //         "variable.other.readwrite",
+  //         "variable.parameter"
+  //       ],
+  //       "settings": {
+  //         "fontStyle": ""
+  //       }
+  //     }
+  //   ]
+  // },
+  // "editor.tokenColorCustomizations": {
+  //   "textMateRules": [
+  //     {
+  //       "scope": [
+  //         //following will be in italic (=FlottFlott)
+  //         "comment",
+  //         "entity.name.type.class", //class names
+  //         "keyword", //import, export, return…
+  //         "constant", //String, Number, Boolean…, this, super
+  //         "storage.modifier", //static keyword
+  //         "storage.type.class.js", //class keyword
+  //       ],
+  //       "settings": {
+  //         "fontStyle": "italic"
+  //       }
+  //     },
+  //     {
+  //       "scope": [
+  //         //following will be excluded from italics (VSCode has some defaults for italics)
+  //         "invalid",
+  //         "keyword.operator",
+  //         "constant.numeric.css",
+  //         "keyword.other.unit.px.css",
+  //         "constant.numeric.decimal.js",
+  //         "constant.numeric.json"
+  //       ],
+  //       "settings": {
+  //         "fontStyle": ""
+  //       }
+  //     }
+  //   ]
+  // },
+  "vim.easymotion": true,
+  "vim.sneak": true,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": false,
+  "vim.hlsearch": true,
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["j", "j"],
+      "after": ["<Esc>"]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "d"],
+      "after": ["d", "d"]
+    },
+    {
+      "before": ["<C-n>"],
+      "commands": [":nohl"]
+    },
+    {
+      "before": ["f"],
+      "after": ["<leader>", "<leader>", "<leader>", "b", "d", "w"],
+    }
+  ],
+  "vim.leader": "<space>",
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-f>": false
+  },
+  "window.titleBarStyle": "native",
+  "vim.easymotionJumpToAnywhereRegex": "[A-Za-z0-9]",
+  "workbench.iconTheme": "vscode-great-icons",
+  "window.enableMenuBarMnemonics": false,
+  "window.menuBarVisibility": "toggle",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "python.linting.pep8Enabled": false,
+  "workbench.statusBar.visible": true,
+  "[python]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4  
+  },
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.renderWhitespace": "none",
+  "workbench.statusBar.feedback.visible": false,
+  "python.jediEnabled": false,
+  "workbench.activityBar.visible": true,
+  "spellright.documentTypes": [
+    "markdown"
+  ],
+  "spellright.language": [
+    "Spanish"
+  ]
+}

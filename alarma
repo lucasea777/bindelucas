@@ -2,7 +2,7 @@
 #http://askubuntu.com/questions/61708/automatically-sleep-and-wake-up-at-specific-times
 
 # Example:
-# alarma HH:MM --media=/home/luks/Music/Hymn.mp3
+# alarma HH:MM --media=/home/luks/Music/ne*.mp3
 # alarma HH:MM --media=/home/luks/Music/Hymn.mp3 --cmd="fm -fav yo -m \"test3\" -f -e @hotmail.com"
 
 # ------------------------------------------------------
@@ -11,7 +11,7 @@
 #SCRIPTPATH="`dirname $SCRIPT`"
 
 type=mem
-media="/home/luks/Music/Hymn.mp3"
+media="/home/luks/Music/nenamaldicion.mp3"
 
 function value_var {
     IFS='=' read -r -a array <<< "$1" ; echo "${array[1]}" ; 

@@ -1,14 +1,14 @@
 #!/bin/bash
 #http://askubuntu.com/questions/222587/how-to-check-apt-get-upgrade-status-after-losing-ssh-connection
 function doit() {
-sshpass -f ~/binprivate/db/miqueridacontraes ssh edu@$1 -t 'screen -raAd; /bin/bash'
+sshpass -f ~/binprivate/db/miqueridacontraes ssh edu@$1 -t 'screen -raAd; /bin/bash' $2
 }
 if [[ $1 == "-l" ]]; then
 	ip=$(lip edu)
-	doit $ip
+	doit $ip $2
 elif [[ $1 == "-e" ]]; then
 	ip=$(eip edu)
-        doit $ip
+        doit $ip $2
 else
-   doit $(livinghost)
+   doit $(livinghost) $1
 fi

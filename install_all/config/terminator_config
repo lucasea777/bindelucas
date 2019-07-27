@@ -1,7 +1,7 @@
 [global_config]
   window_state = fullscreen
 [keybindings]
-  hide_window = F10
+  hide_window = F11
   resize_down = <Primary><Shift>Down
   resize_up = <Primary><Shift>Up
   switch_to_tab_1 = <Alt>1

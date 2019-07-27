@@ -1,19 +1,2 @@
-OUT=$(nmap 192.168.1.0/24 -p 22 --open | egrep -ho "([0-9]+\.){3}[0-9]" | tail -1)
-if [ $OUT = "192.168.1.1" ]; then echo 'NOT_FOUND'; else echo $OUT; fi
-exit
-#!/usr/bin/python3
-import os,re
-enter = None
-m = None
-lines = []
-for line in os.popen('nmap 192.168.1.0/28').readlines()[1:]:
-  lines += [line]
-  enter = line == '\n' or enter
-  if enter and line.startswith('22/tcp'):
-    break
-for line in reversed(lines):
-  m = re.search('\d+\.\d+\.\d+\.\d+', line)
-  if m:
-    break
-#if n.group(0) == '192.168.1.1':
-#print(m.group(0))
+#!/usr/bin/env bash
+getip living_eth

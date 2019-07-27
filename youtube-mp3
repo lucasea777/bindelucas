@@ -1,1 +1,1 @@
-youtube-dl -x --audio-format mp3 --audio-quality 320K "$?"
+youtube-dl -x --audio-format mp3 --audio-quality 320K "$1"
