@@ -1,0 +1,34 @@
+#!/bin/bash gccANDexecute
+#define _GNU_SOURCE         /* See feature_test_macros(7) */
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+int main() {
+  size_t pollingDelay = 5;
+  while (true) {
+    printf("hi\n");
+    FILE *fp;
+    char path[1035];
+
+    /* Open the command for reading. */
+    fp = popen("/usr/bin/find /home/edu/Downloads/wallpapers -type f | shuf -n 1", "r");
+    if (fp == NULL) {
+      printf("Failed to run command\n" );
+      exit(1);
+    }
+
+    /* Read the output a line at a time - output it. */
+    fgets(path, sizeof(path), fp);
+    /* close */
+    pclose(fp);
+    char* string;
+    if(0 > asprintf(&string, "echo DISPLAY=:0 pcmanfm --set-wallpaper='%s'", path)) printf("Error\n");
+    //if(0 > asprintf(&string, "/bin/bash")) printf("Error\n");
+    system(string);
+    free(string);
+    sleep(pollingDelay);  /* sleep for 100 milliSeconds */
+  }
+  return 0;
+}
