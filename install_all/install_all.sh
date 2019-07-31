@@ -112,6 +112,7 @@
 
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 gsettings set org.gnome.desktop.interface clock-show-date true
+gsettings set org.gnome.desktop.interface enable-animations false
 
 # hasta ahora el theme solo se cambia con gnome-tweak-tools
 # https://extensions.gnome.org/extension/723/pixel-saver/
