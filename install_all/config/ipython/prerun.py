@@ -51,6 +51,15 @@ def a(line, body=None):
     else:
         globals()[line.strip()] = np.array(eval_rows)
 
+# @register_cell_magic
+@register_line_magic
+def l(line, body=None):
+    """
+    L = %l 1 3 4
+    """
+    return [eval(c) for c in line.split()]
+
+
 @register_line_magic
 def cplast(line):
     last = list(get_ipython().history_manager.get_tail(1, raw=False))[0][-1]

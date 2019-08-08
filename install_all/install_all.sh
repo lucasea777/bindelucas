@@ -33,6 +33,8 @@
 #http://stackoverflow.com/questions/29778967/how-to-install-sublime-monokai-theme-in-netbeans-8
 #http://askubuntu.com/questions/293838/shell-script-to-conditionally-add-apt-repository
 
+#https://linuxconfig.org/how-to-install-gnome-shell-extensions-from-zip-file-using-command-line-on-ubuntu-18-04-bionic-beaver-linux
+
 # x2go
 # https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-desktop-with-x2go-on-debian-8
 
@@ -105,6 +107,8 @@
 # /usr/share/X11/xkb/keycodes/evdev
 # actualizar con:
 # setxkbmap -layout us
+# https://askubuntu.com/questions/33774/how-do-i-remap-the-caps-lock-and-ctrl-keys
+# setxkbmap -layout us -option ctrl:nocaps
 # nombres con:
 # xev -event keyboard # quizas?
 # https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
@@ -146,7 +150,10 @@ inst ansible
 # ansible oh-my-zsh
 # history duplicates
 # https://github.com/zsh-users/zsh-history-substring-search/issues/19
+sudo apt-get install fonts-powerline
 curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/install.sh | bash 
+# o quizas pero seguramente mal!
+# --- usando sudo -i -u luks bash
 
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
@@ -397,7 +404,11 @@ chmod +x /home/luks/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-sta
 cd $myoldpath &&
 rm -rf /tmp/logkeys
 
-inst guake
+# inst guake version vieja!!
+pip3 install guake --user
+# https://askubuntu.com/questions/468445/how-to-backup-guakes-settings
+# guake --save-preferences ~/bindelucas/install_all/config/myguakeconfig
+# guake --restore-preferences ~/bindelucas/install_all/config/myguakeconfig
 shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 #latex
@@ -570,7 +581,7 @@ wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp
 dpkg -i /tmp/code_latest_amd64.deb
 ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
 ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
-ln -f -s '/home/luks/bindelucas/install_all/config/vscode/snippets' /home/luks/.config/Code/User/snippets
+ln -f -s $HOME'/bindelucas/install_all/config/vscode/snippets' $HOME/.config/Code/User/snippets
 exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
 for one_thing in "${exts[@]}"; do
     code --install-extension $one_thing
@@ -680,7 +691,8 @@ latest=$(cat /tmp/chromedriver/LATEST_RELEASE) &&
 rm -f /tmp/chromedriver/chromedriver.zip &&
 wget -q --force-directories -O /tmp/chromedriver/chromedriver.zip 'http://chromedriver.storage.googleapis.com/'$latest'/chromedriver_linux'$b'.zip' &&
 
-unzip -o -q /tmp/chromedriver/chromedriver.zip -d /usr/local/bin/
+unzip -o -q /tmp/chromedriver/chromedriver.zip -d /usr/local/bin/ &&
+chmod +x /usr/local/bin/chromedriver
 #sel=$(printf "try:\n\timport selenium; print 'OK'\nexcept:\n\tpass" | python3) &&
 #if [[ $sel = 'OK' ]]; then red 'selenium works!'; else red 'selenium error'; fi
 red 'fin selenium'
