@@ -107,3 +107,24 @@ function addrepo() {
     fi
     inf "repo added"
 }
+
+function updir() {
+    cd ..
+    zle reset-prompt
+}
+function downdir() {
+    cd $((pwd;dirs) | p \
+        "p=input(); l=input(); \
+         eu=lambda a: str(Path(a).expanduser()); \
+         ([a for a in map(eu,l.split()) \
+           if a.startswith(p) and len(a) > len(p)] + ['.'])[0]")
+    zle reset-prompt
+}
+zle -N updir
+zle -N downdir
+bindkey '^j' updir
+bindkey '^k' downdir
+
+bindkey -M emacs '^[[3;5~' kill-word
+bindkey -M emacs '^H' backward-kill-word
+

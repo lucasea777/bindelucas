@@ -249,6 +249,9 @@ onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.bashrc
 onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.zshrc
 export PATH="$HOME/go/bin:$PATH"
 
+go get github.com/gsamokovarov/jump
+onceinfile 'unset -f jump; eval "$(jump shell --bind=j)"' '#<JUMP>' ~/.zshrc
+
 # setup thyme
 inst x11-utils
 inst xdotool
