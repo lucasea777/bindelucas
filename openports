@@ -1,0 +1,5 @@
+# mostrar puertos
+#sudo netstat -tnpa | /home/luks/bindelucas/p "'\n'.join({l.strip().split()[3].split(':')[-1] for l in sys.stdin.readlines() if 'LISTEN' in l and '127' != l.split()[3][:3]})" 
+
+# mostrar nombre de procesos
+sudo netstat -tnpa | /home/luks/bindelucas/p "'\n'.join({l.strip().split()[-1].split('/')[-1] for l in sys.stdin.readlines() if 'LISTEN' in l and '127' != l.split()[3][:3]})"

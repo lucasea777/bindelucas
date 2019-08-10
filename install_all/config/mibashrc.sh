@@ -7,6 +7,7 @@ alias ccat2="~/workspace-go/bin/ccat --bg=dark"
 alias keygen='node /home/luks/Downloads/gymkeygen/keygen_node.js'
 alias jq-interactive='jid'
 alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
+#https://www.2daygeek.com/linux-scan-check-open-ports-using-netstat-ss-nmap/
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
 function cdpymodule() {
     mydir=$(p 'import '$1'; '$1'.__file__');
@@ -128,3 +129,14 @@ bindkey '^k' downdir
 bindkey -M emacs '^[[3;5~' kill-word
 bindkey -M emacs '^H' backward-kill-word
 
+zsh_wifi_signal(){
+    # local signal=$(sudo /home/luks/bindelucas/openports)
+    echo $(sudo /home/luks/bindelucas/openports)
+    # echo ""
+    # local color='%F{yellow}'
+    # echo -n "%{$color%}\uf230  $signal%{%f%}" # \uf230 is 
+}
+
+POWERLEVEL9K_CUSTOM_OPENPORTS="zsh_wifi_signal"
+POWERLEVEL9K_CUSTOM_OPENPORTS_BACKGROUND="red"
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs custom_openports vcs command_execution_time time)
