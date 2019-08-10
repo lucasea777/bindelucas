@@ -1,0 +1,2 @@
+echo "Will output 'listenting!' each time a syscalls:sys_enter_listen is performed"
+sudo stdbuf -i 0 -o 0 -e 0 perf top -e "syscalls:sys_enter_listen" -a --stdio -d 3 |grep --line-buff "fd: " | perl -pe 's/^.*$/listening!/' 

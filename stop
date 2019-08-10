@@ -1,0 +1,1 @@
+systemctl list-unit-files |grep '.service'| grep enabled | p "'\n'.join(['exit']+[l.strip().split()[0] for l in sys.stdin.readlines()])" | fzf | xargs systemctl stop 

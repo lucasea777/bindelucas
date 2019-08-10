@@ -1,0 +1,2 @@
+# shows all ips of clients connected to the sshd daemon (if any)
+sudo netstat -tnpa | grep 'ESTABLISHED.*sshd' | /home/luks/bindelucas/p "''.join(list({l.split()[4].split(':')[0] for l in sys.stdin.readlines()}) or [''])" 
