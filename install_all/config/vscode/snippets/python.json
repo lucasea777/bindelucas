@@ -91,6 +91,12 @@
 			"newtext = re.sub('<([^<]){2,8}>|\\n.{24} >', '', text)  # https://regex101.com/",
 			"words = re.findall(r'\\w{4,}', newtext)"
 		]
+	},
+	"doctest": {
+		"prefix": ["doctest", "test"],
+		"body" :[
+			"import doctest; doctest.testmod(verbose=True)",
+		]
 	}
 }
 
