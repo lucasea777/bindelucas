@@ -97,6 +97,10 @@
 		"body" :[
 			"import doctest; doctest.testmod(verbose=True)",
 		]
+	},
+	"print": {
+		"prefix": ["p", "print"],
+		"body": "print(f\"$1\")"
 	}
 }
 
