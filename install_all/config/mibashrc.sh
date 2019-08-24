@@ -63,7 +63,11 @@ function onceinfile() { # eg: onceinfile 'LINE' 'ID' 'FILE'
 # magenta   COLOR_MAGENTA     5     max,0,max
 # cyan      COLOR_CYAN        6     0,max,max
 # white     COLOR_WHITE       7     max,max,max
-
+function update-vscode() {
+    sudo echo "gratcie"&&
+	wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb && 
+	sudo dpkg -i /tmp/code_latest_amd64.deb
+}
 function red() {
     echo "$(tput setaf 1)$(tput setab 7)$1$(tput sgr 0)"
 }
@@ -131,6 +135,8 @@ bindkey -M emacs '^H' backward-kill-word
 
 zsh_wifi_signal(){
     # local signal=$(sudo /home/luks/bindelucas/openports)
+    # sudo visudo
+    # agregar a final: luks ALL=(ALL:ALL) NOPASSWD: /home/luks/bindelucas/openports
     echo $(sudo /home/luks/bindelucas/openports)
     # echo ""
     # local color='%F{yellow}'
