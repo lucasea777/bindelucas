@@ -711,7 +711,8 @@ source ~/bindelucas/install_all/install-themes.sh
 red 'fin-themes'
 
 red 'android-studio'
-source ~/bindelucas/install_all/install-android-studio.sh
+# source ~/bindelucas/install_all/install-android-studio.sh
+sudo snap install android-studio --classic
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.bashrc
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
 red 'fin android-studio'
