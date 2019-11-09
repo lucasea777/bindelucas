@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Example: "require jquery | clipcopy"
+And know y can just paste in chrome console and type "jquery".
+
+Usage:
+    require <npmpkgname>
+    require (-h | --help)
+    require --version
+
+Options:
+    -h --help       Show this screen.
+    --version       Show version.
+    --speed=<kn>    Speed in knots [default: 10].
+    --moored        Moored (anchored) mine.
+    --drifting      Drifting mine.
+
+"""
+from docopt import docopt
+import requests
+import sys
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='Naval Fate 2.0')
+    except SystemExit:
+        print(__doc__)
+        sys.exit()
+    name = arguments["<npmpkgname>"]
+
+# Basado en https://github.com/mathisonian/requirify/blob/master/requirify.js
+
+template = """
+if (typeof require !== "undefined")
+    _require = require;
+{body}
+window["{name}"] = require("{name}");
+if (typeof _require !== "undefined")
+    require = _require;
+"""
+
+body = requests.get(f"https://wzrd.in/bundle/{name}@latest/").text
+
+print(template.format(**locals()))
+
+
+# var request = require('browser-request');
+
+# window.require = function(name, moduleName) {
+#     _require = require;
+
+#     if(!moduleName) {
+#         moduleName = name;
+#     }
+
+#     console.log('Fetching ' + moduleName + '... just one second');
+#     request('https://wzrd.in/bundle/' + moduleName + '@latest/', function(er, res, body) {
+
+#         require = null;
+#         eval(body);
+#         window[name] = require(moduleName);
+#         require = _require;
+#         console.log('Finished getting ' + moduleName);
+#     });
+# };
