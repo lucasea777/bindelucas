@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+"""pack files.
+
+Ejemplos:
+    pack foo foo.tar.gz
+    pack foo foo.tar
+    pack foo foo.zip
+    pack foo foo.rar
+
+Usage:
+    pack [--simulate] <paths>...
+    pack (-h | --help)
+    pack --version
+
+Options:
+    -h --help       Show this screen.
+    --version       Show version.
+    --speed=<kn>    Speed in knots [default: 10].
+    --moored        Moored (anchored) mine.
+    --drifting      Drifting mine.
+
+"""
+from docopt import docopt
+from pathlib import Path
+import sys
+import os
+
+class NoDot(Exception):
+    def __str__(self):
+        return f"There is no '.' in '{self.args[0]}' (which is the last argument)"
+
+class ExtNotKnown(Exception):
+    def __str__(self):
+        return f"I don't know {self.args[0]}"
+        
+def getcmd(input_files, file_out):
+    if "." not in file_out:
+        raise NoDot(file_out)
+    ext = "".join(file_out.split(".", 1)[1])
+    cmds = {
+        # https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/
+        "tar.gz": f'tar -czvf {file_out} {" ".join(input_files)}',
+        "tar": f'tar -cvf {file_out} {" ".join(input_files)}',
+        "zip": f'zip -r {file_out} {" ".join(input_files)}',
+        "rar": f'rar a {file_out} {" ".join(input_files)}'
+    }
+    if ext not in cmds:
+        raise ExtNotKnown(ext)
+    return cmds[ext]
+# zip test1 test1.zip
+# rar a -p comprR.rar comprR.zip
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='pack 0.1')
+    except SystemExit:
+        print(__doc__)
+    else:
+        if len(arguments["<paths>"]) <= 1:
+            print("Se requieren almenos dos paths.\n")
+            print(__doc__)
+        else:
+            input_files, file_out = arguments["<paths>"][:-1], arguments["<paths>"][-1]
+            for f in input_files:
+                if not Path(f).exists():
+                    print(f"{f} does not exist")
+                    sys.exit()
+            if Path(file_out).exists():
+                print(f"{file_out} already exists")
+                sys.exit()
+            try:
+                cmd = getcmd(input_files, file_out)
+            except NoDot as nd:
+                print(nd)
+            except ExtNotKnown as enk:
+                print(enk)
+            else:
+                if arguments["--simulate"]:
+                    print(cmd)
+                    sys.exit()
+                os.system(cmd)
+            # print(arguments)
