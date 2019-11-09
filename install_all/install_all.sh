@@ -270,6 +270,8 @@ inst gparted
 upd
 inst htop
 inst ack # better than grep with perl regex syntax
+inst gpick
+inst screenruler
 inst python3-dev
 inst python-dev
 # install docker
