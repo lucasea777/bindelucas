@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Example: "require jquery | clipcopy"
-And know y can just paste in chrome console and type "jquery".
+And now I can just paste in the chrome console and type "jquery".
 
 Usage:
     require <npmpkgname>
