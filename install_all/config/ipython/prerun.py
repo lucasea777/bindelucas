@@ -71,4 +71,4 @@ def copylast(line):
 
 get_ipython().define_macro('load_sympy','from sympy.abc import *; from sympy import * ; init_printing()')
 
-print("load_sympy might be useful 😊")
+print("load_sympy might be useful 😊, Also ctrl+o adds a precious new line")
