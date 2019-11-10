@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""youtube-playlist.
+
+Usage:
+    youtube-playlist <id>
+
+Options:
+    -h --help       Show this screen.
+    --version       Show version.
+
+"""
+from docopt import docopt
+from pathlib import Path
+from collections import Counter, defaultdict
+import sys, os, requests
+
+def getitems(id):
+    out = []
+    r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", {
+            "part": "id,contentDetails,snippet",
+            "maxResults": 50,
+            "playlistId": id,
+            "key": Path("~/binprivate/db/youtubev3apikey").expanduser().read_text().strip()
+        })
+    if r.status_code != 200:
+        raise Exception("r.status_code != 200", r.status_code)
+    js = r.json()
+    # print(js["pageInfo"])
+    out += js["items"]
+    total = int(js["pageInfo"]["totalResults"])
+    while len(out) < total:
+        # print(js["nextPageToken"])
+        r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", {
+            "part": "id,contentDetails,snippet",
+            "pageToken": js["nextPageToken"],
+            "maxResults": 50,
+            "playlistId": id,
+            "key": Path("~/binprivate/db/youtubev3apikey").expanduser().read_text().strip()
+        })
+        if r.status_code != 200:
+            raise Exception("r.status_code != 200", r.status_code)
+        js = r.json()
+        out += js["items"]
+    return out
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='youtube-playlist 0.01')
+    except SystemExit:
+        print(__doc__)
+        sys.exit()
+    out = getitems(arguments["<id>"])
+    print(out)
+    # import IPython; IPython.embed()
+# curl 'https://www.googleapis.com/youtube/v3/playlistItems?part=id%2CcontentDetails%2Csnippet&maxResults=50&playlistId={id}&key='`cat $HOME/binprivate/db/youtubev3apikey`
+# https://developers.google.com/youtube/v3/docs/playlistItems/list
