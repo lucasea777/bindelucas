@@ -3,7 +3,7 @@
     "file:///home/luks/Downloads/synthwave84.css"
     ],  
   "editor.folding": false,
-  "editor.glyphMargin": false,
+  "editor.glyphMargin": true,
   "activitusbar.views": {
     "explorer": "file-text",
     "search": "search",
