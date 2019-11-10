@@ -17,6 +17,16 @@ function ly {
     myurl=$(imfly $@);
     mpv $myurl --no-video
 }
+function lyv {
+    myurl=$(imfly $@);
+    mpv $myurl
+}
+function adbwifi {
+    adb tcpip 5555 && adb connect `getip g4`:5555;
+}
+function sshliv {
+    sshpass -f $HOME/binprivate/db/miqueridacontraes ssh edu@`getip living_eth`
+}
 function cless() {
     #~/workspace-go/bin/ccat --bg=dark --color always $@ | less -r
     pygmentize -g -O style=colorful,linenos=1 $@ | less -r
