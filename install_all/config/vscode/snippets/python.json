@@ -31,31 +31,37 @@
 	"docopt": {
 		"prefix": "docopt",
 		"body": [
-			"#!/usr/bin/python3",
-			"\"\"\"Naval Fate.",
+			"#!/usr/bin/env python3",
+			"\"\"\"${1:${TM_FILENAME}}.",
 			"",
 			"Usage:",
-			"    naval_fate.py ship new <name>...",
-			"    naval_fate.py ship <name> move <x> <y> [--speed=<kn>]",
-			"    naval_fate.py ship shoot <x> <y>",
-			"    naval_fate.py mine (set|remove) <x> <y> [--moored | --drifting]",
-			"    naval_fate.py (-h | --help)",
-			"    naval_fate.py --version",
+			"    $1 ship new <name>...",
+			"    $1 ship <name> move <x> <y> [--speed=<kn>]",
+			"    $1 ship shoot <x> <y>",
+			"    $1 mine (set|remove) <x> <y> [--moored | --drifting]",
+			"    $1 (-h | --help)",
+			"    $1 --version",
 			"",
 			"Options:",
-				"    -h --help       Show this screen.",
-				"    --version       Show version.",
-				"    --speed=<kn>    Speed in knots [default: 10].",
-				"    --moored        Moored (anchored) mine.",
-				"    --drifting      Drifting mine.",
+			"    -h --help       Show this screen.",
+			"    --version       Show version.",
+			"    --speed=<kn>    Speed in knots [default: 10].",
+			"    --moored        Moored (anchored) mine.",
+			"    --drifting      Drifting mine.",
 			"",
 			"\"\"\"",
 			"from docopt import docopt",
+			"from pathlib import Path",
+			"from collections import Counter, defaultdict",
+			"import sys, os",
 			"",
 			"",
 			"if __name__ == '__main__':",
-				"    arguments = docopt(__doc__, version='Naval Fate 2.0')",
-				"    print(arguments)"
+			"    try:",
+			"        arguments = docopt(__doc__, version='$1 0.01')",
+			"    except SystemExit:",
+			"        print(__doc__)",
+			"        sys.exit()"
 		]
 	},
 	"keras": {
@@ -101,6 +107,16 @@
 	"print": {
 		"prefix": ["p", "print"],
 		"body": "print(f\"$1\")"
+	},
+	"shebang": {
+		"prefix": ["shebang"],
+		"body": "#!/usr/bin/env python3"
+	},
+	"subprocess": {
+		"prefix": ["subprocess"],
+		"body": ["import subprocess",
+				"hostname = subprocess.Popen(\"hostname\",",
+				"                  stdout=subprocess.PIPE).stdout.read().decode().strip()"]
 	}
 }
 
