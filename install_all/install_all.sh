@@ -372,6 +372,8 @@ curl https://bootstrap.pypa.io/get-pip.py | python3
 #inst python3-pip #default en ubuntu
 pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
 pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision seaborn --user
+pip3 -q install opencv-contrib-python --user
+pip3 -q install altair vega_datasets --user
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
@@ -716,6 +718,8 @@ sudo snap install android-studio --classic
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.bashrc
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
 red 'fin android-studio'
+
+sudo snap install scrcpy
 
 #red 'codelite'
 #apt-key adv --fetch-keys http://repos.codelite.org/CodeLite.asc &&
