@@ -1,0 +1,551 @@
+#!/usr/bin/env python3
+"""mylist.
+
+Usage:
+    mylist
+
+Options:
+    -h --help       Show this screen.
+    --version       Show version.
+
+Dependencies:
+ 
+Docs: 
+ Can scroll with mouse or with keys 'u' and 'd'.
+"""
+import urwid
+import random
+from collections import defaultdict
+from pathlib import Path
+import os, json
+import subprocess
+import urllib
+from pipes import quote
+from itertools import groupby, combinations_with_replacement
+from multiprocessing import Process, Queue
+import sys, os, math
+import numpy as np
+import multiprocessing
+import time
+import requests
+
+from docopt import docopt
+from pathlib import Path
+from collections import Counter, defaultdict
+import sys, os
+
+
+try:
+    arguments = docopt(__doc__, version='mylist 0.01')
+except SystemExit:
+    # print(__doc__)
+    sys.exit()
+# multiprocessing.set_start_method('spawn', True)
+
+w, h = urwid.raw_display.Screen().get_cols_rows()
+# import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True); ptvsd.wait_for_attach();
+# import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
+# https://github.com/siikamiika/mpv-python-ipc/blob/master/mpv_python_ipc/mpv_python_ipc.py
+def getprobs(templ, n):
+    templ = templ.replace(".", "1")
+    templ = templ.replace("-", "3")
+    templ = templ.replace("^", "9")
+    gs = ["".join(g) for k, g in groupby(templ)]
+    sizes = [len(v)/len(templ) for v in gs]
+    reps = [math.ceil(n*s) for s in sizes]
+    while sum(reps) > n:
+        todel = reps.index(max(reps))
+        reps[todel] -= 1
+        if reps[todel] == 0:
+            del reps[todel]
+            del gs[todel]
+    t = sum(map(lambda x: int(x[0]), gs))
+    probs = [int(v[0])/t for v in gs]
+    out = []
+    for p, r in zip(probs, reps):
+        out += [p/r] * r
+    return out
+
+def test_probs():
+    for s in ("".join(a) for a in combinations_with_replacement("1234", 15)):
+        for n in range(1,7):
+            out = getprobs(s, n)
+            if not len(out) == n:
+                print(s,n,out, len(out))
+                sys.exit()
+            if not abs(sum(out) - 1) < 0.001:
+                print(s,n,out, sum(out))
+                sys.exit()
+            if all([int(s[i-1]) < int(c) for i, c in enumerate(s, 1)]):
+                if not all([out[i-1] <= c for i, c in enumerate(out, 1)]):
+                    print(s,n,out)
+                    sys.exit()
+
+
+class Config():
+    def __init__(self):
+        self.configpath = Path("~/mylist.json").expanduser()
+        self.config = self.load()
+    
+    def load(self):
+        template = {
+            "relatedProb": 1,
+            "seed": 34,
+            "playlists": {
+                "top50": {
+                    "id": "PLgzTt0k8mXzEk586ze4BjvDXR7c-TUSnx",
+                    "prob": 1,
+                    "order": "random"
+                }, 
+                "top501": {
+                    "id": "PLgzTt0k8mXzEk586ze4BjvDXR7c-TUSnx",
+                    "prob": 1,
+                    "order": "original",
+                    "listprob": "...--^"
+                }, 
+                "top502": {
+                    "id": "PLgzTt0k8mXzEk586ze4BjvDXR7c-TUSnx",
+                    "prob": 1,
+                    "order": "reverse",
+                    "listprob": "...--^"
+                }
+            }
+        }
+
+        if not self.configpath.exists():
+            self.configpath.write_text(json.dumps(template, indent=2))
+            os.system(f"nano {str(self.configpath)}")
+
+        return json.load(self.configpath.open())
+
+    def change(self, m):
+        m.stop()
+        os.system(f"nano {str(self.configpath)}")
+        self.config = self.load()
+        m.start()
+
+class Lucky():
+    @staticmethod
+    def _geturl(s):
+        return subprocess.Popen(f"imfly '{s}'".split(),
+                          stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE).stdout.read().decode().strip().split("q=", 1)[1]
+
+    @staticmethod
+    def geturl(s):
+        var = requests.head(f'http://www.google.com/search?q="{" ".join(s)} site:youtube.com"&btnI')
+        return var.headers["Location"].split("q=", 1)[1]
+
+    @classmethod
+    def getidfromurl(cls, url):
+        return urllib.parse.unquote(url).split("watch?v=")[1]
+    
+    @classmethod
+    def getid(cls, s):
+        return cls.getidfromurl(cls.geturl(s))
+
+class YoutubeDl():
+    @staticmethod
+    def getjs(id):
+        cmd = f"youtube-dl -j -- {id}"
+        return json.loads(subprocess.Popen(cmd.split(),
+                          stdout=subprocess.PIPE).stdout.read().decode().strip())
+    @classmethod
+    def getsimple(cls, id):
+        filter = ["creator", "title", "id"]
+        return {k: v for k, v in cls.getjs(id).items() if k in filter}
+
+
+class PlayerIPC():
+    def __init__(self, myscreen):
+        os.system("killall mpv")
+        self.ms = myscreen
+        self.q = Queue()
+        self.p = None
+        self._ensure_start()
+
+    def onpipeevent(self, data):
+        data = data.decode()
+        # Path("/tmp/borrame").write_text(data)
+        for j in [json.loads(d) for d in data.strip().replace("}{", "}\n{").split("\n")]:
+            # print(j, j["event"])
+            # if j["event"] == "end-file":
+            if j["event"] == "idle":
+                self.playnext()
+    
+    def playnext(self):
+        self.ms.cplaying.next()
+        self.play(self.ms.cplaying.position)
+    
+    def playprevious(self):
+        self.ms.cplaying.before()
+        self.play(self.ms.cplaying.position)
+
+    def listen(self, fdpipe):
+        def listener(q):
+            time.sleep(2)
+            # https://stackoverflow.com/questions/27195677/how-to-access-unix-domain-sockets-from-the-command-line
+            reader_p = subprocess.Popen("ncat -U /tmp/mpvsocket", shell=True, 
+                            stdout=subprocess.PIPE, stdin=subprocess.PIPE).stdout
+            # https://stackoverflow.com/questions/5848087/how-to-use-a-generator-to-split-socket-read-data-on-newlines
+            for l in reader_p:
+                l = l.strip()
+                if l:
+                    os.write(fdpipe, l)
+        self.p = Process(target=listener, args=(self.q,))
+        self.p.start()
+
+    def _ensure_start(self):
+        if not (self.p and self.p.is_alive()):
+            cmd = f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet"
+            self.p = subprocess.Popen(cmd, shell=True,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    
+    def play(self, pos=None):
+        pos = pos if pos != None else self.ms.cselected.position
+        self._ensure_start()
+        self.ms.cplaying.position = pos
+        self.ms.render()
+        id = self.ms.js[pos]["id"]
+        # https://github.com/stax76/mpv.net/wiki/mpv-properties
+        # https://github.com/mpv-player/mpv/blob/master/DOCS/man/input.rst#list-of-input-commands
+        cmd = f"""echo '{json.dumps({ "command": ["loadfile", f"https://www.youtube.com/watch?v={id}"]})}' | socat - /tmp/mpvsocket"""
+        o = (subprocess.Popen(cmd, shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE).stdout.read().decode())
+        # print(o)
+        self.resume()
+
+    def toggleResume(self):
+        cmd = f"""echo '{ json.dumps({"command": ["cycle", "pause"]}) }' | socat - /tmp/mpvsocket"""
+        o = (subprocess.Popen(cmd, shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE).stdout.read().decode())
+        # print(o)
+    def resume(self):
+        cmd = f"""echo '{ json.dumps({"command": ["set_property", "pause", False]}) }' | socat - /tmp/mpvsocket"""
+        o = (subprocess.Popen(cmd, shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE).stdout.read().decode())
+        # print(o)
+
+class Player():
+    def __init__(self, myscreen):
+        def f(q):
+            while True:
+                cmd = q.get()
+                p = subprocess.Popen(cmd.split(),
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+                q.put(p.pid)
+                p.wait()
+        self.p = None
+        self.ms = myscreen
+        # self.q = Queue()
+        # self.p = Process(target=f, args=(self.q,))
+        # self.p.start()
+    
+    def play(self):
+        # if self.q.qsize() > 0:
+        #     os.kill(self.q.get(), 9)
+        id = self.ms.js[self.ms.cselected.position]["id"]
+        cmd = f"mpv https://www.youtube.com/watch?v={id}"
+        # self.q.put(cmd)
+        if self.p:
+            self.p.terminate()
+        self.p = subprocess.Popen(cmd.split(),
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+        
+
+class Playlist():
+    @classmethod
+    def generate(cls, config):
+        # np.random.seed(config.config["seed"])
+        originals = cls.get_playlists(config)
+        tmp = originals.copy()
+        js = []
+        while any(len(p) != 0 for p in tmp.values()):
+            # elejir cual playlist
+            name_prob = [(name, config.config["playlists"][name]["prob"]) for name, p in tmp.items() if len(p) != 0]
+            probs = [p for c, p in name_prob]
+            t = sum(probs)
+            i = np.random.choice(range(len(name_prob)), p=np.array(probs)/t)
+            name, _ = name_prob[i]
+            n = len(tmp[name])
+            # elejir cual tema
+            listconfig = config.config["playlists"][name]
+            order = listconfig["order"]
+            if order == "random":
+                i = np.random.randint(0, n)
+            if order in {"original", "reverse"}:
+                l = range(n)
+                l = reversed(l) if order == "reverse" else l
+                i = np.random.choice(list(l), p=getprobs(listconfig["listprob"], n))
+            js.append(tmp[name][i])
+            del tmp[name][i]
+
+        return js
+
+    @staticmethod
+    def get_playlist(name, id):
+        path = Path(f"~/.cache/{name}.json").expanduser()
+        if not path.exists():
+            print(f"downloading {name}")
+            os.system(f"youtube-dl -j --flat-playlist '{id}' > {str(path)}")
+        return [json.loads(t) for t in path.read_text().strip().split("\n")]
+
+    @classmethod
+    def get_playlists(cls, config):
+        return {name: cls.get_playlist(name, p["id"]) for name, p in config.config["playlists"].items()}
+
+class Cursor():
+    def __init__(self, myscreen, style):
+        self.ms = myscreen
+        self.position = 0
+        self.style = style
+    
+    def next(self):
+        if self.position < len(self.ms.js):
+            self.reset()
+            self.position += self.position != len(self.ms.js) - 1
+            Cursor.render_cursors(self.ms, self.ms.cursors)
+        if self.position == self.ms.h + self.ms.scroll_start:
+            self.ms.onscrolldown()
+    
+    def before(self):
+        if self.position > 0:
+            self.reset()
+            self.position -= 1
+            Cursor.render_cursors(self.ms, self.ms.cursors)
+        if self.position == self.ms.scroll_start - 1:
+            self.ms.onscrollup()
+
+    @classmethod
+    def withstyles(cls, styles, j):
+        # if len(styles) == 1:
+        st = "" 
+        if "selected" in styles:
+            st = "selected"
+        if "playing" in styles:
+            st = "playing"
+        # return st, f"    {txt}"
+        icon1 = "👉" if "selected" in styles else "  "
+        icon1 = "🔃" if "moving" in styles else icon1
+        icon1 = "⏳" if "loading" in styles else icon1
+        icon2 = "🔉" if "playing" in styles else "  "
+        return st, f""" {icon1} {icon2} {j["title"]}"""
+
+    @classmethod
+    def render_cursors(cls, myscreen, cursors):
+        poscur = defaultdict(set)
+        for c in cursors:
+            poscur[c.position].update(c.style)
+        for p in poscur:
+            abs = p - myscreen.scroll_start
+            if 0 <= abs < myscreen.h:
+                myscreen.thepile[abs].set_text(cls.withstyles(poscur[p], myscreen.js[p]))
+    
+    def reset(self):
+        abs = self.position - self.ms.scroll_start
+        if 0 <= abs < self.ms.h:
+            self.ms.thepile[abs].set_text(Cursor.withstyles({}, self.ms.js[self.position]))
+
+class MyScreen():
+    def __init__(self, w, h):
+        self.player = PlayerIPC(self)
+        self.config = Config()
+        self.w = w
+        self.h = h
+        self.js = Playlist().generate(self.config)
+        self.scroll_start = 0
+        self.cplaying = Cursor(self, {"playing"})
+        self.cselected = Cursor(self, {"selected"})
+        self.cursors = {self.cplaying, self.cselected}
+        self.moving = False
+        self.editing = False
+        # self.txts = [Cursor.withstyles({}, j["title"]) for j in js]
+        
+        texts = [urwid.Text(Cursor.withstyles({}, j)) for j in self.js[:self.h]]
+        self.thepile = urwid.Pile(texts)
+        Cursor.render_cursors(self, self.cursors)
+
+    def toggleMoving(self):
+        self.moving = False if self.moving else True
+        if self.moving:
+            self.cselected.style.add("moving")
+        else:
+            self.cselected.style.discard("moving")
+        Cursor.render_cursors(self, self.cursors)
+
+    def render(self):
+        texts = []
+        for j in self.js[self.scroll_start:self.scroll_start+self.h]:
+            texts.append(urwid.Text(Cursor.withstyles({}, j)))
+        self.thepile = urwid.Pile(texts)
+        ms.top.set_body(self.thepile)
+        Cursor.render_cursors(self, self.cursors)
+
+    def onscrolldown(self):
+        if not (self.moving or self.editing) and self.scroll_start + self.h < len(self.js):
+            self.scroll_start += 1
+            self.render()
+    
+    def onscrollup(self):
+        if not (self.moving or self.editing) and self.scroll_start > 0:
+            self.scroll_start -= 1
+            self.render()
+
+    def getpile(self):
+        return self.thepile
+
+    def delete(self):
+        del self.js[self.cselected.position]
+        self.cselected.position -= 1
+        self.render()
+    
+    def replaceup(self):
+        if self.cselected.position > 0:
+            (self.js[self.cselected.position], 
+                self.js[self.cselected.position-1]) = (self.js[self.cselected.position-1], 
+                                                    self.js[self.cselected.position])
+            abs = self.cselected.position - self.scroll_start
+            self.scroll_start -= abs == 0 and  self.scroll_start > 0
+            self.render()
+
+    def replacedown(self):
+        if self.cselected.position < len(self.js) - 1:
+            (self.js[self.cselected.position], 
+                self.js[self.cselected.position+1]) = (self.js[self.cselected.position+1], 
+                                                    self.js[self.cselected.position])
+            abs = self.cselected.position - self.scroll_start
+            self.scroll_start += abs == self.h - 1 and self.h + self.scroll_start < len(self.js)
+            self.render()
+
+    def addnew(self):
+        if self.cselected.position < len(self.js):
+            abs = self.cselected.position - self.scroll_start
+            self.editing = True
+            # del self.thepile.contents
+            # clonar pila directamente
+            jsinscreen = self.js[self.scroll_start:self.scroll_start+self.h]
+            pila = []
+            for j in jsinscreen:
+                pila.append(urwid.Text(Cursor.withstyles({}, j)))
+            myedit = urwid.Edit("       ")
+            urwid.connect_signal(myedit, 'change', lambda a, b: "")
+            pila.insert(abs + 1, myedit)
+            self.thepile = urwid.Pile(pila)
+            ms.top.set_body(self.thepile)
+            # Cursor.render_cursors(self, self.cursors)
+    
+    def closeediting(self):
+        self.editing = False
+        self.render()
+
+    def loadlucky(self):
+        abs = self.cselected.position - self.scroll_start
+        edit = self.thepile[abs + 1]
+        txt = edit.get_edit_text()
+        edit.set_caption("  ⏳   ") #ignorado?
+        try:
+            id = Lucky().getid(txt)
+            js = YoutubeDl().getsimple(id)
+        except Exception:
+            edit.set_edit_text(txt + " Error!")
+        else:
+            self.js.insert(self.cselected.position + 1, js)
+            self.render()
+            self.cselected.next()
+            ms.editing = False
+
+ms = MyScreen(w, h)
+
+mylist = ms.getpile()
+palette = [('selected', 'default,bold,underline', 'default', 'bold'),
+           ('playing', 'black', 'light gray')]
+# row1 = urwid.Text(u"Some text on Row 1")
+# edit = urwid.Edit()
+# row2 = urwid.Columns([
+#             urwid.Text(u"Enter something on Row 2"), 
+#             edit
+#         ])
+# row3 = urwid.Text(u"...")
+
+# button = urwid.Button(u'Exit')
+# div = urwid.Divider()
+# pile = urwid.Pile([row1, row2, row3])
+# pile = urwid.Pile([urwid.Text(f"Some text on Row {i}") for i in range(100)])
+top = urwid.Filler(mylist, valign='top')
+ms.top = top
+# import IPython; IPython.embed()
+
+# def on_ask_change(edit, new_edit_text):
+#     row3.set_text(('I say', u"Nice to meet you, %s" % new_edit_text))
+
+def on_exit_clicked(button):
+    raise urwid.ExitMainLoop()
+
+def show_or_exit(key):
+    if key in ('q', 'Q'):
+        os.system("killall mpv")
+        ms.player.p.terminate()
+        raise urwid.ExitMainLoop()
+    if key == "u" or (key[0] == "mouse press" and key[1] == 4):
+        ms.onscrollup()
+    if key == "d" or (key[0] == "mouse press" and key[1] == 5):
+        ms.onscrolldown()
+    if key == "j":
+        if ms.moving:
+            ms.replacedown()
+        ms.cselected.next()
+    if key == "k":
+        if ms.moving:
+            ms.replaceup()
+        ms.cselected.before()
+    if key == "right":
+        ms.player.playnext()
+    if key == "left":
+        ms.player.playprevious()
+    if key == "home":
+        while ms.cselected.position != 0:
+            if ms.moving:
+                ms.replaceup()
+            ms.cselected.before()
+    if key == "end":
+        while ms.cselected.position != len(ms.js) - 1:
+            if ms.moving:
+                ms.replacedown()
+            ms.cselected.next()
+    if key == "r":
+        ms.delete()
+    if key == "m":
+        ms.toggleMoving()
+    if key == "a":
+        if ms.moving:
+            ms.toggleMoving()
+        ms.addnew()
+    if key == "enter":
+        if ms.editing:
+            ms.loadlucky()
+    if key == "esc":
+        if ms.editing:
+            ms.closeediting()
+    if key == "c":
+        ms.config.change(mainloop)
+    if key == "p":
+        ms.player.play()
+    if key == " ":
+        ms.player.toggleResume()
+    # txt.set_text(repr(key))
+    # mylist.contents[0][0].set_text(f"Some text on Row {random.randint(0, 10)}")
+    # print(key, urwid.raw_display.Screen().get_cols_rows())
+
+# urwid.connect_signal(edit, 'change', on_ask_change)
+# urwid.connect_signal(button, 'click', on_exit_clicked)
+# lastline = urwid.Text(("", "j,k: for cursor move    m: Move entries     a: Add new entry (then press enter or scape)"))
+mainloop = urwid.MainLoop(urwid.Pile([top]), palette, unhandled_input=show_or_exit)
+ms.player.listen(mainloop.watch_pipe(ms.player.onpipeevent))
+# import IPython; IPython.embed()
+mainloop.run()
