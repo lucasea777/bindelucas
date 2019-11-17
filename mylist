@@ -172,6 +172,7 @@ class PlayerIPC():
             # if j["event"] == "end-file":
             if j["event"] == "idle":
                 self.playnext()
+                # pass
     
     def playnext(self):
         self.ms.cplaying.next()
@@ -197,7 +198,7 @@ class PlayerIPC():
 
     def _ensure_start(self):
         if not (self.p and self.p.is_alive()):
-            cmd = f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet"
+            cmd = f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet --force-window"
             self.p = subprocess.Popen(cmd, shell=True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -268,7 +269,7 @@ class Playlist():
         js = []
         while any(len(p) != 0 for p in tmp.values()):
             # elejir cual playlist
-            name_prob = [(name, config.config["playlists"][name]["prob"]) for name, p in tmp.items() if len(p) != 0]
+            name_prob = sorted([(name, config.config["playlists"][name]["prob"]) for name, p in tmp.items() if len(p) != 0])
             probs = [p for c, p in name_prob]
             t = sum(probs)
             i = np.random.choice(range(len(name_prob)), p=np.array(probs)/t)
