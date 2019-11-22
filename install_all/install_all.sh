@@ -142,6 +142,9 @@
 # https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
 # # restart gnome shell by typing alt+F2 and writing restart, also works for setting ntilde and Ntile using FOUR_LEVEL !
 
+# Download desmos graphs
+# https://www.desmos.com/api/v1/calculator/my_graphs
+
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 gsettings set org.gnome.desktop.interface clock-show-date true
 gsettings set org.gnome.desktop.interface enable-animations false
