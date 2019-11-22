@@ -3,16 +3,20 @@
 It should work at least if the ip ends with a number less than 100.
 
 Usage:
+    getip.py ls
     getip.py [--nfping] showall
     getip.py [--verbose] (<name>|<mac>)
     getip.py (-h | --help)
+
+Explanation:
+    getip.py ls    list pairs (name, mac) in ~/binprivate/db/macs.json
 
 Options:
     -h --help      Show this screen.
 
 """
 # TODO:
-# net = "192.168.1...."
+# net = "192.168.1...." (use lip to determine prefix)
 # listar todas las ips"
 from docopt import docopt
 import nmap  # pip install python-nmap --user
@@ -72,6 +76,10 @@ def main():
     global arguments
     arguments = docopt(__doc__, version='getip 1.0')
     # print(arguments)
+    if arguments["ls"]:
+        for name, mac in json.loads(Path("~/binprivate/db/macs.json").expanduser().read_text()).items():
+            print(name.ljust(15), mac)
+        sys.exit()
     if arguments["showall"]:
         macs = get_macs_from_file()
         if not arguments["--nfping"]:
