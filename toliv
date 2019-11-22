@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""toliv.
+
+Usage:
+    toliv [--simulate] <paths>...
+    toliv (-h | --help)
+    toliv --version
+
+Options:
+    --simulate      Only show commad.
+    -h --help       Show this screen.
+    --version       Show version.
+
+"""
+from docopt import docopt
+from pathlib import Path
+from pipes import quote
+import sys, os
+import subprocess
+
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='toliv 0.01')
+    except SystemExit:
+        print(__doc__)
+        sys.exit()
+    paths = arguments["<paths>"]
+    if len(paths) <= 1:
+        print("At least two paths needed")
+        sys.exit()
+    for p in paths[:-1]:
+        if not Path(p).exists():
+            print(f"{p} does no exist.")
+            sys.exit()
+    livip = subprocess.Popen("getip living_eth".split(),
+               stdout=subprocess.PIPE).stdout.read().decode().strip()
+    paths[-1] = quote(f"edu@{livip}:\"{paths[-1]}\"")
+    rendered = " ".join(quote(s) for s in paths[:-1])
+    cmd = f'sshpass -f $HOME/binprivate/db/miqueridacontraes rsync -avP {rendered} {paths[-1]}'
+    print(cmd)
+    if arguments["--simulate"]:
+        sys.exit()
+    os.system(cmd)

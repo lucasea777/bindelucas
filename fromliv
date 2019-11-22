@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""fromliv.
+
+Usage:
+    fromliv [--simulate] <paths>...
+    fromliv (-h | --help)
+    fromliv --version
+
+Options:
+    --simulate      Only show commad.
+    -h --help       Show this screen.
+    --version       Show version.
+
+"""
+from docopt import docopt
+from pathlib import Path
+from pipes import quote
+import sys, os
+
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='fromliv 0.01')
+    except SystemExit:
+        print(__doc__)
+        sys.exit()
+    paths = arguments["<paths>"]
+    if len(paths) <= 1:
+        print("At least two paths needed")
+        sys.exit()
+    if Path(paths[-1]).exists() and Path(paths[-1]).is_file():
+        print(f"{paths[-1]} already exist.")
+        sys.exit()
+    paths[:-1] = [f"edu@`getip living_eth`:\"{quote(p)}\"" for p in paths[:-1]]
+    cmd = f'sshpass -f $HOME/binprivate/db/miqueridacontraes rsync -avP {" ".join(paths[:-1])} {paths[-1]}'
+    print(cmd)
+    if arguments["--simulate"]:
+        sys.exit()
+    os.system(cmd)
