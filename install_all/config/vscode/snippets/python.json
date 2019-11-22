@@ -114,9 +114,8 @@
 	},
 	"subprocess": {
 		"prefix": ["subprocess"],
-		"body": ["import subprocess",
-				"hostname = subprocess.Popen(\"hostname\",",
-				"                  stdout=subprocess.PIPE).stdout.read().decode().strip()"]
+		"body": ["$1 = subprocess.Popen(\"$2\".split(),",
+				"           stdout=subprocess.PIPE).stdout.read().decode().strip()"]
 	}
 }
 
