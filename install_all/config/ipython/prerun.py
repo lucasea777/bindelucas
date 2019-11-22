@@ -72,4 +72,4 @@ def copylast(line):
 get_ipython().define_macro('load_sympy','from sympy.abc import *; from sympy import * ; init_printing()')
 get_ipython().define_macro('killme','import os, signal; os.kill(os.getpid(), signal.SIGKILL)')
 
-print("load_sympy might be useful 😊, Also ctrl+o adds a precious new line")
+print("load_sympy might be useful 😊, Also ctrl+o adds a precious new line, Also _ is the last value!")
