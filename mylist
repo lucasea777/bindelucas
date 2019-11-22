@@ -34,6 +34,14 @@ from pathlib import Path
 from collections import Counter, defaultdict
 import sys, os
 
+# Important links:
+
+# https://github.com/siikamiika/mpv-python-ipc/blob/master/mpv_python_ipc/mpv_python_ipc.py
+# https://mpv.io/manual/master/#options
+# https://stackoverflow.com/questions/27195677/how-to-access-unix-domain-sockets-from-the-command-line
+# https://github.com/stax76/mpv.net/wiki/mpv-properties
+# https://github.com/mpv-player/mpv/blob/master/DOCS/man/input.rst#list-of-input-commands
+# https://stackoverflow.com/questions/5848087/how-to-use-a-generator-to-split-socket-read-data-on-newlines
 
 try:
     arguments = docopt(__doc__, version='mylist 0.01')
@@ -45,7 +53,6 @@ except SystemExit:
 w, h = urwid.raw_display.Screen().get_cols_rows()
 # import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True); ptvsd.wait_for_attach();
 # import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
-# https://github.com/siikamiika/mpv-python-ipc/blob/master/mpv_python_ipc/mpv_python_ipc.py
 def getprobs(templ, n):
     templ = templ.replace(".", "1")
     templ = templ.replace("-", "3")
@@ -185,10 +192,8 @@ class PlayerIPC():
     def listen(self, fdpipe):
         def listener(q):
             time.sleep(2)
-            # https://stackoverflow.com/questions/27195677/how-to-access-unix-domain-sockets-from-the-command-line
             reader_p = subprocess.Popen("ncat -U /tmp/mpvsocket", shell=True, 
                             stdout=subprocess.PIPE, stdin=subprocess.PIPE).stdout
-            # https://stackoverflow.com/questions/5848087/how-to-use-a-generator-to-split-socket-read-data-on-newlines
             for l in reader_p:
                 l = l.strip()
                 if l:
@@ -198,7 +203,8 @@ class PlayerIPC():
 
     def _ensure_start(self):
         if not (self.p and self.p.is_alive()):
-            cmd = f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet --force-window"
+            cmd = (f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet --force-window"
+                    + " --ytdl-format='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best'")
             self.p = subprocess.Popen(cmd, shell=True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -209,8 +215,6 @@ class PlayerIPC():
         self.ms.cplaying.position = pos
         self.ms.render()
         id = self.ms.js[pos]["id"]
-        # https://github.com/stax76/mpv.net/wiki/mpv-properties
-        # https://github.com/mpv-player/mpv/blob/master/DOCS/man/input.rst#list-of-input-commands
         cmd = f"""echo '{json.dumps({ "command": ["loadfile", f"https://www.youtube.com/watch?v={id}"]})}' | socat - /tmp/mpvsocket"""
         o = (subprocess.Popen(cmd, shell=True,
                         stdout=subprocess.PIPE,
