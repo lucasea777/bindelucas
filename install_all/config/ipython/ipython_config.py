@@ -3,6 +3,9 @@ c = get_config()
 modules = """
 math math
 plt matplotlib.pyplot
+matplotlib matplotlib
+pd pandas
+requests requests
 ks keras
 np numpy
 numpy numpy
@@ -21,14 +24,30 @@ subprocess subprocess
 """.strip().split("\n")
 
 callables = """
+defaultdict collections.defaultdict
 Path pathlib.Path
 Matrix sympy.Matrix
 array numpy.array
 """.strip().split("\n")
 
-c.InteractiveShellApp.exec_lines = [
-    'import lazy_import\n'
-] + ["\n".join([f"{line.split()[0]} = lazy_import.lazy_module(\"{line.split()[1]}\")" for line in modules])] \
-  + ["\n".join([f"{line.split()[0]} = lazy_import.lazy_callable(\"{line.split()[1]}\")" for line in callables])]
+lazys = []
+for short_mod, mod in map(str.split, modules):
+    lazys.append(f"{short_mod} = lazy_import.lazy_module('{mod}')")
+for short_callable, callable in map(str.split, callables):
+    lazys.append(f"{short_callable} = lazy_import.lazy_callable('{callable}')")
+# lazys = ";".join(lazys)
+lazys = "\n        ".join(lazys)
+
+c.InteractiveShellApp.exec_lines = [f"""
+try:
+    if get_ipython().__class__.__name__ == "TerminalInteractiveShell":
+        import lazy_import
+        {lazys}
+    else:
+        pass
+except Exception:
+    pass
+"""]
+# print(c.InteractiveShellApp.exec_lines[0])
 
 c.InteractiveShellApp.exec_files = ['/home/luks/.ipython/profile_default/prerun.py']
