@@ -3,9 +3,9 @@
 <host> currently doesnt do anything!
 
 Usage: 
-    pdf [--arguments] <file>
     pdf [--arguments] cups
     pdf [--arguments] currcon
+    pdf [--arguments] <file>
     pdf [--arguments] [--simulate] print <file> (<pagelist> | all) [<host>]
 
 Options:
@@ -26,6 +26,7 @@ import subprocess
 import sys
 from subprocess import CalledProcessError, check_output
 import os
+from pipes import quote
 
 def getpagecount(path):
     command = [
@@ -78,9 +79,7 @@ if __name__ == '__main__':
         pagelist_cmd = ''
         if arguments['<pagelist>'] != 'all':
             pagelist_cmd = '-P ' + arguments['<pagelist>']
-        print_cmd = "lp -oOutputMode=Best -oColorModel=KGray {path} {pagelist_cmd}".format(
-            path=path, pagelist_cmd=pagelist_cmd
-            )
+        print_cmd = f"lp -oOutputMode=Best -oColorModel=KGray {quote(path)} {pagelist_cmd}"
         if not arguments['--simulate']:
             print("running: $ " + print_cmd)
             os.system(print_cmd)
