@@ -38,6 +38,7 @@ for short_callable, callable in map(str.split, callables):
 # lazys = ";".join(lazys)
 lazys = "\n        ".join(lazys)
 
+# https://stackoverflow.com/questions/15411967/how-can-i-check-if-code-is-executed-in-the-ipython-notebook
 c.InteractiveShellApp.exec_lines = [f"""
 try:
     if get_ipython().__class__.__name__ == "TerminalInteractiveShell":

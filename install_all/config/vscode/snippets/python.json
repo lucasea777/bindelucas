@@ -35,7 +35,7 @@
 			"\"\"\"${1:${TM_FILENAME}}.",
 			"",
 			"Usage:",
-			"    $1 ship new <name>...",
+			"    $1 [--arguments] ship new <name>...",
 			"    $1 ship <name> move <x> <y> [--speed=<kn>]",
 			"    $1 ship shoot <x> <y>",
 			"    $1 mine (set|remove) <x> <y> [--moored | --drifting]",
@@ -45,6 +45,7 @@
 			"Options:",
 			"    -h --help       Show this screen.",
 			"    --version       Show version.",
+			"    --arguments     Only print arguments",
 			"    --speed=<kn>    Speed in knots [default: 10].",
 			"    --moored        Moored (anchored) mine.",
 			"    --drifting      Drifting mine.",
@@ -59,7 +60,11 @@
 			"if __name__ == '__main__':",
 			"    try:",
 			"        arguments = docopt(__doc__, version='$1 0.01')",
+			"        if arguments['--arguments']:",
+			"            print(arguments)",
+			"            sys.exit()",
 			"    except SystemExit:",
+			"        print(arguments)",
 			"        print(__doc__)",
 			"        sys.exit()"
 		]

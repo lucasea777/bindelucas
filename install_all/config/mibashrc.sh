@@ -14,6 +14,14 @@ function cdpymodule() {
     mydir=$(p 'import '$1'; '$1'.__file__');
     cd $(dirname $mydir);
 }
+function ofzf() {
+    local mypath=$(find $@ | fzf);
+    echo $mypath;
+    o $mypath > /dev/null 2>&1;
+}
+function sudop() {
+    sudo -S --prompt ' ' <<< `cat /home/luks/binprivate/db/miqueridacontraes` $@
+}
 function ly {
     myurl=$(imfly $@);
     mpv $myurl --no-video
