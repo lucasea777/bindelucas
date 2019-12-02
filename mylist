@@ -42,6 +42,7 @@ import sys, os
 # https://github.com/stax76/mpv.net/wiki/mpv-properties
 # https://github.com/mpv-player/mpv/blob/master/DOCS/man/input.rst#list-of-input-commands
 # https://stackoverflow.com/questions/5848087/how-to-use-a-generator-to-split-socket-read-data-on-newlines
+# https://github.com/mpv-player/mpv/issues/4241
 
 try:
     arguments = docopt(__doc__, version='mylist 0.01')
@@ -203,6 +204,7 @@ class PlayerIPC():
 
     def _ensure_start(self):
         if not (self.p and self.p.is_alive()):
+            # https://github.com/mpv-player/mpv/issues/4241
             cmd = (f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet --force-window"
                     + " --ytdl-format='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best'")
             self.p = subprocess.Popen(cmd, shell=True,
