@@ -1,2 +1,0 @@
-#!/bin/bash
-gcc -x c <(cat $1 | sed -n '1!p') -o /tmp/cwp && /tmp/cwp

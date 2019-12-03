@@ -12,6 +12,29 @@
 #sudo /etc/init.d/vboxdrv setup
 # bashrcgenerator
 
+# === boot/BOOT grub para instalar / reparar menu grub ===
+# Tecla Bios ACER Aspire: F2
+# En la bios probar con varias opciones en el menu Boot, aun si dicen Windows!
+## Para crear live usb:
+## sudo dd bs=4M if=/home/luks/Downloads/ubuntu-17.10.1-desktop-amd64.iso of=/dev/sXXX conv=fdatasync && sync
+## desde windows: https://rufus.ie/
+
+### Para reparar grub, si es EFI:
+### https://askubuntu.com/questions/831216/how-can-i-reinstall-grub-to-the-efi-partition
+### Lo siguiente en consola en live usb:
+### sudo mount /dev/sdXXX /mnt
+### sudo mount /dev/sdXX /mnt/boot/efi
+### for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done
+### sudo chroot /mnt
+### grub-install /dev/sdX
+### update-grub  
+###
+### Note : sdX = disk | sdXX = efi partition | sdXXX = system partition 
+### The important point is to boot the installation media in the correct boot-mode, if we want to reinstall grub-efi we have to boot in UEFI-mode, if we wanty to reinstall grub-pc we have to boot in legacy-mode. – mook765 Mar 6 '18 at 12:20
+# Para setear "GRUB_DEFAULT=" :  sudo nano /etc/default/grub
+# Para nvidia esta el archivo ./install_nvidia.sh
+# ===
+
 #mount disk -> udisksctl mount -b /dev/<disk>
 
 #GPU
@@ -81,10 +104,6 @@
 # $ ssh -M -S /tmp/zx81 cp201801@zx81.famaf.unc.edu.ar
 # $ rsync -e "ssh -S /tmp/zx81" -avP cp201801@zx81.famaf.unc.edu.ar:~/lab3y4/run_nvprof_sizes_npp.json .
 
-# live usb
-# sudo dd bs=4M if=/home/luks/Downloads/ubuntu-17.10.1-desktop-amd64.iso of=/dev/sXXX conv=fdatasync && sync
-# check progress todo
-
 # SHARING
 
 # samba
@@ -113,12 +132,24 @@
 
 # actualizar con:
 # setxkbmap -layout us
+## Quizas sea necesario desactivar "Compose key" en "Keyboard & Mouse" en Tweaks y/o activar
+## Right Alt en "Key to choose third level" en "Additional Layout Options"
+# Cuando todo anda bien AltGr se ve asi (xev -event keyboard):
+# KeyRelease event, serial 28, synthetic NO, window 0x2800001,
+#     root 0x18f, subw 0x0, time 750300, (81,134), root:(81,816),
+#     state 0x10, keycode 108 (keysym 0xfe03, ISO_Level3_Shift), same_screen YES,
+#     XKeysymToKeycode returns keycode: 92
+#     XLookupString gives 0 bytes: 
+#     XFilterEvent returns: False
 # https://askubuntu.com/questions/33774/how-do-i-remap-the-caps-lock-and-ctrl-keys
 # setxkbmap -layout us -option ctrl:nocaps
 # nombres con:
-# xev -event keyboard # quizas?
+# xev -event keyboard
 # https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
 # # restart gnome shell by typing alt+F2 and writing restart, also works for setting ntilde and Ntile using FOUR_LEVEL !
+
+# Download desmos graphs
+# https://www.desmos.com/api/v1/calculator/my_graphs
 
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 gsettings set org.gnome.desktop.interface clock-show-date true
@@ -160,6 +191,12 @@ sudo apt-get install fonts-powerline
 curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/install.sh | bash 
 # o quizas pero seguramente mal!
 # --- usando sudo -i -u luks bash
+
+# para que fzf-insert-history solo muestre unicos:
+# modificar /home/luks/.antigen/bundles/ytet5uy4/fzf-widgets/autoload/widgets/fzf-insert-history
+# # modificado para solo mostrar unicos
+# # fc -l 1 | \
+# fc -l 1 | python3 <(printf "import sys;s=set()\nfor l in sys.stdin.readlines():\n l=l.rstrip('\\\n');d=''.join(l.split(maxsplit=1)[1])\n if d not in s:\n  print(l)\n  s.add(d)") | \
 
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.bashrc
 onceinfile 'source ~/bindelucas/install_all/config/mibashrc.sh' '#<MIBASHRC>' ~/.zshrc
@@ -242,6 +279,8 @@ inst gparted
 upd
 inst htop
 inst ack # better than grep with perl regex syntax
+inst gpick
+inst screenruler
 inst python3-dev
 inst python-dev
 # install docker
@@ -252,8 +291,11 @@ source ~/bindelucas/install_all/ansible/install_golang.sh
 MYPATH=`python3 <<< "from pathlib import Path as P; print(list(P('/opt/go/').glob('*/bin/go'))[0])"`
 ln -s $MYPATH /usr/bin/go
 onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.bashrc
+onceinfile 'export PATH="$HOME/workspace-go/bin:$PATH"' '#<GO_GET_BIN2>' ~/.zshrc
+onceinfile 'export PATH="$HOME/workspace-go/bin:$PATH"' '#<GO_GET_BIN2>' ~/.bashrc
 onceinfile 'export PATH="$HOME/go/bin:$PATH"' '#<GO_GET_BIN>' ~/.zshrc
 export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/workspace-go/bin:$PATH"
 
 go get github.com/gsamokovarov/jump
 onceinfile 'unset -f jump; eval "$(jump shell --bind=j)"' '#<JUMP>' ~/.zshrc
@@ -339,6 +381,8 @@ curl https://bootstrap.pypa.io/get-pip.py | python3
 #inst python3-pip #default en ubuntu
 pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
 pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision seaborn --user
+pip3 -q install opencv-contrib-python --user
+pip3 -q install altair vega_datasets --user
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
@@ -585,16 +629,24 @@ inst chrome-gnome-shell
 red 'fin-chrome'
 
 red 'vscode'
+# Guardar extensiones actuales:
+# code --list-extensions > $HOME/bindelucas/install_all/config/vscode/extension_list
 #https://askubuntu.com/questions/833448/how-to-update-vs-code-on-ubuntu
-wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb
-dpkg -i /tmp/code_latest_amd64.deb
+function update-vscode() {
+	sudo echo "gratcie"&&
+	wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb && 
+	sudo dpkg -i /tmp/code_latest_amd64.deb
+}
+update-vscode()
 ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
 ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
 ln -f -s $HOME'/bindelucas/install_all/config/vscode/snippets' $HOME/.config/Code/User/snippets
-exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
-for one_thing in "${exts[@]}"; do
-    code --install-extension $one_thing
-done
+p "[os.system(f'code --install-extension {e}') for e in Path('"$HOME"/bindelucas/install_all/config/vscode/extension_list').read_text().split('\n')]"
+# exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
+# readarray exts < $HOME/bindelucas/install_all/config/vscode/extension_list
+# for one_thing in "${exts[@]}"; do
+#     code --install-extension $one_thing
+# done
 shortcuts set 'vscode' 'code' 'v'
 red 'fin vscode'
 
@@ -670,10 +722,13 @@ source ~/bindelucas/install_all/install-themes.sh
 red 'fin-themes'
 
 red 'android-studio'
-source ~/bindelucas/install_all/install-android-studio.sh
+# source ~/bindelucas/install_all/install-android-studio.sh
+sudo snap install android-studio --classic
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.bashrc
 onceinfile 'export PATH="$HOME/Android/Sdk/platform-tools:$PATH"' '#<ANDROIDPLATFORMTOOLS>' ~/.zshrc
 red 'fin android-studio'
+
+sudo snap install scrcpy
 
 #red 'codelite'
 #apt-key adv --fetch-keys http://repos.codelite.org/CodeLite.asc &&

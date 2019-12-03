@@ -9,13 +9,32 @@ alias jq-interactive='jid'
 alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
 #https://www.2daygeek.com/linux-scan-check-open-ports-using-netstat-ss-nmap/
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
+alias o="xdg-open"
 function cdpymodule() {
     mydir=$(p 'import '$1'; '$1'.__file__');
     cd $(dirname $mydir);
 }
+function ofzf() {
+    local mypath=$(find $@ | fzf);
+    echo $mypath;
+    o $mypath > /dev/null 2>&1;
+}
+function sudop() {
+    sudo -S --prompt ' ' <<< `cat /home/luks/binprivate/db/miqueridacontraes` $@
+}
 function ly {
     myurl=$(imfly $@);
     mpv $myurl --no-video
+}
+function lyv {
+    myurl=$(imfly $@);
+    mpv $myurl
+}
+function adbwifi {
+    adb tcpip 5555 && adb connect `getip g4`:5555;
+}
+function sshliv {
+    sshpass -f $HOME/binprivate/db/miqueridacontraes ssh edu@`getip living_eth` "$@"
 }
 function cless() {
     #~/workspace-go/bin/ccat --bg=dark --color always $@ | less -r
@@ -27,9 +46,9 @@ ln -s $(readlink -f $1) /tmp/oklink
 file /tmp/oklink
 }
 # Create a new directory and enter it
-# function md() {
-# 	mkdir -p "$@" && cd "$@"
-# }
+function mdcd() {
+	mkdir -p "$@" && cd "$@"
+}
 function notify() {
     if [[ $? -eq 0 ]]; then
         # no error
@@ -63,7 +82,11 @@ function onceinfile() { # eg: onceinfile 'LINE' 'ID' 'FILE'
 # magenta   COLOR_MAGENTA     5     max,0,max
 # cyan      COLOR_CYAN        6     0,max,max
 # white     COLOR_WHITE       7     max,max,max
-
+function update-vscode() {
+    sudo echo "gratcie"&&
+	wget https://vscode-update.azurewebsites.net/latest/linux-deb-x64/stable -O /tmp/code_latest_amd64.deb && 
+	sudo dpkg -i /tmp/code_latest_amd64.deb
+}
 function red() {
     echo "$(tput setaf 1)$(tput setab 7)$1$(tput sgr 0)"
 }
@@ -126,11 +149,13 @@ zle -N downdir
 bindkey '^j' updir
 bindkey '^k' downdir
 
-bindkey -M emacs '^[[3;5~' kill-word
-bindkey -M emacs '^H' backward-kill-word
+# bindkey -M emacs '^[[3;5~' kill-word
+# bindkey -M emacs '^H' backward-kill-word
 
 zsh_wifi_signal(){
     # local signal=$(sudo /home/luks/bindelucas/openports)
+    # sudo visudo
+    # agregar a final: luks ALL=(ALL:ALL) NOPASSWD: /home/luks/bindelucas/openports
     echo $(sudo /home/luks/bindelucas/openports)
     # echo ""
     # local color='%F{yellow}'

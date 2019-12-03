@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""imgto.
+
+Usage:
+    imgto (html|text|txt) <img>
+    imgto (-h | --help)
+
+Options:
+    -h --help       Show this screen.
+    --version       Show version.
+
+"""
+from docopt import docopt
+from pathlib import Path
+from collections import Counter, defaultdict
+import sys, os
+
+style = """
+<style>
+body, html {
+    background: black;
+    color: white;
+}
+.wrapper {
+    background: gray;
+    color: black;
+}
+</style>
+""".lstrip()
+
+script = """
+<script src="https://unpkg.com/hocrjs"></script>
+""".lstrip()
+
+if __name__ == '__main__':
+    try:
+        arguments = docopt(__doc__, version='imgtohtml 0.01')
+    except SystemExit:
+        print(__doc__)
+        sys.exit()
+    Path("/tmp/imgtohtml").mkdir(exist_ok=True)
+    Path("/tmp/imgtohtml/tes").write_bytes(Path(arguments["<img>"]).read_bytes())
+    if arguments["html"]:
+        os.system("docker run -v /tmp/imgtohtml:/tmp jitesoft/tesseract-ocr:19.10 /tmp/tes stdout hocr > /tmp/imgtohtml/out.html")
+        txt = Path("/tmp/imgtohtml/out.html").read_text()
+        hpos = txt.find("<head>")
+        tmp = txt[:hpos] + style + txt[hpos:]
+        closebodypos = tmp.find("</body>")
+        out = tmp[:closebodypos] + script + tmp[closebodypos:]
+        # Path("/tmp/imgtohtml/out.html").write_text(out)
+        print(out)
+    elif arguments["txt"] or arguments["text"]:
+        os.system("docker run -v /tmp/imgtohtml:/tmp jitesoft/tesseract-ocr:19.10 /tmp/tes stdout")

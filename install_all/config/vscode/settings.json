@@ -3,14 +3,29 @@
     "file:///home/luks/Downloads/synthwave84.css"
     ],  
   "editor.folding": false,
-  "editor.glyphMargin": false,
-  "activitusbar.views": {
-    "explorer": "file-text",
-    "search": "search",
-    "scm": "repo-forked",
-    "debug": "bug",
-    "extensions": "package"
-  },
+  "editor.glyphMargin": true,
+  "activitusbar.views": [
+    {
+      "name": "explorer",
+      "octicon": "file-text"
+    },
+    {
+      "name": "search",
+      "octicon": "search"
+    },
+    {
+      "name": "scm",
+      "octicon": "repo-forked"
+    },
+    {
+      "name": "debug",
+      "octicon": "bug"
+    },
+    {
+      "name": "extensions",
+      "octicon": "package"
+    }
+  ],
   "languageServerHaskell.enableHIE": true,
   "editor.renderIndentGuides": false,
   "python.formatting.provider": "autopep8",
@@ -293,7 +308,7 @@
   "window.enableMenuBarMnemonics": false,
   "window.menuBarVisibility": "toggle",
   "latex-workshop.view.pdf.viewer": "tab",
-  "python.linting.pep8Enabled": false,
+  "python.linting.pycodestyleEnabled": false,
   "workbench.statusBar.visible": true,
   "[python]": {
     "editor.insertSpaces": true,

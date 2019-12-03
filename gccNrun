@@ -1,0 +1,12 @@
+#!/bin/bash
+# se utiliza asi:
+# #!/usr/bin/env gccNrun
+# #include <stdio.h>
+# #include <stdbool.h>
+
+# int main() {
+#   size_t pollingDelay = 5;
+#   printf("hi\n");
+#   return 0;
+# }
+gcc -x c <(cat $1 | sed -n '1!p') -o /tmp/cwp && /tmp/cwp
