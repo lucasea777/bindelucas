@@ -124,6 +124,12 @@
 # /usr/share/X11/xkb/types/iso9995
 # /usr/share/X11/xkb/symbols/inet
 # /usr/share/X11/xkb/keycodes/evdev
+
+# ojo! si AltGr envia "^@" o funciona como Alt:
+# xmodmap -e "keycode 108 = "   (https://ubuntuforums.org/showthread.php?t=994066)
+# para reactivar:
+# no se pero basarse en el link
+
 # actualizar con:
 # setxkbmap -layout us
 ## Quizas sea necesario desactivar "Compose key" en "Keyboard & Mouse" en Tweaks y/o activar
