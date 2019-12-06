@@ -206,7 +206,8 @@ class PlayerIPC():
         if not (self.p and self.p.is_alive()):
             # https://github.com/mpv-player/mpv/issues/4241
             cmd = (f"mpv --idle --input-ipc-server=/tmp/mpvsocket --no-term-osd --no-term-osd --quiet --force-window"
-                    + " --ytdl-format='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best'")
+                    # + " --ytdl-format='bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best'")
+                    + " --ytdl-format='bestvideo[height<=?720][fps<=?30]+bestaudio/best'")
             self.p = subprocess.Popen(cmd, shell=True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -221,7 +222,7 @@ class PlayerIPC():
         o = (subprocess.Popen(cmd, shell=True,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE).stdout.read().decode())
-        # print(o)
+        # Path("/tmp/out").write_text(o)
         self.resume()
 
     def toggleResume(self):
