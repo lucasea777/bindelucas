@@ -9,9 +9,17 @@ Options:
     --version       Show version.
 
 Dependencies:
+    pip3 install urwid requests numpy docopt youtube_dl --user --upgrade
+    apt install mpv socat
  
 Docs: 
  Can scroll with mouse or with keys 'u' and 'd'.
+ Move cursor:         j, k
+ Next and before:     <-, ->
+ Pause and resume:    space
+ Add song using IMFL: a
+ Move with cursor:    m
+ Remove song:         r
 """
 import urwid
 import random
