@@ -3,8 +3,7 @@ xkb_symbols "basic" {
     
     # woooww comentar siguiente lineas para desactivar overlay1
     key <RALT> {
-        #symbols[Group1]= [ Overlay1_Enable, Overlay2_Enable],
-        #actions[Group1] = [ LockControls(controls=overlay1) ]
+        # symbols[Group1]= [ Overlay1_Enable, Overlay2_Enable],
         actions[Group1] = [ SetControls(controls=overlay1) ]
     };
 #       doesnt work because each key can have only one alternative keycode :(
@@ -16,7 +15,7 @@ xkb_symbols "basic" {
     name[Group1]= "English (US)";
 
     key <TLDE> {	[     grave,	asciitilde	], overlay1 = <I158>	};
-    key <AE01> {	[	  1,	exclam,  exclamdown		], overlay1 = <I164>	};
+    key <AE01> {	[	  1,	exclam,  exclamdown		], overlay2 = <KPAD>	};
     key <AE02> {	[	  2,	at		]	};
     key <AE03> {	[	  3,	numbersign	]	};
     key <AE04> {	[	  4,	dollar		]	};
@@ -31,10 +30,10 @@ xkb_symbols "basic" {
     #key <TAB> {    [     tab,	tab		], overlay2 = <FK12>, overlay1 = <KPAD>  };
     key <TAB> {    [     tab,	tab		], overlay1 = <FK12> };
 
-    key <AD01> {  type="THREE_LEVEL", [	  q,	Q, plus		],  overlay1 = <I160>	};
-    key <AD02> {  type="THREE_LEVEL", [	  w,	W, minus    ],  overlay1 = <I161>	};
-    key <AD03> {  type="THREE_LEVEL", [	  e,	E,  braceleft		], overlay1 = <I162>	};
-    key <AD04> {  type="THREE_LEVEL", [	  r,	R,  braceright		], overlay1 = <I163>	};
+    key <AD01> {  type="THREE_LEVEL", [	  q,	Q, plus		],  overlay1 = <KPAD>	};
+    key <AD02> {  type="THREE_LEVEL", [	  w,	W, minus    ],  overlay1 = <KPSU>	};
+    key <AD03> {  type="THREE_LEVEL", [	  e,	E,  braceleft		],  overlay1 = <KPMU>	};
+    key <AD04> {  type="THREE_LEVEL", [	  r,	R,  braceright		], overlay1 = <KPDV>	};
     key <AD05> {  type="THREE_LEVEL", [	  t,	T,  asterisk		], overlay1 = <AE12>	};
     key <AD06> {  type="THREE_LEVEL", [	  y,	Y,  slash		], overlay1 = <KPDV>	};
     key <AD07>  { type="THREE_LEVEL", [               u,               U,            Prior ] , overlay1 = <AB08> }; # overlay1 = <I157>    };
@@ -65,10 +64,10 @@ xkb_symbols "basic" {
     key <AB07> {	[	  m,	M		], overlay1 =  <PGDN>	};
     key <AB08> {	[     comma,	less		], overlay1 = <PGUP>	};
     key <AB09> {	[    period,	greater		], overlay1 = <FK12>	};
-    key <AB10> {	[     slash,	question,  questiondown	], overlay1 = <I177>	};
+    key <AB10> {	[     slash,	question,  questiondown	], overlay1 = <I160>	};
 
     key <BKSL> {	[ backslash,         bar	]	};
-    key <SPCE> {  type="THREE_LEVEL", [        space,        space,   Return ], overlay1 = <I165> };
+    key <SPCE> {  type="THREE_LEVEL", [        space,        space,   Return ], overlay1 = <KPEN> };
 };
 
 partial alphanumeric_keys

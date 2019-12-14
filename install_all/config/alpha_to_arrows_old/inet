@@ -122,11 +122,11 @@ xkb_symbols "evdev" {
 //  key <I120>   {      [ ]       }; // KEY_MACRO
 
 #    key <I126>   {      [ plusminus             ]       };
-    key <I126>   {      [ parenleft, ampersand           ]       }; // wololo __luks__
+    key <I126>   {      [ parenleft, less             ]       }; // wololo __luks__
 #    key <I128>   {      [ XF86LaunchA           ]       };
     key <I128>   {      [ parenright, greater           ]       };
 #    key <I147>   {      [ XF86MenuKB            ]       };
-    key <I147>   {      [ bracketleft, dollar           ]       };
+    key <I147>   {      [ bracketleft, braceleft            ]       };
 #    key <I148>   {      [ XF86Calculator        ]       };
     key <I148>   {      [ bracketright, braceright        ]       };
 //  key <I149>   {      [ ]       }; // KEY_SETUP
@@ -149,17 +149,12 @@ xkb_symbols "evdev" {
 #    key <I159>   {      [ XF86DOS               ]       };
     key <I159>   {      [ braceleft             ]       };
 #    key <I160>   {      [ XF86ScreenSaver       ]       };
-    key <I160>   {      [ plus       ]       };
-#    key <I161>   {      [ XF86RotateWindows     ]       };
-    key <I161>   {      [ minus, underscore     ]       };
-#    key <I162>   {      [ XF86TaskPane          ]       };
-    key <I162>   {      [ asterisk, asciicircum  ]       };
-#    key <I163>   {      [ XF86Mail              ]       };
-    key <I163>   {      [ slash, backslash              ]       };
-#    key <I164>   {      [ XF86Favorites         ]       };
-    key <I164>   {      [ asciitilde          ]       };
-#    key <I165>   {      [ XF86MyComputer        ]       };
-    key <I165>   {      [ Return        ]       };    
+    key <I160>   {      [ Caps_Lock       ]       };
+    key <I161>   {      [ XF86RotateWindows     ]       };
+    key <I162>   {      [ XF86TaskPane          ]       };
+    key <I163>   {      [ XF86Mail              ]       };
+    key <I164>   {      [ XF86Favorites         ]       };
+    key <I165>   {      [ XF86MyComputer        ]       };
     key <I166>   {      [ XF86Back              ]       };
     key <I167>   {      [ XF86Forward           ]       };
 //  key <I168>   {      [ ]       }; // KEY_CLOSECD (opposite of eject)
@@ -171,8 +166,7 @@ xkb_symbols "evdev" {
     key <I174>   {      [ XF86AudioStop, XF86Eject ]    };
     key <I175>   {      [ XF86AudioRecord       ]       };
     key <I176>   {      [ XF86AudioRewind       ]       };
-#    key <I177>   {      [ XF86Phone             ]       };
-    key <I177>   {      [ Caps_Lock             ]       };
+    key <I177>   {      [ XF86Phone             ]       };
 //  key <I178>   {      [ ]       }; // KEY_ISO
     key <I179>   {      [ XF86Tools             ]       };
     key <I180>   {      [ XF86HomePage          ]       };
