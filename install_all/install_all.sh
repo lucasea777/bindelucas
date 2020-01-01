@@ -534,6 +534,11 @@ yarn global add forever http-server node-inspector
 yarn config set -- --emoji true #😉
 red 'fin nodejs'
 
+# Update inotify watch limit
+# https://stackoverflow.com/questions/22475849/node-js-what-is-enospc-error-and-how-to-solve/32600959#32600959
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+sudo sysctl --system
+
 # https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
 
 # red 'nw'
