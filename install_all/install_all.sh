@@ -321,6 +321,7 @@ inst gitg
 
 inst unison-all-gtk # https://stackoverflow.com/questions/2936627/two-way-sync-with-rsync
 inst jq
+inst kazam # screen recorder
 
 shortcuts set 'ontop' 'ontop' 'z'
 shortcuts set '/usr/bin/gnome-screenshot' '/usr/bin/gnome-screenshot -a' 'a'
