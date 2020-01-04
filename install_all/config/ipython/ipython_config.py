@@ -51,4 +51,5 @@ except Exception:
 """]
 # print(c.InteractiveShellApp.exec_lines[0])
 
-c.InteractiveShellApp.exec_files = ['/home/luks/.ipython/profile_default/prerun.py']
+from pathlib import Path
+c.InteractiveShellApp.exec_files = [str(Path('~/.ipython/profile_default/prerun.py').expanduser())]
