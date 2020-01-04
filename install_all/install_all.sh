@@ -448,7 +448,7 @@ inst gnome-tweak-tool
 # shortcuts daemon
 # https://github.com/baskerville/sxhkd
 inst sxhkd
-printf "[Desktop Entry]\nName=sxhkd\nExec=/usr/bin/sxhkd -c /home/luks/bindelucas/install_all/config/sxhkd.config\nType=Application" > ~/.config/autostart/sxhkd.desktop
+printf "[Desktop Entry]\nName=sxhkd\nExec=/usr/bin/sxhkd -c $HOME/bindelucas/install_all/config/sxhkd.config\nType=Application" > ~/.config/autostart/sxhkd.desktop
 
 red 'fin masive apt-get'
 
@@ -465,8 +465,8 @@ make install &&
 mkdir -p /usr/local/etc/logkeys-keymaps/ &&
 cp /tmp/logkeys/keymaps/es_AR.map /usr/local/etc/logkeys-keymaps/es_AR.map &&
 printf '#!/bin/sh\nlogkeys --start -m /usr/local/etc/logkeys-keymaps/es_AR.map -o /var/log/logkeys.log\n' > /usr/local/etc/logkeys-start.sh &&
-printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application\n' > /home/luks/.config/autostart/logkeys.desktop &&
-chmod +x /home/luks/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
+printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application\n' > $HOME/.config/autostart/logkeys.desktop &&
+chmod +x $HOME/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
 cd $myoldpath &&
 rm -rf /tmp/logkeys
 
@@ -475,7 +475,7 @@ pip3 install guake --user
 # https://askubuntu.com/questions/468445/how-to-backup-guakes-settings
 # guake --save-preferences ~/bindelucas/install_all/config/myguakeconfig
 # guake --restore-preferences ~/bindelucas/install_all/config/myguakeconfig
-shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
+# shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 #latex
 inst texlive
@@ -656,8 +656,8 @@ function update-vscode() {
 	sudo dpkg -i /tmp/code_latest_amd64.deb
 }
 update-vscode()
-ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
-ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
+ln -f -s $HOME'/bindelucas/install_all/config/vscode/settings.json' $HOME/.config/Code/User/settings.json
+ln -f -s $HOME'/bindelucas/install_all/config/vscode/keybindings.json' $HOME/.config/Code/User/keybindings.json
 ln -f -s $HOME'/bindelucas/install_all/config/vscode/snippets' $HOME/.config/Code/User/snippets
 p "[os.system(f'code --install-extension {e}') for e in Path('"$HOME"/bindelucas/install_all/config/vscode/extension_list').read_text().split('\n')]"
 # exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
