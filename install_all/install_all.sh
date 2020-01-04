@@ -404,7 +404,10 @@ inst python3-pil.imagetk
 #pip3 -q install ipython
 pip3 install pudb --user
 #pip3 install ipykernel
+pip3 install lazy_import --user
 pip3 install jupyter jupyterlab --user
+# abrir jupyter console o ipython3 de alguna forma para que se genere ~/.ipython/profile_default
+# TODO hacer esto de forma automatizada
 ln -f -s "$HOME/bindelucas/install_all/config/ipython/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
 ln -f -s "$HOME/bindelucas/install_all/config/ipython/prerun.py" ~/.ipython/profile_default/prerun.py
 inst xvfb
