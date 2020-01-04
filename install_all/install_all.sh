@@ -124,6 +124,14 @@
 # /usr/share/X11/xkb/types/iso9995
 # /usr/share/X11/xkb/symbols/inet
 # /usr/share/X11/xkb/keycodes/evdev
+function jkli_arrows() {
+    cd $HOME/bindelucas/install_all/config/alpha_to_arrows
+    cp --backup=numbered us /usr/share/X11/xkb/symbols/us
+    cp --backup=numbered iso9995 /usr/share/X11/xkb/types/iso9995
+    cp --backup=numbered inet /usr/share/X11/xkb/symbols/inet
+    cp --backup=numbered evdev /usr/share/X11/xkb/keycodes/evdev
+}
+# jkli_arrows()
 
 # ojo! si AltGr envia "^@" o funciona como Alt:
 # xmodmap -e "keycode 108 = "   (https://ubuntuforums.org/showthread.php?t=994066)
@@ -143,6 +151,7 @@
 #     XFilterEvent returns: False
 # https://askubuntu.com/questions/33774/how-do-i-remap-the-caps-lock-and-ctrl-keys
 # setxkbmap -layout us -option ctrl:nocaps
+# quizas sea mejor setear "Caps Lock as Ctrl" en Ctrl position en gnome tweaks
 # nombres con:
 # xev -event keyboard
 # https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
