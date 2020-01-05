@@ -1,7 +1,7 @@
 
 # INSTALL THIS TING:
 #
-#  git clone https://github.com/lucasea777/bindelucas ~/bindelucas
+#  sudo apt install --yes git && git clone https://github.com/lucasea777/bindelucas ~/bindelucas
 #  sudo bash ~/bindelucas/install_all/install_all.sh
 #
 #para descargar solo los instaladores
