@@ -144,6 +144,14 @@ function downdir() {
            if a.startswith(p) and len(a) > len(p)] + ['.'])[0]")
     zle reset-prompt
 }
+# https://stackoverflow.com/questions/44258585/how-to-insert-text-into-input-prompt-using-zsh-zle
+addText () {
+    # text_to_add="textGoesHere"
+    # RBUFFER=${text_to_add}${RBUFFER}
+    eval `python3 $HOME/bindelucas/install_all/config/instantsnippets.py`
+}
+zle -N addText
+bindkey '^a' addText
 zle -N updir
 zle -N downdir
 bindkey '^j' updir
