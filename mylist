@@ -53,14 +53,6 @@ import sys, os
 # https://stackoverflow.com/questions/5848087/how-to-use-a-generator-to-split-socket-read-data-on-newlines
 # https://github.com/mpv-player/mpv/issues/4241
 
-try:
-    arguments = docopt(__doc__, version='mylist 0.01')
-except SystemExit:
-    # print(__doc__)
-    sys.exit()
-# multiprocessing.set_start_method('spawn', True)
-
-w, h = urwid.raw_display.Screen().get_cols_rows()
 # import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True); ptvsd.wait_for_attach();
 # import ptvsd; print("Waiting"); ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
 def getprobs(templ, n):
@@ -477,29 +469,6 @@ class MyScreen():
             self.cselected.next()
             ms.editing = False
 
-ms = MyScreen(w, h)
-
-mylist = ms.getpile()
-palette = [('selected', 'default,bold,underline', 'default', 'bold'),
-           ('playing', 'black', 'light gray')]
-# row1 = urwid.Text(u"Some text on Row 1")
-# edit = urwid.Edit()
-# row2 = urwid.Columns([
-#             urwid.Text(u"Enter something on Row 2"), 
-#             edit
-#         ])
-# row3 = urwid.Text(u"...")
-
-# button = urwid.Button(u'Exit')
-# div = urwid.Divider()
-# pile = urwid.Pile([row1, row2, row3])
-# pile = urwid.Pile([urwid.Text(f"Some text on Row {i}") for i in range(100)])
-top = urwid.Filler(mylist, valign='top')
-ms.top = top
-# import IPython; IPython.embed()
-
-# def on_ask_change(edit, new_edit_text):
-#     row3.set_text(('I say', u"Nice to meet you, %s" % new_edit_text))
 
 def on_exit_clicked(button):
     raise urwid.ExitMainLoop()
@@ -558,11 +527,44 @@ def show_or_exit(key):
     # txt.set_text(repr(key))
     # mylist.contents[0][0].set_text(f"Some text on Row {random.randint(0, 10)}")
     # print(key, urwid.raw_display.Screen().get_cols_rows())
+if __name__ == "__main__":
+    try:
+        arguments = docopt(__doc__, version='mylist 0.01')
+    except SystemExit:
+        # print(__doc__)
+        sys.exit()
+    # multiprocessing.set_start_method('spawn', True)
 
-# urwid.connect_signal(edit, 'change', on_ask_change)
-# urwid.connect_signal(button, 'click', on_exit_clicked)
-# lastline = urwid.Text(("", "j,k: for cursor move    m: Move entries     a: Add new entry (then press enter or scape)"))
-mainloop = urwid.MainLoop(urwid.Pile([top]), palette, unhandled_input=show_or_exit)
-ms.player.listen(mainloop.watch_pipe(ms.player.onpipeevent))
-# import IPython; IPython.embed()
-mainloop.run()
+    w, h = urwid.raw_display.Screen().get_cols_rows()
+
+    ms = MyScreen(w, h)
+
+    mylist = ms.getpile()
+    palette = [('selected', 'default,bold,underline', 'default', 'bold'),
+            ('playing', 'black', 'light gray')]
+    # row1 = urwid.Text(u"Some text on Row 1")
+    # edit = urwid.Edit()
+    # row2 = urwid.Columns([
+    #             urwid.Text(u"Enter something on Row 2"), 
+    #             edit
+    #         ])
+    # row3 = urwid.Text(u"...")
+
+    # button = urwid.Button(u'Exit')
+    # div = urwid.Divider()
+    # pile = urwid.Pile([row1, row2, row3])
+    # pile = urwid.Pile([urwid.Text(f"Some text on Row {i}") for i in range(100)])
+    top = urwid.Filler(mylist, valign='top')
+    ms.top = top
+    # import IPython; IPython.embed()
+
+    # def on_ask_change(edit, new_edit_text):
+    #     row3.set_text(('I say', u"Nice to meet you, %s" % new_edit_text))
+
+    # urwid.connect_signal(edit, 'change', on_ask_change)
+    # urwid.connect_signal(button, 'click', on_exit_clicked)
+    # lastline = urwid.Text(("", "j,k: for cursor move    m: Move entries     a: Add new entry (then press enter or scape)"))
+    mainloop = urwid.MainLoop(urwid.Pile([top]), palette, unhandled_input=show_or_exit)
+    ms.player.listen(mainloop.watch_pipe(ms.player.onpipeevent))
+    # import IPython; IPython.embed()
+    mainloop.run()
