@@ -9,7 +9,8 @@ Options:
     --version       Show version.
 
 Dependencies:
-    pip3 install urwid requests numpy docopt youtube_dl --user --upgrade
+    pip3 install urwid==2.0.1 --user # ojo que con 2.1.0 no anda TODO
+    pip3 install requests numpy docopt youtube_dl --user --upgrade
     apt install mpv socat
  
 Docs: 
