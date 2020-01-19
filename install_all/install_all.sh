@@ -1,7 +1,7 @@
 
 # INSTALL THIS TING:
 #
-#  git clone https://github.com/lucasea777/bindelucas ~/bindelucas
+#  sudo apt install --yes git && git clone https://github.com/lucasea777/bindelucas ~/bindelucas
 #  sudo bash ~/bindelucas/install_all/install_all.sh
 #
 #para descargar solo los instaladores
@@ -124,6 +124,14 @@
 # /usr/share/X11/xkb/types/iso9995
 # /usr/share/X11/xkb/symbols/inet
 # /usr/share/X11/xkb/keycodes/evdev
+function jkli_arrows() {
+    cd $HOME/bindelucas/install_all/config/alpha_to_arrows
+    cp --backup=numbered us /usr/share/X11/xkb/symbols/us
+    cp --backup=numbered iso9995 /usr/share/X11/xkb/types/iso9995
+    cp --backup=numbered inet /usr/share/X11/xkb/symbols/inet
+    cp --backup=numbered evdev /usr/share/X11/xkb/keycodes/evdev
+}
+# jkli_arrows()
 
 # ojo! si AltGr envia "^@" o funciona como Alt:
 # xmodmap -e "keycode 108 = "   (https://ubuntuforums.org/showthread.php?t=994066)
@@ -143,6 +151,7 @@
 #     XFilterEvent returns: False
 # https://askubuntu.com/questions/33774/how-do-i-remap-the-caps-lock-and-ctrl-keys
 # setxkbmap -layout us -option ctrl:nocaps
+# quizas sea mejor setear "Caps Lock as Ctrl" en Ctrl position en gnome tweaks
 # nombres con:
 # xev -event keyboard
 # https://askubuntu.com/questions/533719/custom-keyboard-layout-to-use-h-j-k-l-as-arrows-not-working-properly
@@ -321,6 +330,7 @@ inst gitg
 
 inst unison-all-gtk # https://stackoverflow.com/questions/2936627/two-way-sync-with-rsync
 inst jq
+inst kazam # screen recorder
 
 shortcuts set 'ontop' 'ontop' 'z'
 shortcuts set '/usr/bin/gnome-screenshot' '/usr/bin/gnome-screenshot -a' 'a'
@@ -394,7 +404,10 @@ inst python3-pil.imagetk
 #pip3 -q install ipython
 pip3 install pudb --user
 #pip3 install ipykernel
+pip3 install lazy_import --user
 pip3 install jupyter jupyterlab --user
+# abrir jupyter console o ipython3 de alguna forma para que se genere ~/.ipython/profile_default
+# TODO hacer esto de forma automatizada
 ln -f -s "$HOME/bindelucas/install_all/config/ipython/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
 ln -f -s "$HOME/bindelucas/install_all/config/ipython/prerun.py" ~/.ipython/profile_default/prerun.py
 inst xvfb
@@ -435,7 +448,7 @@ inst gnome-tweak-tool
 # shortcuts daemon
 # https://github.com/baskerville/sxhkd
 inst sxhkd
-printf "[Desktop Entry]\nName=sxhkd\nExec=/usr/bin/sxhkd -c /home/luks/bindelucas/install_all/config/sxhkd.config\nType=Application" > ~/.config/autostart/sxhkd.desktop
+printf "[Desktop Entry]\nName=sxhkd\nExec=/usr/bin/sxhkd -c $HOME/bindelucas/install_all/config/sxhkd.config\nType=Application" > ~/.config/autostart/sxhkd.desktop
 
 red 'fin masive apt-get'
 
@@ -452,8 +465,8 @@ make install &&
 mkdir -p /usr/local/etc/logkeys-keymaps/ &&
 cp /tmp/logkeys/keymaps/es_AR.map /usr/local/etc/logkeys-keymaps/es_AR.map &&
 printf '#!/bin/sh\nlogkeys --start -m /usr/local/etc/logkeys-keymaps/es_AR.map -o /var/log/logkeys.log\n' > /usr/local/etc/logkeys-start.sh &&
-printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application\n' > /home/luks/.config/autostart/logkeys.desktop &&
-chmod +x /home/luks/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
+printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application\n' > $HOME/.config/autostart/logkeys.desktop &&
+chmod +x $HOME/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
 cd $myoldpath &&
 rm -rf /tmp/logkeys
 
@@ -462,7 +475,7 @@ pip3 install guake --user
 # https://askubuntu.com/questions/468445/how-to-backup-guakes-settings
 # guake --save-preferences ~/bindelucas/install_all/config/myguakeconfig
 # guake --restore-preferences ~/bindelucas/install_all/config/myguakeconfig
-shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
+# shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 #latex
 inst texlive
@@ -532,6 +545,11 @@ source ~/.zshrc
 yarn global add forever http-server node-inspector
 yarn config set -- --emoji true #😉
 red 'fin nodejs'
+
+# Update inotify watch limit
+# https://stackoverflow.com/questions/22475849/node-js-what-is-enospc-error-and-how-to-solve/32600959#32600959
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+sudo sysctl --system
 
 # https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04
 
@@ -638,8 +656,8 @@ function update-vscode() {
 	sudo dpkg -i /tmp/code_latest_amd64.deb
 }
 update-vscode()
-ln -f -s '/home/luks/bindelucas/install_all/config/vscode/settings.json' /home/luks/.config/Code/User/settings.json
-ln -f -s '/home/luks/bindelucas/install_all/config/vscode/keybindings.json' /home/luks/.config/Code/User/keybindings.json
+ln -f -s $HOME'/bindelucas/install_all/config/vscode/settings.json' $HOME/.config/Code/User/settings.json
+ln -f -s $HOME'/bindelucas/install_all/config/vscode/keybindings.json' $HOME/.config/Code/User/keybindings.json
 ln -f -s $HOME'/bindelucas/install_all/config/vscode/snippets' $HOME/.config/Code/User/snippets
 p "[os.system(f'code --install-extension {e}') for e in Path('"$HOME"/bindelucas/install_all/config/vscode/extension_list').read_text().split('\n')]"
 # exts=(FallenMax.mithril-emmet HookyQR.beautify James-Yu.latex-workshop Orta.vscode-jest SolarLiner.linux-themes dbaeumer.vscode-eslint dsznajder.es7-react-js-snippets dzannotti.vscode-babel-coloring esbenp.prettier-vscode karyfoundation.theme-karyfoundation-themes ms-python.python ms-vscode.cpptools msjsdiag.debugger-for-chrome zhuangtongfa.Material-theme)
