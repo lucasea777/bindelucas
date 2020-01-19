@@ -150,7 +150,7 @@ class Lucky():
 
     @staticmethod
     def geturl(s):
-        var = requests.head(f'http://www.google.com/search?q="{" ".join(s)} site:youtube.com"&btnI')
+        var = requests.head(f'http://www.google.com/search?q={s} site:youtube.com&btnI')
         return var.headers["Location"].split("q=", 1)[1]
 
     @classmethod
