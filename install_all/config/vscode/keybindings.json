@@ -253,4 +253,9 @@
         "command": "workbench.action.debug.stop",
         "when": "inDebugMode"
     },
+    {
+        "key": "alt+enter",
+        "command": "problems.action.showQuickFixes",
+        "when": "problemFocus"
+    }
 ]

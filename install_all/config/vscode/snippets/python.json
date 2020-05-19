@@ -54,6 +54,8 @@
 			"from docopt import docopt",
 			"from pathlib import Path",
 			"from collections import Counter, defaultdict",
+			"import stackprinter",
+			"stackprinter.set_excepthook(style='darkbg2')",
 			"import sys, os",
 			"",
 			"",

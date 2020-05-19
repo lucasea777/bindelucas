@@ -201,6 +201,9 @@ curl https://raw.githubusercontent.com/viasite-ansible/ansible-role-zsh/master/i
 # o quizas pero seguramente mal!
 # --- usando sudo -i -u luks bash
 
+# TODO: why I cant use https://github.com/wfxr/forgit
+# only appears to work if I execute antigen bundle 'wfxr/forgit' directly in the console
+
 # para que fzf-insert-history solo muestre unicos:
 # modificar /home/luks/.antigen/bundles/ytet5uy4/fzf-widgets/autoload/widgets/fzf-insert-history
 # # modificado para solo mostrar unicos
@@ -389,11 +392,14 @@ inst hardinfo # gui
 curl https://bootstrap.pypa.io/get-pip.py | python3
 
 #inst python3-pip #default en ubuntu
+pip3 install --user advance-touch # ad create/dir/tree/like/this # <-- not sure if necessary
 pip3 install --user pyftpdlib # python -m pyftpdlib -w <-- ftp server # https://askubuntu.com/questions/17084/how-do-i-temporarily-run-an-ftp-server
 pip3 -q install testresources scipy sympy numpy matplotlib pandas sklearn torch torchvision seaborn --user
 pip3 -q install opencv-contrib-python --user
 pip3 -q install altair vega_datasets --user
 pip3 -q install pygments requests_html tqdm pyvirtualdisplay --user
+pip3 -q install dominate --user # manipulate, write, pythonic html, svg, xml documents
+pip3 -q install stackprinter --user # better stacktrace, traceback etc
 #pip3 -q install argcomplete
 #activate-global-python-argcomplete
 #samba config https://help.ubuntu.com/community/Samba/SambaServerGuide
@@ -478,6 +484,7 @@ pip3 install guake --user
 # shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 #latex
+# might be useful to check: https://github.com/3b1b/manim/blob/master/Dockerfile
 inst texlive
 inst texlive-full # gigante! pero quizas necesario
 inst texlive-lang-spanish

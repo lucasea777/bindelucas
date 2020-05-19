@@ -10,12 +10,15 @@ alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
 #https://www.2daygeek.com/linux-scan-check-open-ports-using-netstat-ss-nmap/
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
 alias o="xdg-open"
+function ipa() {
+    curl https://api.dictionaryapi.dev/api/v1/entries/en/$1 -s -o - | jq -r .[0].phonetic
+}
 function cdpymodule() {
     mydir=$(p 'import '$1'; '$1'.__file__');
     cd $(dirname $mydir);
 }
 function ofzf() {
-    local mypath=$(find $@ | fzf);
+    local mypath=$(find $@ | fzf --preview 'bat --style=numbers --color=always {}');
     echo $mypath;
     o $mypath > /dev/null 2>&1;
 }
