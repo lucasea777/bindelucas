@@ -245,6 +245,19 @@ inst curl
 # onceinfile 'source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' '#<ZSH_AUTOSUGGESTIONS>' ~/.zshrc
 # source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
+inst git
+
+# rust with cargo
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+onceinfile 'export PATH="$HOME/.cargo/bin:$PATH"' '#<CARGO>' ~/.bashrc
+onceinfile 'export PATH="$HOME/.cargo/bin:$PATH"' '#<CARGO>' ~/.zshrc
+
+# some rust things...
+cargo install fd # better find
+cargo install fselect
+cargo install navi
+cargo install exa
+cargo install bat # apt-get install libclang-dev # might need this
 
 mkdir -p ~/.config/autostart
 
@@ -291,6 +304,11 @@ inst gparted
 upd
 inst htop
 inst ack # better than grep with perl regex syntax
+inst silversearcher-ag # ag command, better than ack https://github.com/ggreer/the_silver_searcher
+inst httpie
+snap install micro --classic
+onceinfile 'export PATH="/snap/bin:$PATH"' '#<SNAP>' ~/.bashrc
+onceinfile 'export PATH="/snap/bin:$PATH"' '#<SNAP>' ~/.zshrc
 inst gpick
 inst screenruler
 inst python3-dev
@@ -312,6 +330,8 @@ export PATH="$HOME/workspace-go/bin:$PATH"
 go get github.com/gsamokovarov/jump
 onceinfile 'unset -f jump; eval "$(jump shell --bind=j)"' '#<JUMP>' ~/.zshrc
 
+go get github.com/claudiodangelis/qrcp # grcp Folder o grcp receive para recibir archivos por lan
+
 # setup thyme
 inst x11-utils
 inst xdotool
@@ -325,7 +345,6 @@ snap install remmina
 inst apt-transport-https
 inst python-tk
 inst python3-tk
-inst git 
 inst automake
 # git gui
 # https://github.com/FredrikNoren/ungit
