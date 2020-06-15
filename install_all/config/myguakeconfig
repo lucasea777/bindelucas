@@ -1,12 +1,12 @@
 [general]
 prompt-on-quit=true
-window-height=74
+window-height=72
 mouse-display=true
 window-width=100
 max-tab-name-length=100
 gtk-theme-name='Numix'
 gtk-prefer-dark-theme=true
-window-losefocus=false
+quick-open-enable=true
 history-size=1000
 save-tabs-when-changed=true
 open-tab-cwd=true
@@ -19,34 +19,42 @@ abbreviate-tab-names=false
 display-n=0
 scroll-keystroke=true
 use-default-font=true
-use-trayicon=true
+display-tab-names=0
 restore-tabs-notify=true
 use-scrollbar=true
 window-tabbar=true
 use-popup=false
 window-refocus=false
+window-losefocus=false
+use-trayicon=true
 
 [keybindings/local]
+switch-tab5='<Alt>5'
 new-tab='<Primary>t'
 split-tab-vertical='<Primary>s'
+switch-tab9='<Alt>9'
 switch-tab6='<Alt>6'
+switch-tab8='<Alt>8'
 focus-terminal-right='<Alt>Right'
+move-tab-left='<Shift><Alt>o'
+previous-tab='<Alt>o'
+move-tab-right='<Shift><Alt>p'
 switch-tab1='<Alt>1'
 focus-terminal-up='<Alt>Up'
 split-tab-horizontal='<Primary>h'
 switch-tab3='<Alt>3'
+next-tab='<Alt>p'
 focus-terminal-left='<Alt>Left'
-switch-tab5='<Alt>5'
 switch-tab4='<Alt>4'
 switch-tab2='<Alt>2'
 focus-terminal-down='<Alt>Down'
 switch-tab7='<Alt>7'
 
 [style/background]
-transparency=76
+transparency=94
 
 [style/font]
 allow-bold=true
 style='Bitstream Vera Sans Mono Oblique 10'
-palette='#000000000000:#cccc00000000:#4e4e9a9a0606:#c4c4a0a00000:#34346565a4a4:#757550507b7b:#060698209a9a:#d3d3d7d7cfcf:#555557575353:#efef29292929:#8a8ae2e23434:#fcfce9e94f4f:#72729f9fcfcf:#adad7f7fa8a8:#3434e2e2e2e2:#eeeeeeeeecec:#ffffffffffff:#000000000000'
-palette-name='Tango'
+palette='#1C1C1D1D1919:#D0D01B1B2424:#A7A7D3D32C2C:#D8D8CFCF6767:#6161B8B8D0D0:#69695A5ABBBB:#D5D538386464:#FEFEFFFFFEFE:#1C1C1D1D1919:#D0D01B1B2424:#A7A7D3D32C2C:#D8D8CFCF6767:#6161B8B8D0D0:#69695A5ABBBB:#D5D538386464:#FEFEFFFFFEFE:#F6F6F5F5EEEE:#232325252626'
+palette-name='Monokai'

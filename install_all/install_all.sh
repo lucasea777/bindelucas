@@ -16,6 +16,7 @@
 # Tecla Bios ACER Aspire: F2
 # En la bios probar con varias opciones en el menu Boot, aun si dicen Windows!
 ## Para crear live usb:
+## Ahora parece mucho mejor ventoy.net
 ## sudo dd bs=4M if=/home/luks/Downloads/ubuntu-17.10.1-desktop-amd64.iso of=/dev/sXXX conv=fdatasync && sync
 ## desde windows: https://rufus.ie/
 
@@ -49,6 +50,8 @@
 #sudo restart lightdm
 
 #TODO
+# https://github.com/alebcay/awesome-shell
+# maybe xonsh
 #pip3: --user en vez de sudo
 #http://askubuntu.com/questions/339212/zeitgeist-fts-always-using-a-lot-of-memory
 #for automatic windows apps (wine) instalation use: PyAutoIt + PyVirtualDisplay = Awesomenesess!
@@ -495,11 +498,21 @@ chmod +x $HOME/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh
 cd $myoldpath &&
 rm -rf /tmp/logkeys
 
-# inst guake version vieja!!
-pip3 install guake --user
+# inst guake # quizas version vieja!!
+# guake dependencies (just in case)
+function install_guake_from_sources() {
+	curl https://raw.githubusercontent.com/Guake/guake/master/scripts/bootstrap-dev-debian.sh | bash &&
+	cd /tmp/ &&
+	git clone https://github.com/Guake/guake &&
+	cd guake &&
+	make dev && make && sudo make install &&
+}
+# aplicar mi patch
+sudo python3 $HOME/bindelucas/install_all/config/apply_ast_guake_deleteword_patch.py
+# pip3 install guake --user
 # https://askubuntu.com/questions/468445/how-to-backup-guakes-settings
 # guake --save-preferences ~/bindelucas/install_all/config/myguakeconfig
-# guake --restore-preferences ~/bindelucas/install_all/config/myguakeconfig
+guake --restore-preferences ~/bindelucas/install_all/config/myguakeconfig
 # shortcuts set '/home/luks/.local/bin/guake' '/home/luks/.local/bin/guake -t' 'F12'
 
 #latex
