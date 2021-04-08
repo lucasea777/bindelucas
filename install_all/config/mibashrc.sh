@@ -10,8 +10,30 @@ alias whoisusingthisfuckingport='sudo netstat -ltnp | grep $1'
 #https://www.2daygeek.com/linux-scan-check-open-ports-using-netstat-ss-nmap/
 alias nmap-all-open-ports='nmap 0.0.0.0 -p 1-65535'
 alias o="xdg-open"
+alias gds='git diff --staged'
+alias gap='git add -p'
+alias grp='git reset -p'
+alias gd='git diff'
+alias gl='git log'
+alias gs='git status'
+alias gsh='git show'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias bn='git rev-parse --abbrev-ref HEAD'
+alias ga="git ls-files -m -o --exclude-standard | fzf --print0 -m | xargs -0 -t -o git add"
+alias awsoff="mv ~/.aws/credentials ~/.aws/credentials.off"
+alias awson="mv ~/.aws/credentials.off ~/.aws/credentials"
+alias smv="mv -nv"
+# https://spin.atomicobject.com/2018/04/05/fuzzy-find-git-add/
+function n() {
+    if [[ $? -eq 0 ]]; then
+        /usr/bin/ffplay -nodisp -autoexit $HOME/Music/tuturu_1.mp3 >/dev/null 2>&1
+    else
+        /usr/bin/paplay /usr/share/sounds/freedesktop/stereo/suspend-error.oga
+    fi
+}
 function ipa() {
-    curl https://api.dictionaryapi.dev/api/v1/entries/en/$1 -s -o - | jq -r .[0].phonetic
+    curl https://api.dictionaryapi.dev/api/v1/entries/en/$1 -s -o - | jq -r '.[0].phonetics[].text'
 }
 function cdpymodule() {
     mydir=$(p 'import '$1'; '$1'.__file__');
@@ -23,7 +45,7 @@ function ofzf() {
     o $mypath > /dev/null 2>&1;
 }
 function sudop() {
-    sudo -S --prompt ' ' <<< `cat /home/luks/binprivate/db/miqueridacontraes` $@
+    sudo -S --prompt ' ' <<< `cat $HOME/binprivate/db/miqueridacontraes` $@
 }
 function ly {
     myurl=$(imfly $@);
@@ -153,6 +175,9 @@ addText () {
     # RBUFFER=${text_to_add}${RBUFFER}
     eval `python3 $HOME/bindelucas/install_all/config/instantsnippets.py`
 }
+# https://unix.stackexchange.com/questions/373795/bindkey-to-execute-command-zsh
+bindkey -s "^[l" 'ls^M'
+bindkey -s "^[L" 'ls -halt ^M'
 zle -N addText
 bindkey '^a' addText
 zle -N updir
@@ -175,4 +200,13 @@ zsh_wifi_signal(){
 
 POWERLEVEL9K_CUSTOM_OPENPORTS="zsh_wifi_signal"
 POWERLEVEL9K_CUSTOM_OPENPORTS_BACKGROUND="red"
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs custom_openports vcs command_execution_time time)
+# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs custom_openports vcs command_execution_time time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs vcs command_execution_time time)
+
+## pyenv configs
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi

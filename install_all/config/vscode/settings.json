@@ -32,7 +32,7 @@
   "editor.multiCursorModifier": "ctrlCmd",
   "emmet.syntaxProfiles": { "javascript": "html" },
   "emmet.triggerExpansionOnTab": true,
-  "window.zoomLevel": 2,
+  "window.zoomLevel": 0,
   // Controls the font family.
   //"editor.fontFamily": "Operator Mono Book",
   //"editor.fontFamily": "Operator SSm"
@@ -302,11 +302,10 @@
     "<C-a>": false,
     "<C-f>": false
   },
-  "window.titleBarStyle": "native",
   "vim.easymotionJumpToAnywhereRegex": "[A-Za-z0-9]",
   "workbench.iconTheme": "vscode-great-icons",
   "window.enableMenuBarMnemonics": false,
-  "window.menuBarVisibility": "toggle",
+  "window.menuBarVisibility": "hidden",
   "latex-workshop.view.pdf.viewer": "tab",
   "python.linting.pycodestyleEnabled": false,
   "workbench.statusBar.visible": true,
@@ -325,5 +324,6 @@
   ],
   "spellright.language": [
     "Spanish"
-  ]
+],
+"python.languageServer": "Microsoft"
 }

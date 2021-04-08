@@ -319,6 +319,7 @@ inst python-dev
 # install docker
 source ~/bindelucas/install_all/ansible/install_docker.sh # to install docker!
 usermod -a -G docker $USER
+sudo su ${USER} # or log out and log in
 # install go
 source ~/bindelucas/install_all/ansible/install_golang.sh
 MYPATH=`python3 <<< "from pathlib import Path as P; print(list(P('/opt/go/').glob('*/bin/go'))[0])"`
@@ -505,7 +506,7 @@ function install_guake_from_sources() {
 	cd /tmp/ &&
 	git clone https://github.com/Guake/guake &&
 	cd guake &&
-	make dev && make && sudo make install &&
+	make dev && make && sudo make install
 }
 # aplicar mi patch
 sudo python3 $HOME/bindelucas/install_all/config/apply_ast_guake_deleteword_patch.py
