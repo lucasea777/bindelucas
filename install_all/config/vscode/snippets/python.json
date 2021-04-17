@@ -16,7 +16,7 @@
 	"IPython": {
 		"prefix": "ipython",
 		"body": [
-			"import IPython; IPython.embed()"
+			"import IPython; IPython.embed(colors=\"neutral\")"
 		],
 		"description": "IPython Debugging right here"
 	},

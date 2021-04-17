@@ -1,4 +1,4 @@
-#echo "export PS1=\[\033[38;5;11m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h:\[$(tput sgr0)\]\[\033[38;5;6m\][\w]:\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"
+#echo "export PS1=\[\033[38;5;11m\]\u\[$(tput sgr0)\]\[\033[38;5;15m\]@\h:\[$(tput sgr0)\]\[\033[38;5;6m\][\w]:\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"   
 function inst() { 
     apt-get -y install "$*"; 
 };
@@ -32,6 +32,9 @@ function n() {
         /usr/bin/paplay /usr/share/sounds/freedesktop/stereo/suspend-error.oga
     fi
 }
+namingthingsishard () { echo; ls -halt; zle redisplay;}
+zle -N namingthingsishard
+bindkey '^l' namingthingsishard
 function ipa() {
     curl https://api.dictionaryapi.dev/api/v1/entries/en/$1 -s -o - | jq -r '.[0].phonetics[].text'
 }
@@ -198,10 +201,10 @@ zsh_wifi_signal(){
     # echo -n "%{$color%}\uf230  $signal%{%f%}" # \uf230 is 
 }
 
+POWERLEVEL9K_VIRTUALENV_SHOW_PYTHON_VERSION=true
 POWERLEVEL9K_CUSTOM_OPENPORTS="zsh_wifi_signal"
 POWERLEVEL9K_CUSTOM_OPENPORTS_BACKGROUND="red"
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs custom_openports vcs command_execution_time time)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status background_jobs vcs command_execution_time time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv background_jobs custom_openports vcs command_execution_time time)
 
 ## pyenv configs
 export PYENV_ROOT="$HOME/.pyenv"

@@ -23,6 +23,9 @@ inst materia-theme #https://github.com/nana-4/materia-theme
 # git clone https://github.com/ddnexus/equilux-theme; cde equi*; source install.sh
 
 # cursor theme
+# sulo usar Capitaine
+# LiOS V parece peola tambien https://www.pling.com/p/1443087/
+# otro https://github.com/ful1e5/Bibata_Cursor
 cd /tmp
 git clone https://gitlab.com/limitland/comixcursors
 cd comixcursors

@@ -32,7 +32,7 @@
   "editor.multiCursorModifier": "ctrlCmd",
   "emmet.syntaxProfiles": { "javascript": "html" },
   "emmet.triggerExpansionOnTab": true,
-  "window.zoomLevel": 0,
+  "window.zoomLevel": 1,
   // Controls the font family.
   //"editor.fontFamily": "Operator Mono Book",
   //"editor.fontFamily": "Operator SSm"
@@ -101,7 +101,6 @@
   // ],
   // "workbench.colorTheme": "Material Basic - Materia",
   "workbench.colorTheme": "Material Basic - Materia Contrast",
-  "python.pythonPath": "/usr/bin/python3",
   "jupyter.appendResults": true,
   "python.linting.enabled": true,
   "python.linting.flake8Enabled": false,
@@ -325,5 +324,6 @@
   "spellright.language": [
     "Spanish"
 ],
-"python.languageServer": "Microsoft"
+"python.languageServer": "Microsoft",
+"python.defaultInterpreterPath": "/usr/bin/python3"
 }

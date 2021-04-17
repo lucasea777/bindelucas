@@ -50,6 +50,8 @@
 #sudo restart lightdm
 
 #TODO
+# sudo snap install glimpse-editor
+# https://github.com/netdata/netdata
 # https://github.com/alebcay/awesome-shell
 # maybe xonsh
 #pip3: --user en vez de sudo
@@ -77,6 +79,8 @@
 # https://medium.com/@docodemore/an-alternative-to-operator-mono-font-6e5d040e1c7e
 
 # TODO
+# maybes:
+#	kdenlive
 # https://medium.com/@patdhlk/how-to-install-go-1-9-1-on-ubuntu-16-04-ee64c073cd79
 # o mejor ansible para golang!
 # https://github.com/fiatjaf/jiq
@@ -176,6 +180,7 @@ gsettings set org.gnome.desktop.interface enable-animations false
 # pero lo seguro es reemplazar 
 # /usr/share/fonts/truetype/noto/NotoColorEmoji.ttf
 # por algun ttf de whatsapp, como ser el de https://forum.xda-developers.com/general/general/root-stock-emoji-fonts-ios-windows10-t3418801
+# with mate! https://forum.xda-developers.com/android/general/whatsapp-emojis-unicode-12-t4003337
 # o mas bien de iOS!
 
 mkdir ~/emoji_ttf_backup &&
@@ -256,6 +261,7 @@ onceinfile 'export PATH="$HOME/.cargo/bin:$PATH"' '#<CARGO>' ~/.bashrc
 onceinfile 'export PATH="$HOME/.cargo/bin:$PATH"' '#<CARGO>' ~/.zshrc
 
 # some rust things...
+cargo install ripgrep
 cargo install fd # better find
 cargo install fselect
 cargo install navi
@@ -379,6 +385,8 @@ inst xclip # clipboard $ printf "hola" | xclip -selection clipboard && xclip -se
 inst libsox-fmt-all
 #inst winff
 inst unp #descomprime cualqueir cosa!
+inst p7zip-full # maybe even better! with `7z x file.FORMAT`
+inst p7zip-rar
 inst miniupnpc #upnpc -a $(lip) 43210 43210 TCP #external-ip
 #inst devilspie2
 inst gconf-editor
@@ -413,6 +421,9 @@ inst wxhexeditor
 inst hardinfo # gui
 #inst python-pip
 curl https://bootstrap.pypa.io/get-pip.py | python3
+
+# pyenv
+curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 
 #inst python3-pip #default en ubuntu
 pip3 install --user advance-touch # ad create/dir/tree/like/this # <-- not sure if necessary
@@ -498,6 +509,11 @@ printf '[Desktop Entry]\nName=logkeys\nExec=/usr/local/bin/llk\nType=Application
 chmod +x $HOME/.config/autostart/logkeys.desktop /usr/local/etc/logkeys-start.sh &&
 cd $myoldpath &&
 rm -rf /tmp/logkeys
+
+# vpn goodies
+# https://www.fosslinux.com/4150/how-to-install-openvpn-to-connect-to-nordvpn-in-ubuntu.htm
+sudo apt-get install network-manager-openvpn-gnome network-manager-openvpn network-manager-pptp network-manager-vpnc
+# sudo systemctl restart NetworkManager
 
 # inst guake # quizas version vieja!!
 # guake dependencies (just in case)

@@ -101,7 +101,8 @@ sleep 5
 # Any commands you want to launch after wakeup can be placed here
 # Remember: sudo may have expired by now
 amixer -D pulse sset Master 90% on -q
-nohup rhythmbox $media &
+/usr/bin/google-chrome "https://www.youtube.com/watch?v=_83KqwEEGw4"
+# nohup rhythmbox $media &
 #turn on monitor
 #xset dpms force on
 
